@@ -1,0 +1,612 @@
+/* ═══════════════════════════════════════════════════════════
+   DATA CENTERS — EXPO SCREEN  |  styles.css
+   ───────────────────────────────────────────────────────────
+   Estructura: tokens → reset → layout → sección A → sección B
+               → sección C → sección D → cards → switch →
+               detalle → animaciones
+═══════════════════════════════════════════════════════════ */
+
+/* ── TOKENS ──────────────────────────────────────────────── */
+:root {
+  /* Fondo y paneles */
+  --bg:           #e8ecf2;           /* Fondo general: gris muy claro */
+  --panel:        #f2f4f7;           /* Panel / Sección A: gris 01 */
+  --panel-dark:   #d4dae5;           /* Bordes y divisores */
+  --surface:      rgba(255,255,255,0.72); /* Cards sobre gris */
+  --surface-hover:rgba(255,255,255,0.95);
+
+  /* Texto */
+  --text-900:     #0d1421;
+  --text-700:     #2c3e55;
+  --text-500:     #5a6a82;
+  --text-300:     #8fa0b8;
+
+  /* Azul corporativo */
+  --blue:         #1b5fff;
+  --blue-light:   rgba(27,95,255,0.12);
+  --blue-glow:    rgba(27,95,255,0.25);
+  --blue-btn:     #1b5fff;
+
+  /* Render (zona B) fondo */
+  --render-bg:    #c8d2e0;
+
+  /* Espaciados */
+  --gap:          20px;
+  --gap-sm:       12px;
+  --radius-lg:    20px;
+  --radius-md:    14px;
+  --radius-sm:    10px;
+
+  /* Secciones */
+  --nav-h:        88px;
+
+  /* Sombras */
+  --shadow-card:  0 2px 10px rgba(13,20,33,0.08);
+  --shadow-panel: 0 4px 24px rgba(13,20,33,0.10);
+}
+
+/* ── RESET ────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  height: 100%;
+  overflow: hidden;  /* pantalla fija de exposición, sin scroll global */
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text-900);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── LAYOUT GLOBAL ───────────────────────────────────────── */
+.app {
+  height: 100vh;
+  display: grid;
+  grid-template-rows: 1fr var(--nav-h);
+  gap: var(--gap);
+  padding: var(--gap);
+  padding-bottom: 0;
+}
+
+.main {
+  display: grid;
+  grid-template-columns: 1fr 2fr;   /* 1/3 — 2/3 */
+  gap: var(--gap);
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* ── SECCIÓN A — Panel izquierdo ─────────────────────────── */
+.section-a {
+  background: var(--panel);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-panel);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 24px 20px;
+  gap: 16px;
+}
+
+/* Cabecera A */
+.a-header {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--panel-dark);
+}
+
+.a-badge {
+  display: inline-flex;
+  align-items: center;
+  background: var(--blue-light);
+  color: var(--blue);
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 10px;
+  letter-spacing: 2px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--blue-glow);
+  width: fit-content;
+  transition: background 0.25s, color 0.25s;
+}
+
+.a-title {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 26px;
+  line-height: 1.15;
+  color: var(--text-900);
+  transition: opacity 0.3s;
+}
+
+.a-text {
+  font-size: 13px;
+  line-height: 1.65;
+  color: var(--text-500);
+  font-weight: 300;
+  transition: opacity 0.3s;
+}
+
+/* Cuerpo A (lista de equipos o detalle) */
+.a-body {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-right: 4px;
+  /* Scroll suave */
+  scroll-behavior: smooth;
+}
+
+/* Scrollbar fina */
+.a-body::-webkit-scrollbar { width: 4px; }
+.a-body::-webkit-scrollbar-track { background: transparent; }
+.a-body::-webkit-scrollbar-thumb { background: var(--panel-dark); border-radius: 4px; }
+
+/* ── CARDS DE EQUIPOS ─────────────────────────────────────── */
+.card {
+  background: var(--surface);
+  border: 1px solid rgba(255,255,255,0.9);
+  border-radius: var(--radius-md);
+  padding: 14px 14px 14px 16px;
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  align-items: center;
+  gap: 12px;
+  cursor: default;
+  box-shadow: var(--shadow-card);
+  transition: background 0.2s, box-shadow 0.2s, transform 0.15s;
+  animation: slideIn 0.25s ease both;
+}
+
+.card:hover {
+  background: var(--surface-hover);
+  box-shadow: 0 4px 18px rgba(13,20,33,0.13);
+  transform: translateY(-1px);
+}
+
+/* Cuando el equipo está activo */
+.card.card--active {
+  border-color: var(--blue-glow);
+  background: rgba(27,95,255,0.06);
+  box-shadow: 0 0 0 1px var(--blue-glow), var(--shadow-card);
+}
+
+.card-info { min-width: 0; }
+
+.card-title {
+  font-family: 'Syne', sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--text-900);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 3px;
+}
+
+.card-desc {
+  font-size: 12px;
+  color: var(--text-500);
+  font-weight: 300;
+  line-height: 1.4;
+}
+
+/* Botón de detalle (flecha) */
+.btn-detail {
+  width: 34px;
+  height: 34px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--panel-dark);
+  background: transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-500);
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
+  flex-shrink: 0;
+}
+.btn-detail:hover {
+  background: var(--blue);
+  color: #fff;
+  border-color: var(--blue);
+}
+.btn-detail svg { width: 16px; height: 16px; }
+
+/* ── SWITCH ───────────────────────────────────────────────── */
+.switch {
+  width: 48px;
+  height: 28px;
+  border-radius: 999px;
+  background: var(--panel-dark);
+  border: none;
+  position: relative;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.2s;
+  outline: none;
+}
+.switch::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 4px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+  transform: translateY(-50%);
+  transition: left 0.2s cubic-bezier(0.4,0,0.2,1);
+}
+.switch.on {
+  background: var(--blue);
+}
+.switch.on::after {
+  left: 24px;
+}
+
+/* ── SECCIÓN DERECHA ─────────────────────────────────────── */
+.right-col {
+  display: grid;
+  grid-template-rows: 1fr auto;
+  gap: var(--gap);
+  min-height: 0;
+}
+
+/* ── SECCIÓN B — Render ──────────────────────────────────── */
+.section-b {
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  position: relative;
+  background: var(--render-bg);
+  box-shadow: var(--shadow-panel);
+  min-height: 0;
+}
+
+.render-wrap {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.render-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+  transition: opacity 0.4s ease;
+}
+
+/* Estado de transición al cambiar render */
+.render-img.fading {
+  opacity: 0;
+}
+
+/* Logo empresa (overlay arriba-derecha) */
+.render-logo {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 2;
+  opacity: 0.85;
+  pointer-events: none;
+}
+
+/* Etiqueta del modelo sobre el render */
+.render-tag {
+  position: absolute;
+  bottom: 16px;
+  left: 16px;
+  background: rgba(255,255,255,0.18);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.35);
+  border-radius: 999px;
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  color: #fff;
+  padding: 6px 14px;
+  pointer-events: none;
+  text-transform: uppercase;
+}
+
+/* Capa de puntos de foco */
+.focus-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.focus-dot {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.45);
+  border: 2px solid rgba(255,255,255,0.7);
+  transform: translate(-50%, -50%);
+  transition: background 0.25s, box-shadow 0.25s, transform 0.25s;
+}
+
+.focus-dot::before {
+  content: '';
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.25);
+  animation: none;
+}
+
+.focus-dot.active {
+  background: var(--blue);
+  border-color: #fff;
+  box-shadow: 0 0 0 4px var(--blue-glow), 0 0 16px rgba(27,95,255,0.5);
+  transform: translate(-50%, -50%) scale(1.25);
+}
+
+.focus-dot.active::before {
+  border-color: rgba(27,95,255,0.35);
+  animation: pulse-ring 1.8s ease-out infinite;
+}
+
+/* Etiqueta del punto de foco */
+.focus-label {
+  position: absolute;
+  left: 50%;
+  top: calc(100% + 8px);
+  transform: translateX(-50%);
+  background: var(--text-900);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 500;
+  padding: 3px 8px;
+  border-radius: 6px;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.focus-dot.active .focus-label {
+  opacity: 1;
+}
+
+/* ── SECCIÓN C — Gráfica ─────────────────────────────────── */
+.section-c {
+  background: var(--panel);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-panel);
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.graph-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.graph-label {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 13px;
+  color: var(--text-900);
+  letter-spacing: 0.5px;
+}
+
+.graph-unit {
+  font-size: 11px;
+  color: var(--text-300);
+}
+
+.graph-video {
+  width: 100%;
+  flex: 1;
+  min-height: 0;
+  border-radius: var(--radius-sm);
+  object-fit: cover;
+  display: none; /* se muestra solo cuando hay video cargado */
+}
+
+.graph-canvas {
+  width: 100%;
+  flex: 1;
+  min-height: 0;
+  border-radius: var(--radius-sm);
+  display: block;
+}
+
+/* ── SECCIÓN D — Navbar inferior ─────────────────────────── */
+.section-d {
+  height: var(--nav-h);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--panel);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  box-shadow: 0 -2px 16px rgba(13,20,33,0.07);
+  padding: 0 24px;
+}
+
+.model-nav {
+  display: flex;
+  gap: 8px;
+  background: var(--bg);
+  border-radius: 999px;
+  padding: 6px;
+  border: 1px solid var(--panel-dark);
+}
+
+.model-btn {
+  border: none;
+  background: transparent;
+  color: var(--text-500);
+  padding: 10px 22px;
+  border-radius: 999px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, font-weight 0.1s;
+  white-space: nowrap;
+}
+
+.model-btn:hover:not(.selected) {
+  color: var(--text-700);
+  background: rgba(255,255,255,0.5);
+}
+
+.model-btn.selected {
+  background: var(--text-900);
+  color: #fff;
+  font-weight: 600;
+}
+
+/* ── VISTA DETALLE DE EQUIPO (en sección A) ──────────────── */
+.detail-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  height: 100%;
+}
+
+.btn-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid var(--panel-dark);
+  background: var(--surface);
+  border-radius: var(--radius-sm);
+  padding: 7px 12px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-700);
+  cursor: pointer;
+  width: fit-content;
+  transition: background 0.2s, color 0.2s;
+}
+.btn-back:hover {
+  background: var(--text-900);
+  color: #fff;
+  border-color: var(--text-900);
+}
+.btn-back svg { width: 14px; height: 14px; }
+
+.detail-scheme {
+  width: 100%;
+  aspect-ratio: 16/9;
+  border-radius: var(--radius-md);
+  object-fit: contain;
+  background: var(--panel-dark);
+  border: 1px solid rgba(0,0,0,0.06);
+}
+
+/* Placeholder de imagen cuando no hay asset */
+.detail-scheme-placeholder {
+  width: 100%;
+  aspect-ratio: 16/9;
+  border-radius: var(--radius-md);
+  background: linear-gradient(135deg, var(--panel-dark) 0%, var(--bg) 100%);
+  border: 1px dashed var(--panel-dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 8px;
+  color: var(--text-300);
+  font-size: 12px;
+}
+
+.detail-scheme-placeholder svg {
+  width: 32px;
+  height: 32px;
+  opacity: 0.4;
+}
+
+.detail-long {
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--text-700);
+  font-weight: 300;
+}
+
+.detail-toggle-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--surface);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  border: 1px solid rgba(0,0,0,0.06);
+  margin-top: auto;
+  flex-shrink: 0;
+}
+
+.detail-toggle-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-700);
+}
+
+/* ── ANIMACIONES ─────────────────────────────────────────── */
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse-ring {
+  0%   { transform: scale(1); opacity: 0.6; }
+  100% { transform: scale(2.5); opacity: 0; }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.anim-fade {
+  animation: fadeIn 0.3s ease both;
+}
+
+/* ── UTILIDADES ──────────────────────────────────────────── */
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Placeholder render */
+.render-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  color: rgba(255,255,255,0.35);
+  font-family: 'Syne', sans-serif;
+  font-size: 13px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Data Centers Solution — Expo Screen</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <div class="app">
+
+    <!-- ═══════════════════════════════════════════
+         MAIN: Sección A (izq 1/3) + Right (der 2/3)
+    ═══════════════════════════════════════════ -->
+    <main class="main">
+
+      <!-- ─── SECCIÓN A ─── (izquierda, 1/3) -->
+      <aside class="section-a" id="sectionA" aria-label="Información del modelo y equipos">
+
+        <!-- Cabecera: título + descripción del modelo -->
+        <header class="a-header">
+          <div class="a-badge" id="aBadge">MODELO 1</div>
+          <h1 class="a-title" id="aTitle">Data Center<br>Standard</h1>
+          <p class="a-text" id="aText">Cargando información…</p>
+        </header>
+
+        <!-- Cuerpo intercambiable: lista de equipos o detalle de uno -->
+        <div class="a-body" id="aBody"></div>
+
+      </aside>
+
+      <!-- ─── DERECHA (2/3): B arriba, C abajo ─── -->
+      <section class="right-col">
+
+        <!-- SECCIÓN B — Render del data center -->
+        <section class="section-b" id="sectionB" aria-label="Render del data center">
+          <div class="render-wrap" id="renderWrap">
+
+            <!-- Logo empresa (esquina superior derecha) -->
+            <div class="render-logo">
+              <svg width="120" height="28" viewBox="0 0 120 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect width="14" height="14" rx="3" fill="white" fill-opacity="0.9"/>
+                <rect x="16" width="14" height="14" rx="3" fill="white" fill-opacity="0.6"/>
+                <rect y="16" width="14" height="12" rx="3" fill="white" fill-opacity="0.6"/>
+                <rect x="16" y="16" width="14" height="12" rx="3" fill="white" fill-opacity="0.9"/>
+                <text x="36" y="11" fill="white" font-family="Syne" font-weight="700" font-size="10" letter-spacing="1">POWER</text>
+                <text x="36" y="24" fill="white" font-family="Syne" font-weight="400" font-size="9" letter-spacing="2" fill-opacity="0.8">ELECTRONICS</text>
+              </svg>
+            </div>
+
+            <!-- Imagen del render -->
+            <img class="render-img" id="renderImg" src="" alt="Render 3D del data center activo" />
+
+            <!-- Overlay de puntos de foco -->
+            <div class="focus-layer" id="focusLayer" aria-hidden="true"></div>
+
+            <!-- Etiqueta del modelo activo en el render -->
+            <div class="render-tag" id="renderTag">Modelo 1</div>
+          </div>
+        </section>
+
+        <!-- SECCIÓN C — Gráfica / video en bucle -->
+        <section class="section-c" id="sectionC" aria-label="Gráfica del data center">
+          <div class="graph-header">
+            <span class="graph-label" id="graphLabel">Rendimiento energético</span>
+            <span class="graph-unit" id="graphUnit">kW · Modelo 1</span>
+          </div>
+          <!-- Video loop (reemplazar src con el .mp4 real) -->
+          <video class="graph-video" id="graphVideo" autoplay loop muted playsinline>
+            <source src="" type="video/mp4" />
+          </video>
+          <!-- Gráfica placeholder mientras no hay video -->
+          <canvas class="graph-canvas" id="graphCanvas" aria-hidden="true"></canvas>
+        </section>
+
+      </section><!-- /right-col -->
+
+    </main><!-- /main -->
+
+    <!-- ═══════════════════════════════════════════
+         SECCIÓN D — Navbar inferior de modelos
+    ═══════════════════════════════════════════ -->
+    <nav class="section-d" id="sectionD" aria-label="Selector de modelo">
+      <div class="model-nav" id="modelNav"></div>
+    </nav>
+
+  </div><!-- /app -->
+
+  <!-- Scripts: primero data, luego app -->
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+
+</body>
+</html>
