@@ -118,25 +118,39 @@ function renderSectionC(model) {
 
   // Si hay asset de vídeo real
   if (model.graph) {
-    // Cambiar la fuente del video y recargar
-    const source = dom.graphVideo.querySelector("source");
-    if (source) source.src = model.graph;
-    dom.graphVideo.load();
-    dom.graphVideo.play().catch(() => {
-      // En algunos kioscos el autoplay puede estar bloqueado
-      // Se muestra igualmente el canvas placeholder
-    });
+    // Soporta ambos casos: <video> y <img> en el contenedor de gráfica.
+    const isVideoEl = dom.graphVideo.tagName === "VIDEO";
 
-    // Mostrar vídeo si carga, sino canvas
-    dom.graphVideo.oncanplay = () => {
+    if (isVideoEl) {
+      const source = dom.graphVideo.querySelector("source");
+      if (source) source.src = model.graph;
+      else dom.graphVideo.src = model.graph;
+
+      dom.graphVideo.load();
+      dom.graphVideo.play().catch(() => {
+        // En algunos kioscos el autoplay puede estar bloqueado.
+      });
+
+      dom.graphVideo.oncanplay = () => {
+        dom.graphVideo.style.display = "block";
+        dom.graphCanvas.style.display = "none";
+      };
+      dom.graphVideo.onerror = () => {
+        dom.graphVideo.style.display = "none";
+        dom.graphCanvas.style.display = "block";
+        drawPlaceholderChart(dom.graphCanvas, model);
+      };
+    } else {
+      dom.graphVideo.src = model.graph;
       dom.graphVideo.style.display = "block";
       dom.graphCanvas.style.display = "none";
-    };
-    dom.graphVideo.onerror = () => {
-      dom.graphVideo.style.display = "none";
-      dom.graphCanvas.style.display = "block";
-      drawPlaceholderChart(dom.graphCanvas, model);
-    };
+
+      dom.graphVideo.onerror = () => {
+        dom.graphVideo.style.display = "none";
+        dom.graphCanvas.style.display = "block";
+        drawPlaceholderChart(dom.graphCanvas, model);
+      };
+    }
   } else {
     // Sin vídeo → dibujar gráfica demo con Canvas
     dom.graphVideo.style.display = "none";

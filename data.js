@@ -65,8 +65,8 @@ const MODELS = [
     description: "Diseñado para cargas de trabajo de alta densidad como HPC y AI. Incorpora sistemas de refrigeración líquida directa en rack y buses de CC de 800V para minimizar pérdidas de conversión en instalaciones superiores a 1 MW.",
     render: "./assets/renders/m2.webp",
     graph: "./assets/graphs/m2.mp4",
-    graphLabel: "Densidad de potencia por rack",
-    graphUnit: "kW/rack · Modelo 2",
+    graphLabel: "Densidad de potencia - titulo modelo gráfica 2",
+    graphUnit: "kW/rack · Modelo 2 - sub titulo gráfica 2 lineas",
     equipos: [
       {
         id: "m2-gpu",
