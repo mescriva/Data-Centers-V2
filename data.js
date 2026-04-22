@@ -15,12 +15,12 @@ const MODELS = [
   {
     id: "m1",
     name: "Data Center Standard",
-    shortName: "Modelo 1",
+    shortName: "Line Interactive",
     description: "Solución modular de entrada diseñada para cargas de trabajo convencionales. Ofrece alta disponibilidad con un balance óptimo entre coste y rendimiento, ideal para empresas que dan sus primeros pasos en infraestructura crítica.",
     render: "./assets/renders/m1.webp",
     graph: "./assets/graphs/m1.mp4",
     graphLabel: "Eficiencia energética",
-    graphUnit: "PUE · Modelo 1",
+    graphUnit: "PUE · Line Interactive",
     equipos: [
       {
         id: "m1-pcs",
@@ -57,16 +57,16 @@ const MODELS = [
     ]
   },
 
-  // ─── MODELO 2 — High Density ──────────────────────────
+  // ─── LOAD SMOOTHING CAPABILITIES — High Density ───────
   {
     id: "m2",
     name: "Data Center High Density",
-    shortName: "Modelo 2",
+    shortName: "Load Smoothing Capabilities",
     description: "Diseñado para cargas de trabajo de alta densidad como HPC y AI. Incorpora sistemas de refrigeración líquida directa en rack y buses de CC de 800V para minimizar pérdidas de conversión en instalaciones superiores a 1 MW.",
     render: "./assets/renders/m2.webp",
     graph: "./assets/graphs/m2.mp4",
     graphLabel: "Densidad de potencia - titulo modelo gráfica 2",
-    graphUnit: "kW/rack · Modelo 2 - sub titulo gráfica 2 lineas",
+    graphUnit: "kW/rack · Load Smoothing Capabilities - sub titulo gráfica 2 lineas",
     equipos: [
       {
         id: "m2-gpu",
