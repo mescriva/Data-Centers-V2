@@ -19,9 +19,8 @@
 // ── ESTADO GLOBAL ─────────────────────────────────────────
 // Todo el estado de la UI vive aquí. Sencillo y depurable.
 const state = {
-  modeloId:      MODELS[0].id,  // modelo seleccionado por defecto
-  activeEquip:   {},            // { [equipId]: boolean }  switch ON/OFF
-  detailEquipId: null           // si ≠ null → sección A muestra detalle
+  modeloId:    MODELS[0].id,  // modelo seleccionado por defecto
+  activeEquip: {}             // { [equipId]: boolean }  ON/OFF
 };
 
 
@@ -29,7 +28,6 @@ const state = {
 const $ = id => document.getElementById(id);
 
 const dom = {
-  aTitle:     $("aTitle"),
   aText:      $("aText"),
   aBadge:     $("aBadge"),
   aBody:      $("aBody"),
@@ -77,36 +75,20 @@ function renderSectionD() {
 }
 
 
-// ── RENDER: SECCIÓN B (render + puntos de foco) ───────────
-function renderSectionB(model) {
-  const currentSrc = dom.renderImg.src;
-  const newSrc     = model.render;
+// ── RENDER: SECCIÓN B (render fijo) ───────────────────────
+const RENDER_SRC = "./assets/renders/render-main.png";
 
-  // Si el render cambia, hacemos fade suave
-  if (currentSrc && !currentSrc.endsWith(newSrc)) {
-    dom.renderImg.classList.add("fading");
-    setTimeout(() => {
-      dom.renderImg.src = newSrc;
-      dom.renderImg.classList.remove("fading");
-    }, 250);
-  } else {
-    dom.renderImg.src = newSrc;
+function renderSectionB(model) {
+  // Imagen fija para todos los modelos
+  if (!dom.renderImg.src.endsWith("render-main.png")) {
+    dom.renderImg.src = RENDER_SRC;
   }
 
   // Etiqueta del modelo sobre el render
   dom.renderTag.textContent = model.shortName.toUpperCase();
 
-  // Puntos de foco (overlay sobre el render)
-  // Los puntos grises son inactivos, azules son activos
-  dom.focusLayer.innerHTML = model.equipos.map(eq => {
-    const activeClass = isOn(eq.id) ? "active" : "";
-    const x = eq.focus?.x ?? 50;
-    const y = eq.focus?.y ?? 50;
-    return `<span class="focus-dot ${activeClass}"
-                  style="left:${x}%; top:${y}%"
-                  title="${eq.title}">
-            </span>`;
-  }).join("");
+  // Sin nodos de foco
+  dom.focusLayer.innerHTML = "";
 }
 
 
@@ -241,7 +223,7 @@ function drawPlaceholderChart(canvas, model) {
     // Eje X: etiquetas de meses
     const meses = ["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"];
     ctx.fillStyle = "rgba(13,20,33,0.35)";
-    ctx.font = "10px 'DM Sans', sans-serif";
+    ctx.font = "10px 'Suisse Int\\'l', sans-serif";
     ctx.textAlign = "center";
     points.forEach((p, i) => {
       ctx.fillText(meses[i], p.x, H - 6);
@@ -256,44 +238,36 @@ function drawPlaceholderChart(canvas, model) {
 
 // ── RENDER: SECCIÓN A — LISTADO DE EQUIPOS ────────────────
 function renderSectionAList(model) {
-  // Cabecera
-  dom.aBadge.textContent  = model.shortName.toUpperCase();
-  dom.aTitle.textContent  = model.name;
-  dom.aText.textContent   = model.description;
+  // Cabecera: subtítulo (shortName del modelo) + descripción
+  dom.aBadge.textContent = model.shortName;
+  dom.aText.textContent  = model.description;
 
-  // Cards de equipos
+  const iconOn  = `<svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="7" cy="7" r="5.5"/><path d="M4.5 7l2 2 3-3"/></svg>`;
+  const iconOff = `<svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="7" cy="7" r="5.5"/><path d="M5 5l4 4M9 5l-4 4"/></svg>`;
+
   dom.aBody.innerHTML = model.equipos.map((eq, i) => {
-    const onClass = isOn(eq.id) ? "on" : "";
-    const cardActive = isOn(eq.id) ? "card--active" : "";
+    const on         = isOn(eq.id);
+    const cardActive = on ? "card--active" : "";
+    const labelClass = on ? "card-label--on" : "card-label--off";
+    const labelText  = on ? "Enabled" : "Disabled";
+    const labelIcon  = on ? iconOn : iconOff;
 
     return `
       <article class="card ${cardActive} anim-fade"
                data-equip="${eq.id}"
+               data-action="toggle"
                style="animation-delay: ${i * 0.06}s">
 
-        <!-- Información del equipo -->
-        <div class="card-info">
+        <!-- Fila superior: nombre + label estado -->
+        <div class="card-top">
           <div class="card-title">${eq.title}</div>
-          <div class="card-desc">${eq.short}</div>
+          <span class="card-label ${labelClass}" aria-label="${labelText}">
+            ${labelIcon}${labelText}
+          </span>
         </div>
 
-        <!-- Switch ON/OFF -->
-        <button class="switch ${onClass}"
-                data-action="toggle"
-                aria-label="${isOn(eq.id) ? "Desactivar" : "Activar"} ${eq.title}"
-                aria-pressed="${isOn(eq.id)}">
-        </button>
-
-        <!-- Botón de detalle -->
-        <button class="btn-detail"
-                data-action="detail"
-                aria-label="Ver detalle de ${eq.title}">
-          <!-- Icono flecha derecha -->
-          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"
-               stroke-linecap="round" stroke-linejoin="round">
-            <path d="M3 8h10M9 4l4 4-4 4"/>
-          </svg>
-        </button>
+        <!-- Descripción corta -->
+        <div class="card-desc">${eq.short}</div>
 
       </article>
     `;
@@ -301,76 +275,9 @@ function renderSectionAList(model) {
 }
 
 
-// ── RENDER: SECCIÓN A — DETALLE DE EQUIPO ────────────────
-function renderSectionADetail(model, equipId) {
-  const eq = model.equipos.find(e => e.id === equipId);
-  if (!eq) return;
-
-  // Actualizar cabecera con datos del equipo
-  dom.aBadge.textContent = model.shortName.toUpperCase();
-  dom.aTitle.textContent = eq.title;
-  dom.aText.textContent  = "";  // se mostrará en el body
-
-  // Contenido del detalle
-  dom.aBody.innerHTML = `
-    <div class="detail-wrap anim-fade">
-
-      <!-- Botón volver -->
-      <button class="btn-back" data-action="back">
-        <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8"
-             stroke-linecap="round" stroke-linejoin="round">
-          <path d="M11 7H3M7 3L3 7l4 4"/>
-        </svg>
-        Volver a equipos
-      </button>
-
-      <!-- Imagen esquema del equipo -->
-      ${eq.schemeImg
-        ? `<img class="detail-scheme"
-                src="${eq.schemeImg}"
-                alt="Esquema de ${eq.title}"
-                onerror="this.outerHTML=renderSchemePlaceholder('${eq.title}')" />`
-        : renderSchemePlaceholder(eq.title)
-      }
-
-      <!-- Descripción larga -->
-      <p class="detail-long">${eq.long}</p>
-
-      <!-- Toggle de activación (al fondo del panel) -->
-      <div class="detail-toggle-row">
-        <span class="detail-toggle-label">Activar en el data center</span>
-        <button class="switch ${isOn(eq.id) ? "on" : ""}"
-                data-action="toggle"
-                data-equip="${eq.id}"
-                aria-label="${isOn(eq.id) ? "Desactivar" : "Activar"} ${eq.title}"
-                aria-pressed="${isOn(eq.id)}">
-        </button>
-      </div>
-
-    </div>
-  `;
-}
-
-
-// Helper: HTML del placeholder de imagen de esquema
-function renderSchemePlaceholder(title) {
-  return `
-    <div class="detail-scheme-placeholder">
-      <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5">
-        <rect x="2" y="6" width="28" height="20" rx="3"/>
-        <circle cx="10" cy="16" r="3"/>
-        <path d="M17 13h8M17 16h6M17 19h8"/>
-      </svg>
-      <span>Esquema: ${title}</span>
-    </div>
-  `;
-}
 
 
 // ── RENDER GLOBAL ─────────────────────────────────────────
-// Un único punto de entrada que actualiza toda la UI.
-// Para MVP es suficiente — re-render completo es muy rápido
-// con el DOM que tenemos.
 function render() {
   const model = getModel();
   initEquipState(model);
@@ -378,21 +285,15 @@ function render() {
   renderSectionD();
   renderSectionB(model);
   renderSectionC(model);
-
-  if (state.detailEquipId) {
-    renderSectionADetail(model, state.detailEquipId);
-  } else {
-    renderSectionAList(model);
-  }
+  renderSectionAList(model);
 }
 
 
 // ── ACCIONES ──────────────────────────────────────────────
 
-/** Cambia el modelo activo y resetea la vista de detalle */
+/** Cambia el modelo activo */
 function setModel(modelId) {
-  state.modeloId    = modelId;
-  state.detailEquipId = null;
+  state.modeloId = modelId;
   render();
 }
 
@@ -402,62 +303,31 @@ function toggleEquip(equipId) {
   render();
 }
 
-/**
- * Abre la vista detalle de un equipo.
- * Activa automáticamente el switch para que el render
- * muestre el punto de foco azul.
- */
-function openDetail(equipId) {
-  state.activeEquip[equipId] = true;  // activar al entrar en detalle
-  state.detailEquipId        = equipId;
-  render();
-}
-
-/** Cierra el detalle y vuelve al listado */
-function closeDetail() {
-  state.detailEquipId = null;
-  render();
-}
-
 
 // ── DELEGACIÓN DE EVENTOS ─────────────────────────────────
-// Un único listener en el documento para toda la interacción.
-// Busca el botón más cercano y su data-action.
+// Listener único para toda la interacción. Soporta tanto
+// botones como la card completa (data-action en article).
 document.addEventListener("click", (ev) => {
-  const btn = ev.target.closest("button[data-action]");
-  if (!btn) return;
+  const target = ev.target.closest("[data-action]");
+  if (!target) return;
 
-  const action  = btn.dataset.action;
+  const action = target.dataset.action;
 
   // ① Cambiar modelo (Sección D)
   if (action === "setModel") {
-    const modelId = btn.dataset.model;
+    const modelId = target.dataset.model;
     if (modelId) setModel(modelId);
     return;
   }
 
-  // ② Activar/desactivar equipo (switch)
+  // ② Activar/desactivar equipo (card completa o switch en detalle)
   if (action === "toggle") {
-    // El equipId puede estar en el propio botón o en la card padre
-    const card    = btn.closest("[data-equip]");
-    const equipId = btn.dataset.equip || card?.dataset.equip;
+    const card    = target.closest("[data-equip]") ?? target;
+    const equipId = target.dataset.equip || card.dataset.equip;
     if (equipId) toggleEquip(equipId);
     return;
   }
 
-  // ③ Abrir detalle (flecha →)
-  if (action === "detail") {
-    const card    = btn.closest("[data-equip]");
-    const equipId = card?.dataset.equip;
-    if (equipId) openDetail(equipId);
-    return;
-  }
-
-  // ④ Volver al listado (← volver)
-  if (action === "back") {
-    closeDetail();
-    return;
-  }
 });
 
 

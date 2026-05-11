@@ -61,7 +61,7 @@ const MODELS = [
   {
     id: "m2",
     name: "Data Center High Density",
-    shortName: "Load Smoothing Capabilities",
+    shortName: "Double Conversion",
     description: "Diseñado para cargas de trabajo de alta densidad como HPC y AI. Incorpora sistemas de refrigeración líquida directa en rack y buses de CC de 800V para minimizar pérdidas de conversión en instalaciones superiores a 1 MW.",
     render: "./assets/renders/m2.webp",
     graph: "./assets/graphs/m2.mp4",
@@ -107,7 +107,7 @@ const MODELS = [
   {
     id: "m3",
     name: "Data Center Solar + BESS",
-    shortName: "Modelo 3",
+    shortName: "Load Sensing",
     description: "Modelo orientado a la sostenibilidad y autosuficiencia energética. Combina generación fotovoltaica de gran escala con un sistema BESS de segunda vida o LFP para alcanzar PUE inferiores a 1,2 y operación off-grid o near-grid.",
     render: "./assets/renders/m3.webp",
     graph: "./assets/graphs/m3.mp4",
@@ -153,7 +153,7 @@ const MODELS = [
   {
     id: "m4",
     name: "Data Center Edge",
-    shortName: "Modelo 4",
+    shortName: "OFF Grid: GT+ BESS BTM",
     description: "Solución compacta para despliegues en el borde de la red (edge computing), zonas remotas o plantas industriales. Diseñada para operar en contenedor con temperatura exterior de hasta 55 °C y sin personal técnico en sitio.",
     render: "./assets/renders/m4.webp",
     graph: "./assets/graphs/m4.mp4",
@@ -199,7 +199,7 @@ const MODELS = [
   {
     id: "m5",
     name: "Data Center Hyperscale",
-    shortName: "Modelo 5",
+    shortName: "Hybrid Load Sensing",
     description: "Infraestructura pensada para operadores cloud y proveedores de colocación de muy gran escala. Soporta potencias totales de 10 a 100 MW con arquitectura de bus CC de 1.500V y enfriamiento líquido directo en cada rack.",
     render: "./assets/renders/m5.webp",
     graph: "./assets/graphs/m5.mp4",
@@ -245,7 +245,7 @@ const MODELS = [
   {
     id: "m6",
     name: "Data Center Hybrid Colocation",
-    shortName: "Modelo 6",
+    shortName: "800 V Power Supply",
     description: "Modelo mixto que combina infraestructura propia con colocation de terceros. Permite a las empresas mantener sus datos críticos on-premise mientras optimizan costes cediendo capacidad sobrante a clientes colocados, con separación física y lógica garantizada.",
     render: "./assets/renders/m6.webp",
     graph: "./assets/graphs/m6.mp4",
