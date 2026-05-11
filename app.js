@@ -94,9 +94,15 @@ function renderSectionB(model) {
 
 // ── RENDER: SECCIÓN C (gráfica / video) ───────────────────
 function renderSectionC(model) {
-  // Actualizar etiquetas
+  // Actualizar etiqueta y leyenda
   dom.graphLabel.textContent = model.graphLabel || "Rendimiento energético";
-  dom.graphUnit.textContent  = model.graphUnit  || `kW · ${model.shortName}`;
+  const legendItems = (model.legend || []).map(item =>
+    `<span class="graph-legend-item">
+       <span class="graph-legend-dot" style="background:${item.color}"></span>
+       ${item.label}
+     </span>`
+  ).join("");
+  dom.graphUnit.innerHTML = legendItems || (model.graphUnit || `kW · ${model.shortName}`);
 
   // Si hay asset de vídeo real
   if (model.graph) {

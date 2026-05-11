@@ -21,6 +21,12 @@ const MODELS = [
     graph: "./assets/graphs/m1.mp4",
     graphLabel: "Eficiencia energética",
     graphUnit: "PUE · Line Interactive",
+    legend: [
+      { label: "Red eléctrica",  color: "#3033ff" },
+      { label: "Generación FV",  color: "#97d700" },
+      { label: "BESS",           color: "#FF8300" },
+      { label: "Consumo IT",     color: "#83919f" }
+    ],
     equipos: [
       {
         id: "m1-pcs",
@@ -67,6 +73,12 @@ const MODELS = [
     graph: "./assets/graphs/m2.mp4",
     graphLabel: "Densidad de potencia - titulo modelo gráfica 2",
     graphUnit: "kW/rack · Load Smoothing Capabilities - sub titulo gráfica 2 lineas",
+    legend: [
+      { label: "Red eléctrica",  color: "#3033ff" },
+      { label: "Generación FV",  color: "#97d700" },
+      { label: "BESS",           color: "#FF8300" },
+      { label: "Consumo IT",     color: "#83919f" }
+    ],
     equipos: [
       {
         id: "m2-gpu",
@@ -113,6 +125,12 @@ const MODELS = [
     graph: "./assets/graphs/m3.mp4",
     graphLabel: "Generación solar vs. consumo",
     graphUnit: "MWh · Modelo 3",
+    legend: [
+      { label: "Red eléctrica",  color: "#3033ff" },
+      { label: "Generación FV",  color: "#97d700" },
+      { label: "BESS",           color: "#FF8300" },
+      { label: "Consumo IT",     color: "#83919f" }
+    ],
     equipos: [
       {
         id: "m3-solar",
@@ -159,6 +177,12 @@ const MODELS = [
     graph: "./assets/graphs/m4.mp4",
     graphLabel: "Latencia de red edge vs. cloud",
     graphUnit: "ms · Modelo 4",
+    legend: [
+      { label: "Red eléctrica",  color: "#3033ff" },
+      { label: "Generación FV",  color: "#97d700" },
+      { label: "BESS",           color: "#FF8300" },
+      { label: "Consumo IT",     color: "#83919f" }
+    ],
     equipos: [
       {
         id: "m4-container",
@@ -205,6 +229,12 @@ const MODELS = [
     graph: "./assets/graphs/m5.mp4",
     graphLabel: "Potencia total instalada",
     graphUnit: "MW · Modelo 5",
+    legend: [
+      { label: "Red eléctrica",  color: "#3033ff" },
+      { label: "Generación FV",  color: "#97d700" },
+      { label: "BESS",           color: "#FF8300" },
+      { label: "Consumo IT",     color: "#83919f" }
+    ],
     equipos: [
       {
         id: "m5-xmv670",
@@ -251,6 +281,12 @@ const MODELS = [
     graph: "./assets/graphs/m6.mp4",
     graphLabel: "Utilización de capacidad",
     graphUnit: "% ocupación · Modelo 6",
+    legend: [
+      { label: "Red eléctrica",  color: "#3033ff" },
+      { label: "Generación FV",  color: "#97d700" },
+      { label: "BESS",           color: "#FF8300" },
+      { label: "Consumo IT",     color: "#83919f" }
+    ],
     equipos: [
       {
         id: "m6-zone-priv",
