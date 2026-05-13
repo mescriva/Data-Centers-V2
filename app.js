@@ -106,7 +106,7 @@ function renderSectionC(model) {
 
   // Placeholder SVG de color sólido por modelo (2160×480, 9:2).
   // Cuando lleguen los .mp4 reales, devolver al flujo de video.
-  dom.graphVideo.style.display = "none";
+  // el naming para recorrer el ARRAY y pintar cada img debe ser m + (id) + .png  dom.graphVideo.style.display = "none";
   dom.graphImg.style.display = "block";
   dom.graphImg.src = `./assets/graphs/${model.id}.png`; /* TODO CHANGE THE NAMES OF PLACEHOLDER BCS MODEL IS "m(n).svg" al png*/
 }
