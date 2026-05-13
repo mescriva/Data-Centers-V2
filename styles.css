@@ -302,24 +302,22 @@ html, body {
 
 /* ── SECCIÓN C — Gráfica ─────────────────────────────────── */
 .section-c {
-  background: var(--panel);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-radius: var(--radius-lg);
-  box-shadow: 0 12px 40px 0 rgba(0,0,0,0.08), var(--inset-panel);
+  /* box-shadow: 0 12px 40px 0 rgba(0,0,0,0.08), var(--inset-panel); */
   padding: 18px 22px;
   display: flex;
   flex-direction: column;
+  width: 100%;
   /* gap 5px → el hueco resultante del canvas/img queda en 1065×237 (9:2 exacto) */
-  gap: 5px;
+  gap: auto;
   min-height: 0;
   overflow: hidden;
 }
 
 .graph-header {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
+  gap:16px; /* padding definido en figma */
+  align-items: start;
   flex-shrink: 0;
 }
 

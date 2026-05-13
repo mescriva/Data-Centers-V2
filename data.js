@@ -305,6 +305,22 @@ const MODELS = [
         focus: { x: 65, y: 45 }
       },
       {
+        id: "m6-zone-colo",
+        title: "Zona Colocation",
+        short: "Espacio comercializable con SLA de disponibilidad 99,999%.",
+        long: "El área de colocation ofrece slots de medio rack, rack completo o jaulas de varios racks con alimentación redundante Tier III. La monitorización de consumo por cliente y la facturación automatizada por kWh real facilitan el modelo de negocio como operador neutral de colocation.",
+        schemeImg: "./assets/schemes/zone_colo.webp",
+        focus: { x: 65, y: 45 }
+      },
+      {
+        id: "m6-zone-colo",
+        title: "Zona Colocation",
+        short: "Espacio comercializable con SLA de disponibilidad 99,999%.",
+        long: "El área de colocation ofrece slots de medio rack, rack completo o jaulas de varios racks con alimentación redundante Tier III. La monitorización de consumo por cliente y la facturación automatizada por kWh real facilitan el modelo de negocio como operador neutral de colocation.",
+        schemeImg: "./assets/schemes/zone_colo.webp",
+        focus: { x: 65, y: 45 }
+      },
+      {
         id: "m6-noc",
         title: "NOC — Network Operations Center",
         short: "Centro de operaciones de red con monitorización 24/7.",
