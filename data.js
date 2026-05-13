@@ -19,13 +19,12 @@ const MODELS = [
     description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor, lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor, lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.",
     render: "./assets/renders/m1.webp",
     graph: "./assets/graphs/m1.mp4", /* TODO CHANGE THIS GRAPH FOR MP4 LOOP video*/
-    graphLabel: "Eficiencia energética",
+    graphLabel: "Line Interactive Chart",
     graphUnit: "PUE · Line Interactive",
     legend: [
-      { label: "Red eléctrica",  color: "#3033ff" },
-      { label: "Generación FV",  color: "#97d700" },
-      { label: "BESS",           color: "#FF8300" },
-      { label: "Consumo IT",     color: "#83919f" }
+      { label: "lorem ipsum",   color: "#3033ff" },
+      { label: "lorem ipsum",   color: "#97d700" },
+      { label: "lorem ipsum",   color: "#FF8300" }
     ],
     equipos: [
       {
@@ -47,13 +46,12 @@ const MODELS = [
     description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor, lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor, lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.",
     render: "./assets/renders/m2.webp",
     graph: "./assets/graphs/m2.mp4",
-    graphLabel: "Densidad de potencia - titulo modelo gráfica 2",
+    graphLabel: "Double Conversion Chart",
     graphUnit: "kW/rack · Load Smoothing Capabilities - sub titulo gráfica 2 lineas",
     legend: [
-      { label: "Red eléctrica",  color: "#3033ff" },
-      { label: "Generación FV",  color: "#97d700" },
-      { label: "BESS",           color: "#FF8300" },
-      { label: "Consumo IT",     color: "#83919f" }
+      { label: "lorem ipsum",   color: "#3033ff" },
+      { label: "lorem ipsum",  color: "#97d700" },
+      { label: "lorem ipsum",    color: "#FF8300" }
     ],
     equipos: [
       {
@@ -78,10 +76,9 @@ const MODELS = [
     graphLabel: "Generación solar vs. consumo",
     graphUnit: "MWh · Modelo 3",
     legend: [
-      { label: "Red eléctrica",  color: "#3033ff" },
-      { label: "Generación FV",  color: "#97d700" },
-      { label: "BESS",           color: "#FF8300" },
-      { label: "Consumo IT",     color: "#83919f" }
+      { label: "lorem ipsum",  color: "#3033ff" },
+      { label: "lorem ipsum",   color: "#97d700" },
+      { label: "lorem ipsum",  color: "#FF8300" }
     ],
     equipos: [
       {
@@ -111,13 +108,12 @@ const MODELS = [
     description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor, lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor, lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.",
     render: "./assets/renders/m4.webp",
     graph: "./assets/graphs/m4.mp4",
-    graphLabel: "Latencia de red edge vs. cloud",
+    graphLabel: "OFF Grid: GT+ BESS BTM Chart",
     graphUnit: "ms · Modelo 4",
-    legend: [
-      { label: "Red eléctrica",  color: "#3033ff" },
-      { label: "Generación FV",  color: "#97d700" },
-      { label: "BESS",           color: "#FF8300" },
-      { label: "Consumo IT",     color: "#83919f" }
+     legend: [
+      { label: "lorem ipsum",  color: "#3033ff" },
+      { label: "lorem ipsum",   color: "#97d700" },
+      { label: "lorem ipsum",  color: "#FF8300" }
     ],
     equipos: [
       {
@@ -139,13 +135,12 @@ const MODELS = [
     description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor, lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor, lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.",
     render: "./assets/renders/m5.webp",
     graph: "./assets/graphs/m5.mp4",
-    graphLabel: "Potencia total instalada",
+    graphLabel: "Hybrid Load Sensing Chart",
     graphUnit: "MW · Modelo 5",
-    legend: [
-      { label: "Red eléctrica",  color: "#3033ff" },
-      { label: "Generación FV",  color: "#97d700" },
-      { label: "BESS",           color: "#FF8300" },
-      { label: "Consumo IT",     color: "#83919f" }
+     legend: [
+      { label: "lorem ipsum",  color: "#3033ff" },
+      { label: "lorem ipsum",   color: "#97d700" },
+      { label: "lorem ipsum",  color: "#FF8300" }
     ],
     equipos: [
       {
@@ -175,13 +170,12 @@ const MODELS = [
     description: "Modelo mixto que combina infraestructura propia con colocation de terceros. Permite a las empresas mantener sus datos críticos on-premise mientras optimizan costes cediendo capacidad sobrante a clientes colocados, con separación física y lógica garantizada.",
     render: "./assets/renders/m6.webp",
     graph: "./assets/graphs/m6.mp4",
-    graphLabel: "Utilización de capacidad",
+    graphLabel: "800 V Power Supply Chart",
     graphUnit: "% ocupación · Modelo 6",
-    legend: [
-      { label: "Red eléctrica",  color: "#3033ff" },
-      { label: "Generación FV",  color: "#97d700" },
-      { label: "BESS",           color: "#FF8300" },
-      { label: "Consumo IT",     color: "#83919f" }
+     legend: [
+      { label: "lorem ipsum",  color: "#3033ff" },
+      { label: "lorem ipsum",   color: "#97d700" },
+      { label: "lorem ipsum",  color: "#FF8300" }
     ],
     equipos: [
       {
