@@ -124,8 +124,8 @@ function renderSectionAList(model) {
   dom.aBody.innerHTML = model.equipos.map((eq, i) => {
     const on         = isOn(eq.id);
     const cardActive = on ? "card--active" : "";
-    const labelText  = on ? "Enabled" : "Disabled";
-    const labelIcon  = on ? iconOn : iconOff;
+    /* const labelText  = on ? "Enabled" : "Disabled";
+    const labelIcon  = on ? iconOn : iconOff;  de momento no hay interaccion*/
 
     return `
       <article class="card ${cardActive} anim-fade"
@@ -133,15 +133,14 @@ function renderSectionAList(model) {
                data-action="toggle"
                style="animation-delay: ${i * 0.06}s">
 
-        <!-- Fila superior: nombre + label estado -->
-        <div class="card-top">
+        <!-- columna izquierda: 312px titulo + label estado -->
+        <div class="card-left">
           <div class="card-title">${eq.title}</div>
           </span>
         </div>
 
-        <!-- Descripción corta -->
+        <!-- columna derecha 1fr: descripción -->
         <div class="card-desc">${eq.short}</div>
-
       </article>
     `;
   }).join("");
