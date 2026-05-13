@@ -308,7 +308,6 @@ html, body {
   position: relative;
   background: var(--render-bg);
   width: 100%;
-  
 }
 
 .render-wrap {
@@ -322,8 +321,6 @@ html, body {
 .render-img {
   width: 100%;
   height: auto;
-  aspect-ratio: 16 / 9;
-  object-fit: cover;
   object-position: center;
   display: block;
   transition: opacity 0.4s ease;
