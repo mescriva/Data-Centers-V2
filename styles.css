@@ -292,11 +292,11 @@ html, body {
 
 
 
-/* ── SECCIÓN DERECHA (ahora columna izquierda: render + gráfica) */
+/* ── SECCIÓN DERECHA (ahora columna izquierda: render solo */
 .right-col {
   display: grid;
-  /* B se dimensiona por su aspect-ratio (16:9). C ocupa el resto. */
-  grid-template-rows: auto 1fr;
+  /* B  ocupará 2/3 de la pantalla y 1/3 será para info y gráfica*/
+  grid-template-rows: 2fr 1fr;
   gap: var(--gap);
   min-height: 0;
 }
@@ -308,6 +308,8 @@ html, body {
   position: relative;
   background: var(--render-bg);
   width: 100%;
+  height: 100%;
+  min-height: 0;
 }
 
 .render-wrap {
@@ -320,7 +322,8 @@ html, body {
 /* Render 16:9 (img nativa 2048x1152) — ancho al 100% del contenedor, alto derivado de la proporción */
 .render-img {
   width: 100%;
-  height: auto;
+  height: 100%;
+  object-fit: cover; /* para encajar el render en el contenedor manteniendo la proporción de 16:9 en vez de 17:9*/
   object-position: center;
   display: block;
   transition: opacity 0.4s ease;
