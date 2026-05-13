@@ -106,7 +106,7 @@ function renderSectionC(model) {
 
   // Placeholder SVG de color sólido por modelo (2160×480, 9:2).
   // Cuando lleguen los .mp4 reales, devolver al flujo de video.
-  dom.graphVideo.style.display = "none";
+  // el naming para recorrer el ARRAY y pintar cada img debe ser m + (id) + .png  dom.graphVideo.style.display = "none";
   dom.graphImg.style.display = "block";
   dom.graphImg.src = `./assets/graphs/${model.id}.png`; /* TODO CHANGE THE NAMES OF PLACEHOLDER BCS MODEL IS "m(n).svg" al png*/
 }
@@ -124,9 +124,8 @@ function renderSectionAList(model) {
   dom.aBody.innerHTML = model.equipos.map((eq, i) => {
     const on         = isOn(eq.id);
     const cardActive = on ? "card--active" : "";
-    const labelClass = on ? "card-label--on" : "card-label--off";
-    const labelText  = on ? "Enabled" : "Disabled";
-    const labelIcon  = on ? iconOn : iconOff;
+    /* const labelText  = on ? "Enabled" : "Disabled";
+    const labelIcon  = on ? iconOn : iconOff;  de momento no hay interaccion*/
 
     return `
       <article class="card ${cardActive} anim-fade"
@@ -134,17 +133,14 @@ function renderSectionAList(model) {
                data-action="toggle"
                style="animation-delay: ${i * 0.06}s">
 
-        <!-- Fila superior: nombre + label estado -->
-        <div class="card-top">
+        <!-- columna izquierda: 312px titulo + label estado -->
+        <div class="card-left">
           <div class="card-title">${eq.title}</div>
-          <span class="card-label ${labelClass}" aria-label="${labelText}">
-            ${labelIcon}${labelText}
           </span>
         </div>
 
-        <!-- Descripción corta -->
+        <!-- columna derecha 1fr: descripción -->
         <div class="card-desc">${eq.short}</div>
-
       </article>
     `;
   }).join("");

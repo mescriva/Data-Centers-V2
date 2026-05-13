@@ -94,10 +94,10 @@ html, body {
   padding-bottom: 0;
 }
 
-/* 3/5 = render+gráfica (izquierda)  |  2/5 = info+cards (derecha) */
+/*  El render tiene una proporcion de 5:4 y el resto será ocupado por la info+grafica */
 .main {
   display: grid;
-  grid-template-columns: 3fr 2fr;
+  grid-template-columns: 1182px 1fr;
   gap: var(--gap);
   min-height: 0;
 }
@@ -115,10 +115,10 @@ html, body {
   box-shadow: 0 12px 40px 0 rgba(0,0,0,0.08), var(--inset-panel);
   display: flex;
   flex-direction: column;
-  overflow-y: auto;
-  overflow-x: visible;
+  overflow:hidden;
   padding: 32px 28px;
   gap: 20px;
+  align-items: stretch;
 }
 
 /* ── Cabecera A ── */
@@ -128,7 +128,7 @@ html, body {
   flex-direction: column;
   gap: 10px;
   padding-bottom: 20px;
-  border-bottom: 1px solid var(--panel-dark);
+  /*  border-bottom: 1px solid var(--panel-dark);  linea divisoria entre descripcion y equipos*/
   position: sticky;
   top: 0;
   z-index: 1;
@@ -188,6 +188,7 @@ html, body {
   display: flex;
   flex-direction: column;
   gap: 10px;
+  overflow: hidden;
 }
 
 .a-body::-webkit-scrollbar { width: 4px; }
@@ -199,47 +200,22 @@ html, body {
 
 /* ── CARDS DE EQUIPOS ─────────────────────────────────────── */
 .card {
-  background: var(--surface);
-  border-radius: var(--radius-md);
-  padding: 16px 18px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  cursor: pointer;
-  box-shadow: var(--shadow-card), var(--inset-panel);
-  transition: background 0.2s, box-shadow 0.2s, transform 0.15s;
-  animation: slideIn 0.25s ease both;
-  user-select: none;
+  align-items: start; 
+  display: grid;
+  width: 100%;
+  padding: 16px;
+  grid-template-columns: 212px 1fr; /* 2 columnas: título+label, descripción */
+  column-gap: 64px; /* espacio entre título y descripción */;
+  border-bottom: 1px solid var(--panel-dark); /* línea sutil para separar cards */
+  /* box-shadow: var(--shadow-card), var(--inset-panel);  TODO: when card is active no-active mode*/
 }
 
-.card:hover {
-  background: var(--surface-hover);
-  transform: translateY(-1px);
-  box-shadow: 0 16px 40px rgba(0,0,0,0.12), var(--inset-panel);
-}
-
-/* Card activa: fondo azul tenue + inner shadow neon */
-.card.card--active {
-  background: var(--blue-light);
-  box-shadow: var(--shadow-card), var(--inset-active);
-}
-
-.card.card--active:hover {
-  background: rgba(214,214,255,0.65);
-  box-shadow: 0 16px 40px rgba(0,0,0,0.12), var(--inset-active);
-}
-
-/* Fila superior: título + label */
-.card-top {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
+.card-left {
+  min-width: 0;
 }
 
 .card-title {
-  font-family: 'Suisse Int\'l', sans-serif;
-  font-weight: 450;   /* Book */
+  font-weight: 450;
   font-size: 14px;
   color: var(--text-900);
   white-space: nowrap;
@@ -248,55 +224,40 @@ html, body {
   min-width: 0;
 }
 
-/* Label Enabled / Disabled */
-.card-label {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  font-size: 11px;
-  font-weight: 400;
-  padding: 3px 10px 3px 8px;
-  border-radius: var(--radius-pill);
-  white-space: nowrap;
-  flex-shrink: 0;
-  transition: background 0.2s, color 0.2s;
-}
-
-.card-label svg {
-  width: 12px;
-  height: 12px;
-  flex-shrink: 0;
-}
-
-.card-label--on {
-  background: var(--blue-100);
-  color: var(--blue);
-}
-
-.card-label--off {
-  background: rgba(131,145,159,0.12);
-  color: var(--text-500);
-}
-
-/* Descripción corta */
 .card-desc {
-  font-size: 12px;
+  font-size: 11px;
+  line-height: 1.4;
   color: var(--text-500);
   font-weight: 400;
-  line-height: 1.5;
+  min-width: 0;
+  white-space: normal;
 }
 
-.card--active .card-desc {
-  color: #353e44;
+/* Fila superior: título + label */
+.card-top {
+  display: flex;
+  align-items: start;
+  width: 312px;
+}
+
+.card-title {
+  font-family: 'Suisse Int\'l', sans-serif;
+  font-weight: 450;   /* Book */
+  font-size: 14px;
+  color: var(--text-900);
+  white-space: nowrap;
+/*  overflow: hidden;
+  text-overflow: ellipsis; 
+  width: max-content; Define un ancho fijo para el titulo, +64px de gap y luego aplica la descripción */
+
 }
 
 
-
-/* ── SECCIÓN DERECHA (ahora columna izquierda: render + gráfica) */
+/* ── SECCIÓN DERECHA (ahora columna izquierda: render solo */
 .right-col {
   display: grid;
-  /* B se dimensiona por su aspect-ratio (16:9). C ocupa el resto. */
-  grid-template-rows: auto 1fr;
+  /* B  ocupará la totalidad de la columna izquierda, con tamaño fijo*/
+  grid-template-rows: 1fr;
   gap: var(--gap);
   min-height: 0;
 }
@@ -308,7 +269,8 @@ html, body {
   position: relative;
   background: var(--render-bg);
   width: 100%;
-  aspect-ratio: 16 / 9;
+  height: 100%;
+  min-height: 0;
 }
 
 .render-wrap {
@@ -316,14 +278,14 @@ html, body {
   width: 100%;
   height: 100%;
   overflow: hidden;
+  min-height: 0;
 }
 
 /* Render 16:9 (img nativa 2048x1152) — ancho al 100% del contenedor, alto derivado de la proporción */
 .render-img {
   width: 100%;
-  height: auto;
-  aspect-ratio: 16 / 9;
-  object-fit: cover;
+  height: 100%;
+  object-fit: contain; /* el render se hará en 5:4 // se cambia a contain porque es fijo si no cover */
   object-position: center;
   display: block;
   transition: opacity 0.4s ease;
@@ -340,24 +302,22 @@ html, body {
 
 /* ── SECCIÓN C — Gráfica ─────────────────────────────────── */
 .section-c {
-  background: var(--panel);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-radius: var(--radius-lg);
-  box-shadow: 0 12px 40px 0 rgba(0,0,0,0.08), var(--inset-panel);
+  /* box-shadow: 0 12px 40px 0 rgba(0,0,0,0.08), var(--inset-panel); */
   padding: 18px 22px;
   display: flex;
   flex-direction: column;
+  width: 100%;
   /* gap 5px → el hueco resultante del canvas/img queda en 1065×237 (9:2 exacto) */
-  gap: 5px;
+  gap: auto;
   min-height: 0;
   overflow: hidden;
 }
 
 .graph-header {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
+  gap:16px; /* padding definido en figma */
+  align-items: start;
   flex-shrink: 0;
 }
 
