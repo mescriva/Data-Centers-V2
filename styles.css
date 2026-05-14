@@ -111,7 +111,7 @@ html, body {
   background: var(--panel);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-md);
   box-shadow: 0 12px 40px 0 rgba(0,0,0,0.08), var(--inset-panel);
   display: flex;
   flex-direction: column;
@@ -160,8 +160,8 @@ html, body {
 /* Subtítulo: shortName del modelo activo */
 .a-badge {
   font-family: 'Suisse Int\'l', sans-serif;
-  font-weight: 450;   /* Book */
-  font-size: 24px;
+  font-weight: 430;  
+  font-size: 20px;
   letter-spacing: 0;
   color: var(--text-900);
   border: none;
@@ -190,19 +190,20 @@ html, body {
   overflow: hidden;
 }
 
-.a-body::-webkit-scrollbar { width: 4px; }
+/* .a-body::-webkit-scrollbar { width: 4px; } */
 /* .a-body::-webkit-scrollbar-track { background: transparent; } */
-.a-body::-webkit-scrollbar-thumb {
+/* .a-body::-webkit-scrollbar-thumb {
   background: var(--panel-dark);
   border-radius: 4px;
-}
+} */
 
 /* ── CARDS DE EQUIPOS ─────────────────────────────────────── */
 .card {
   align-items: start; 
   display: grid;
   width: 100%;
-  padding: 16px;
+  padding: 16px; /*espacio general entre el contenido de cada equipo*/
+  padding-left: 0; /* para no tener espacio a la izquierda y conseguir una alineación correcta con los titulos y la descripción principal del datacenter*/
   grid-template-columns: 150px 1fr; /* 2 columnas: título+label, descripción */
   column-gap: 32px; /* espacio entre título y descripción */;
   border-bottom: 1px solid var(--panel-dark); /* línea sutil para separar cards */
@@ -210,14 +211,6 @@ html, body {
 }
 
 .card-left {
-  min-width: 0;
-}
-
-.card-title {
-  font-weight: 450;
-  font-size: 14px;
-  color: var(--text-900);
-  white-space: normal;
   min-width: 0;
 }
 
@@ -239,16 +232,15 @@ html, body {
 
 .card-title {
   font-family: 'Suisse Int\'l', sans-serif;
-  font-weight: 450;   /* Book */
+  font-weight: 400;   /* Book */
   font-size: 14px;
   color: var(--text-900);
   white-space: normal; /* no wrap para el titulo en 1 sola linea */
 /*  overflow: hidden;
   text-overflow: ellipsis; 
   width: max-content; Define un ancho fijo para el titulo, +64px de gap y luego aplica la descripción */
-
+  min-width: 0;
 }
-
 
 /* ── SECCIÓN DERECHA (ahora columna izquierda: render solo */
 .right-col {
@@ -261,7 +253,7 @@ html, body {
 
 /* ── SECCIÓN B — Render ──────────────────────────────────── */
 .section-b {
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-md);
   overflow: hidden;
   position: relative;
   background: var(--render-bg);
@@ -456,7 +448,7 @@ html, body {
   to   { opacity: 1; }
 }
 
-.anim-fade { animation: fadeIn 0.3s ease both; }
+/* .anim-fade { animation: fadeIn 0.3s ease both; } */
 
 /* ── UTILIDADES ──────────────────────────────────────────── */
 .sr-only {
