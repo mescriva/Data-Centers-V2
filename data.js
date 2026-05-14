@@ -213,8 +213,8 @@ const MODELS = [
       {
         id: "m6-noc",
         title: "XMV670 & XMV670K",
-        short: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor, lorem ipsum dolor sit amet,",
-        long: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor, lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.",
+        short: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor,consectetur adipiscing elit, sed do eiusmod tempor,consectetur adipiscing elit, sed do eiusmod tempor,consectetur adipiscing elit, sed do eiusmod tempor,consectetur adipiscing elit, sed do eiusmod tempor, lorem ipsum dolor sit amet,",
+        long: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor,consectetur adipiscing elit, sed do eiusmod tempor,consectetur adipiscing elit, sed do eiusmod tempor,consectetur adipiscing elit, sed do eiusmod tempor, lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.",
         schemeImg: "./assets/schemes/noc.webp",
         focus: { x: 45, y: 20 }
       },
