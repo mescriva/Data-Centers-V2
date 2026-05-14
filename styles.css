@@ -202,7 +202,7 @@ html, body {
   align-items: start; 
   display: grid;
   width: 100%;
-  padding: 16px; /*espacio general entre el contenido de cada equipo*/
+  padding: 12px; /*espacio general entre el contenido de cada equipo*/
   padding-left: 0; /* para no tener espacio a la izquierda y conseguir una alineación correcta con los titulos y la descripción principal del datacenter*/
   grid-template-columns: 150px 1fr; /* 2 columnas: título+label, descripción */
   column-gap: 32px; /* espacio entre título y descripción */;
