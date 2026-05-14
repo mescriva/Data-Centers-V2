@@ -205,8 +205,8 @@ const MODELS = [
       {
         id: "m6-zone-colo",
         title: "DC/DC Converter",
-        short: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor, lorem ipsum dolor sit amet,",
-        long: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor, lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.",
+        short: "Lorem ipsum dolor sit amet, consectetur arem ipsum dolor sit ametpsum dolor m dolor sit sed do eiusmod tempor, lorem ipsum ",
+        long: "Lorem ipsum dolor sit amet, psum dolor sit amet,  consectetur adipiscing elit, sed do eiusmod tempor.",
         schemeImg: "./assets/schemes/zone_colo.webp",
         focus: { x: 65, y: 45 }
       },
