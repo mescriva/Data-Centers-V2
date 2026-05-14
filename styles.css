@@ -126,8 +126,8 @@ html, body {
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  padding-bottom: 20px;
+  /* gap: 32px; */
+  /* padding-bottom: 20px; */
   /*  border-bottom: 1px solid var(--panel-dark);  linea divisoria entre descripcion y equipos*/
   position: sticky;
   top: 0;
@@ -161,12 +161,12 @@ html, body {
 .a-badge {
   font-family: 'Suisse Int\'l', sans-serif;
   font-weight: 450;   /* Book */
-  font-size: 16px;
+  font-size: 24px;
   letter-spacing: 0;
   color: var(--text-900);
-  background: none;
   border: none;
-  padding: 0;
+  padding-top: 32px;
+  padding-bottom: 8px;
   border-radius: 0;
   width: auto;
   transition: color 0.25s;
@@ -187,12 +187,11 @@ html, body {
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 10px;
   overflow: hidden;
 }
 
 .a-body::-webkit-scrollbar { width: 4px; }
-.a-body::-webkit-scrollbar-track { background: transparent; }
+/* .a-body::-webkit-scrollbar-track { background: transparent; } */
 .a-body::-webkit-scrollbar-thumb {
   background: var(--panel-dark);
   border-radius: 4px;
@@ -204,8 +203,8 @@ html, body {
   display: grid;
   width: 100%;
   padding: 16px;
-  grid-template-columns: 212px 1fr; /* 2 columnas: título+label, descripción */
-  column-gap: 64px; /* espacio entre título y descripción */;
+  grid-template-columns: 150px 1fr; /* 2 columnas: título+label, descripción */
+  column-gap: 32px; /* espacio entre título y descripción */;
   border-bottom: 1px solid var(--panel-dark); /* línea sutil para separar cards */
   /* box-shadow: var(--shadow-card), var(--inset-panel);  TODO: when card is active no-active mode*/
 }
@@ -218,14 +217,12 @@ html, body {
   font-weight: 450;
   font-size: 14px;
   color: var(--text-900);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  white-space: normal;
   min-width: 0;
 }
 
 .card-desc {
-  font-size: 11px;
+  font-size: 12.5px;
   line-height: 1.4;
   color: var(--text-500);
   font-weight: 400;
@@ -245,7 +242,7 @@ html, body {
   font-weight: 450;   /* Book */
   font-size: 14px;
   color: var(--text-900);
-  white-space: nowrap;
+  white-space: normal; /* no wrap para el titulo en 1 sola linea */
 /*  overflow: hidden;
   text-overflow: ellipsis; 
   width: max-content; Define un ancho fijo para el titulo, +64px de gap y luego aplica la descripción */
