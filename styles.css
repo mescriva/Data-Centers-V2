@@ -292,7 +292,6 @@ html, body {
 /* ── SECCIÓN C — Gráfica ─────────────────────────────────── */
 .section-c {
   /* box-shadow: 0 12px 40px 0 rgba(0,0,0,0.08), var(--inset-panel); */
-  padding: 18px 22px;
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -305,15 +304,16 @@ html, body {
 .graph-header {
   display: flex;
   flex-direction: column;
-  gap:16px; /* padding definido en figma */
+  gap:8px; /* padding definido en figma */
   align-items: start;
   flex-shrink: 0;
+  padding-bottom: 32px;
 }
 
 .graph-label {
   font-family: 'Suisse Int\'l', sans-serif;
   font-weight: 450;   /* Book */
-  font-size: 14px;
+  font-size: 18px;
   color: var(--text-900);
 }
 
