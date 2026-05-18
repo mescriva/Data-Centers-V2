@@ -136,7 +136,8 @@ const MODELS = [
     id: "m5",
     name: "Data Center Hyperscale",
     shortName: "Hybrid Load Sensing",
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor, lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor, lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.",
+    description: "Hybrid Load Sensing uses an external control device to measure real-time load demand and send power references to the grid-forming inverter.",
+    description2: "This solution helps minimize grid consumption, reduce significant power peaks, and achieve performance close to line-interactive systems without the need for a choke.",
     render: "./assets/renders/m5.webp",
     graph: "./assets/graphs/m5.mp4",
     graphLabel: "Hybrid Load Sensing Chart",
@@ -150,16 +151,16 @@ const MODELS = [
       {
         id: "m5-xmv670",
         title: "Power Plant Controller",
-        short: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor, lorem ipsum dolor sit amet,",
-        long: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor, lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.",
+        short: "Measures real-time load demand and sends power references to coordinate the inverter response.",
+        long: "Measures real-time load demand and sends power references to coordinate the inverter response, ensuring optimal performance and efficiency.",
         schemeImg: "./assets/schemes/xmv670.webp",
         focus: { x: 52, y: 48 }
       },
       {
         id: "m5-liquid",
          title: "PCSM & Multi PCSM Battery Inverter",
-        short: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor, lorem ipsum dolor sit amet,",
-        long: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor, lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.",
+        short: "Operates in grid-forming mode to reduce power peaks, support stability, and optimize grid consumption.",
+        long: "Operates in grid-forming mode to reduce power peaks, support stability, and optimize grid consumption, ensuring efficient energy management.",
         schemeImg: "./assets/schemes/liquid.webp",
         focus: { x: 30, y: 60 }
       }
@@ -171,7 +172,8 @@ const MODELS = [
     id: "m6",
     name: "Data Center Hybrid Colocation",
     shortName: "800 V Power Supply",
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor, lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor, lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.",
+    description: "AI data centers are no longer limited only by GPUs, but by grid interconnection and energy efficiency. Traditional AC architectures can lose up to 10% of approved power before reaching compute.",
+    description2:"By moving to a direct 800 V DC architecture, redundant conversion stages are reduced, improving efficiency, simplifying system design, and enabling faster scalability for next-generation data centers.",
     render: "./assets/renders/m6.webp",
     graph: "./assets/graphs/m6.mp4",
     graphLabel: "800 V Power Supply Chart",
@@ -185,48 +187,48 @@ const MODELS = [
       {
         id: "m6-zone-priv",
         title: "HEM Solar Inverter",
-        short: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor, lorem ipsum dolor sit amet,",
-        long: "La zona privada del modelo híbrido dispone de jaulas de seguridad física con control de acceso biométrico, circuito de alimentación dedicado y VLANs aisladas para garantizar la separación total frente a los clientes de colocation. Cumple con los requisitos de GDPR, ISO 27001 y ENS nivel alto.",
+        short: "Converts solar energy into AC power for on-site generation.",
+        long: "Converts solar energy into AC power for on-site generation.",
         schemeImg: "./assets/schemes/zone_private.webp",
         focus: { x: 25, y: 40 }
       },
       {
         id: "m6-zone-colo",
         title: "PCSM & Multi PCSM Battery Inverter",
-        short: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor, lorem ipsum dolor sit amet,",
-        long: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor, lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.",
+        short: "Manages battery power for backup, peak shaving, and grid support.",
+        long: "Manages battery power for backup, peak shaving, and grid support.",
         schemeImg: "./assets/schemes/zone_colo.webp",
         focus: { x: 65, y: 45 }
       },
       {
         id: "m6-zone-colo",
         title: "AIPCS 800 V Power Supply",
-        short: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor, lorem ipsum dolor sit amet,",
-        long: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor, lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.",
+        short: "Delivers regulated 800 V DC power to critical data center loads.",
+        long: "Delivers regulated 800 V DC power to critical data center loads.",
         schemeImg: "./assets/schemes/zone_colo.webp",
         focus: { x: 65, y: 45 }
       },
       {
         id: "m6-zone-colo",
         title: "DC/DC Converter",
-        short: "Lorem ipsum dolor sit amet, consectetur arem ipsum dolor sit ametpsum dolor m dolor sit sed do eiusmod tempor, lorem ipsum ",
-        long: "Lorem ipsum dolor sit amet, psum dolor sit amet,  consectetur adipiscing elit, sed do eiusmod tempor.",
+        short: "Connects batteries to the 800 V DC bus for fast power exchange.",
+        long: "Connects batteries to the 800 V DC bus for fast power exchange.",
         schemeImg: "./assets/schemes/zone_colo.webp",
         focus: { x: 65, y: 45 }
       },
       {
         id: "m6-noc",
         title: "XMV670 & XMV670K",
-        short: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor,consectetur adipiscing elit, sed do eiusmod tempor,consectetur adipiscing elit, sed do eiusmod tempor,consectetur adipiscing elit, sed do eiusmod tempor,consectetur adipiscing elit, sed do eiusmod tempor, lorem ipsum dolor sit amet,",
-        long: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor,consectetur adipiscing elit, sed do eiusmod tempor,consectetur adipiscing elit, sed do eiusmod tempor,consectetur adipiscing elit, sed do eiusmod tempor, lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.",
+        short: "Controls cooling systems with precise medium-voltage motor management.",
+        long: "Controls cooling systems with precise medium-voltage motor management.",
         schemeImg: "./assets/schemes/noc.webp",
         focus: { x: 45, y: 20 }
       },
       {
         id: "m6-smartpdu",
         title: "SD750FR",
-        short: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor, lorem ipsum dolor sit amet,",
-        long: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor, lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.",
+        short: "Controls auxiliary pumps and fans for efficient facility operation.",
+        long: "Controls auxiliary pumps and fans for efficient facility operation.",
         schemeImg: "./assets/schemes/smartpdu.webp",
         focus: { x: 80, y: 65 }
       }
