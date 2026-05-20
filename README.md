@@ -2,6 +2,10 @@
 
 Pantalla interactiva para exposición comercial de modelos de Data Center.
 
+## Iniciar el Data Centers Screen
+
+Se puede ejecutar el archivo y visualizar en cualquier pantalla sin acceso a Internet clicando en el archivo iniciar.bat
+
 ## Estructura de archivos
 
 ```
