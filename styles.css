@@ -33,6 +33,14 @@
   --blue-glow:  rgba(48,51,255,0.30);
   --blue-btn:   #3033ff;
 
+  /* Color labels grafica */
+
+
+--label-blue: "#3033ff"; /* neon blue 500 */
+--label-orange: "#FF8300"; /* orange 500 */
+--label-green: "#97d700"; /* mobility green 500*/
+--label-yellow: "#FFEC00"; /* yellow 500 */
+
   /* Render (zona B) */
   --render-bg: #c8d2e0;
 
@@ -176,7 +184,7 @@ html, body {
 .a-text {
   font-size: 12.5px;
   line-height: 1.65;
-  color: var(--text-500);
+  color: var(--text-500); /* gris-03 para el texto descriptivo */
   font-weight: 400;
   transition: opacity 0.3s;
   margin-top: 4px;
@@ -203,8 +211,8 @@ html, body {
   display: grid;
   width: 100%;
   padding:0;   /* para no tener espacio a la izquierda y conseguir una alineación correcta con los titulos y la descripción principal del datacenter*/
-  padding-bottom: 8px; /*espacio general entre el contenido de cada equipo*/
-  padding-top: 8px;
+  padding-bottom: 14px; /*espacio general entre el contenido de cada equipo*/
+  padding-top: 14px;
   grid-template-columns: 150px 1fr; /* 2 columnas: título+label, descripción */
   column-gap: 32px; /* espacio entre título y descripción */;
   border-bottom: 1px solid var(--panel-dark); /* línea sutil para separar cards */
@@ -315,7 +323,7 @@ html, body {
 .graph-label {
   font-family: 'Suisse Int\'l', sans-serif;
   font-weight: 450;   /* Book */
-  font-size: 18px;
+  font-size: 20px;
   color: var(--text-900);
 }
 

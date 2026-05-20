@@ -9,6 +9,14 @@
 //   · schemeImg:  ruta a imagen .webp del esquema del equipo
 // ═══════════════════════════════════════════════════════════
 
+// colores para el label de la gráfica y variables globales
+const COLORS_LABEL = {
+  blue: "#3033ff",
+  orange: "#FF8300",
+  green: "#97d700",
+  yellow: "#FFEC00"
+};
+
 const MODELS = [
 
   // ─── MODELO 1 — Standard ──────────────────────────────
@@ -23,9 +31,9 @@ const MODELS = [
     graphLabel: "Line Interactive Chart",
     graphUnit: "PUE · Line Interactive",
     legend: [
-      { label: "lorem ipsum",   color: "#3033ff" },
-      { label: "lorem ipsum",   color: "#97d700" },
-      { label: "lorem ipsum",   color: "#FF8300" }
+      { label: "P POI",   color: COLORS_LABEL.blue },
+      { label: "PE BESS",   color: COLORS_LABEL.orange },
+      { label: "P Load",   color: COLORS_LABEL.green }
     ],
     equipos: [
       {
@@ -51,9 +59,10 @@ const MODELS = [
     graphLabel: "Double Conversion Chart",
     graphUnit: "kW/rack · Load Smoothing Capabilities - sub titulo gráfica 2 lineas",
     legend: [
-      { label: "lorem ipsum",   color: "#3033ff" },
-      { label: "lorem ipsum",  color: "#97d700" },
-      { label: "lorem ipsum",    color: "#FF8300" }
+      { label: "P POI",   color: COLORS_LABEL.blue },
+      { label: "Pinv gfll",    color: COLORS_LABEL.orange },
+      { label: "P load",  color: COLORS_LABEL.green },
+      { label:"P pinv Gfm", color: COLORS_LABEL.yellow }
     ],
     equipos: [
       {
@@ -67,7 +76,7 @@ const MODELS = [
     ]
   },
 
-  // ─── MODELO 3 — Solar + Storage ───────────────────────
+  // ─── MODELO 3 — Load Sensing ───────────────────────
   {
     id: "m3",
     name: "Data Center Solar + BESS",
@@ -76,12 +85,12 @@ const MODELS = [
     description2: "This enables fast response to load variations, helping reduce grid consumption and smooth significant power peaks while maintaining operational efficiency.",
     render: "./assets/renders/load_sensing.mp4",
     graph: "./assets/graphs/m3.png",
-    graphLabel: "Generación solar vs. consumo",
+    graphLabel: "Load Sensing Chart",
     graphUnit: "MWh · Modelo 3",
     legend: [
-      { label: "lorem ipsum",  color: "#3033ff" },
-      { label: "lorem ipsum",   color: "#97d700" },
-      { label: "lorem ipsum",  color: "#FF8300" }
+      { label: "P POI",  color: COLORS_LABEL.blue },
+      { label: "PE BESS",  color: COLORS_LABEL.orange },
+      { label: "P Load",   color: COLORS_LABEL.green }
     ],
     equipos: [
       {
@@ -103,71 +112,74 @@ const MODELS = [
     ]
   },
 
-  // ─── MODELO 4 — Edge Computing ────────────────────────
+  // ─── MODELO 4 — Hybrid Load Sensing ────────────────────────────
   {
     id: "m4",
-    name: "Data Center Edge",
-    shortName: "OFF Grid: GT+ BESS BTM",
-    description: "Off-grid data centers use gas turbines for primary, continuous, and high-density power, while BESS provides backup power and stability services.",
-    description2: "The BESS delivers near-instantaneous protection against momentary dips and failures, creating a scalable, reliable, and more sustainable alternative to traditional diesel-based backup systems.",
-    render: "./assets/renders/line_interactive.mp4",
-    graph: "./assets/graphs/m4.png",
-    graphLabel: "OFF Grid: GT+ BESS BTM Chart",
-    graphUnit: "ms · Modelo 4",
-     legend: [
-      { label: "lorem ipsum",  color: "#3033ff" },
-      { label: "lorem ipsum",   color: "#97d700" },
-      { label: "lorem ipsum",  color: "#FF8300" }
-    ],
-    equipos: [
-      {
-        id: "m4-container",
-        title: "PCSM & Multi PCSM Battery Inverter",
-        short: "Stabilizes the off-grid system, manages battery response, and provides fast backup power during disturbances.",
-        long: "Stabilizes the off-grid system, manages battery response, and provides fast backup power during disturbances.",
-        schemeImg: "./assets/schemes/m4.png",
-        focus: { x: 35, y: 45 }
-      }
-    ]
-  },
-
-  // ─── MODELO 5 — Hyperscale ────────────────────────────
-  {
-    id: "m5",
     name: "Data Center Hyperscale",
     shortName: "Hybrid Load Sensing",
     description: "Hybrid Load Sensing uses an external control device to measure real-time load demand and send power references to the grid-forming inverter.",
     description2: "This solution helps minimize grid consumption, reduce significant power peaks, and achieve performance close to line-interactive systems without the need for a choke.",
     render: "./assets/renders/hybrid_load_sensing.mp4",
-    graph: "./assets/graphs/m5.png",
+    graph: "./assets/graphs/m4.png",
     graphLabel: "Hybrid Load Sensing Chart",
-    graphUnit: "MW · Modelo 5",
+    graphUnit: "MW · Modelo 4",
      legend: [
-      { label: "lorem ipsum",  color: "#3033ff" },
-      { label: "lorem ipsum",   color: "#97d700" },
-      { label: "lorem ipsum",  color: "#FF8300" }
+      { label: "P POI",  color: COLORS_LABEL.blue },
+      { label: "PE BESS",  color: COLORS_LABEL.orange },
+      { label: "P Load",   color: COLORS_LABEL.green }
     ],
     equipos: [
       {
-        id: "m5-xmv670",
+        id: "m4-xmv670",
         title: "Power Plant Controller",
         short: "Measures real-time load demand and sends power references to coordinate the inverter response.",
         long: "Measures real-time load demand and sends power references to coordinate the inverter response, ensuring optimal performance and efficiency.",
-        schemeImg: "./assets/schemes/m5.png",
+        schemeImg: "./assets/schemes/m4.png",
         focus: { x: 52, y: 48 }
       },
       {
-        id: "m5-liquid",
+        id: "m4-liquid",
          title: "PCSM & Multi PCSM Battery Inverter",
         short: "Operates in grid-forming mode to reduce power peaks, support stability, and optimize grid consumption.",
         long: "Operates in grid-forming mode to reduce power peaks, support stability, and optimize grid consumption, ensuring efficient energy management.",
-        schemeImg: "./assets/schemes/m5.png",
+        schemeImg: "./assets/schemes/m4.png",
         focus: { x: 30, y: 60 }
       }
     ]
   },
 
-  // ─── MODELO 6 — Hybrid Colocation ─────────────────────
+  // ─── MODELO 5 — OFF Grid GT BESS BTM ────────────────────────
+  {
+    id: "m5",
+    name: "Data Center Edge",
+    shortName: "OFF Grid: GT+ BESS BTM",
+    description: "Off-grid data centers use gas turbines for primary, continuous, and high-density power, while BESS provides backup power and stability services.",
+    description2: "The BESS delivers near-instantaneous protection against momentary dips and failures, creating a scalable, reliable, and more sustainable alternative to traditional diesel-based backup systems.",
+    render: "./assets/renders/line_interactive.mp4",
+    graph: "./assets/graphs/m5.png",
+    graphLabel: "OFF Grid: GT+ BESS BTM Chart",
+    graphUnit: "ms · Modelo 5",
+     legend: [
+      { label: "P POI",  color: COLORS_LABEL.blue },
+      { label: "P Load",   color: COLORS_LABEL.green },
+      { label: "PE BESS",  color: COLORS_LABEL.orange }
+      
+    ],
+    equipos: [
+      {
+        id: "m5-container",
+        title: "PCSM & Multi PCSM Battery Inverter",
+        short: "Stabilizes the off-grid system, manages battery response, and provides fast backup power during disturbances.",
+        long: "Stabilizes the off-grid system, manages battery response, and provides fast backup power during disturbances.",
+        schemeImg: "./assets/schemes/m5.png",
+        focus: { x: 35, y: 45 }
+      }
+    ]
+  },
+
+  
+
+  // ─── MODELO 6 — 800 V POWER SUPPLY ─────────────────────
   {
     id: "m6",
     name: "Data Center Hybrid Colocation",
@@ -179,9 +191,10 @@ const MODELS = [
     graphLabel: "800 V Power Supply Chart",
     graphUnit: "% ocupación · Modelo 6",
      legend: [
-      { label: "lorem ipsum",  color: "#3033ff" },
-      { label: "lorem ipsum",   color: "#97d700" },
-      { label: "lorem ipsum",  color: "#FF8300" }
+      { label: "P POI",  color: COLORS_LABEL.blue },
+      { label: "Pinv gfll",  color: COLORS_LABEL.orange },
+      { label: "P Load",   color: COLORS_LABEL.green }
+      
     ],
     equipos: [
       {
