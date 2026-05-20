@@ -32,9 +32,7 @@ const dom = {
   aText2:     $("aText2"),
   aBadge:     $("aBadge"),
   aBody:      $("aBody"),
-  renderImg:  $("renderImg"),
-  focusLayer: $("focusLayer"),
-  renderTag:  $("renderTag"),
+  renderVideo:  $("renderVideo"),
   graphVideo: $("graphVideo"),
   graphImg:   $("graphImg"),
   graphLabel: $("graphLabel"),
@@ -77,19 +75,19 @@ function renderSectionD() {
 
 
 // ── RENDER: SECCIÓN B (render fijo) ───────────────────────
-const RENDER_SRC = "./assets/renders/render-main.png";
+const RENDER_SRC = "./assets/renders/line_interactive.mp4"; /* TODO CHANGE THIS FOR MP4 LOOP video*/
 
 function renderSectionB(model) {
-  // Imagen fija para todos los modelos
-  if (!dom.renderImg.src.endsWith("render-main.png")) {
-    dom.renderImg.src = RENDER_SRC;
+  const FALLBACK = "./assets/renders/line_interactive.mp4";
+  const src = (model.render && model.render.endsWith(".mp4"))
+    ? model.render
+    : FALLBACK;
+
+  if (dom.renderVideo.getAttribute("src") !== src) {
+    dom.renderVideo.setAttribute("src", src);
+    dom.renderVideo.load();
+    dom.renderVideo.play().catch(() => {});
   }
-
-  // Etiqueta del modelo sobre el render
-  dom.renderTag.textContent = model.shortName.toUpperCase();
-
-  // Sin nodos de foco
-  dom.focusLayer.innerHTML = "";
 }
 
 

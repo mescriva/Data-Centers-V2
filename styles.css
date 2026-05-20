@@ -272,7 +272,8 @@ html, body {
 }
 
 /* Render 16:9 (img nativa 2048x1152) — ancho al 100% del contenedor, alto derivado de la proporción */
-.render-img {
+
+.render-video{
   width: 100%;
   height: 100%;
   object-fit: contain; /* el render se hará en 5:4 // se cambia a contain porque es fijo si no cover */
@@ -281,7 +282,7 @@ html, body {
   transition: opacity 0.4s ease;
 }
 
-.render-img.fading { opacity: 0; }
+.render-video.fading { opacity: 0; }
 
 /* Logo y etiqueta eliminados — render limpio */
 .render-logo,

@@ -10,86 +10,50 @@
 
   <div class="app">
 
-    <!-- ═══════════════════════════════════════════
-         MAIN: Sección A (izq 1/3) + Right (der 2/3)
-    ═══════════════════════════════════════════ -->
     <main class="main">
 
-      <!-- ─── SECCIÓN A ─── (izquierda, 1/2 section A arriba + section C (gráfica) abajo) -->
+      <!-- SECCIÓN A — panel derecho: info + equipos + gráfica -->
       <aside class="section-a" id="sectionA" aria-label="Información del modelo y equipos">
 
-        <!-- Cabecera: título fijo + logo / subtítulo modelo + descripción -->
         <header class="a-header">
           <div class="a-title-row">
             <h1 class="a-title">Data Centers</h1>
             <img class="a-logo" src="./assets/logo-pe.svg" alt="Power Electronics" />
           </div>
           <div class="a-badge" id="aBadge"></div>
-          <p class="a-text" id="aText">Cargando información…</p>
-          <p class="a-text" id="aText2">Cargando información…</p> <!-- Segundo parrafo de info descripcion datacenter aText2 en modelos-->
+          <p class="a-text" id="aText"></p>
+          <p class="a-text" id="aText2"></p>
         </header>
 
-        <!-- Cuerpo intercambiable: lista de equipos o detalle de uno -->
-        <div class="a-body" id="aBody"></div>
+        <div class="a-body" id="aBody"></div> <!-- Aqui debe de cargar los datos de app.js y data.js -->
 
-        <!-- SECCIÓN C — Gráfica / video en bucle -->
         <section class="section-c" id="sectionC" aria-label="Gráfica del data center">
           <div class="graph-header">
-            <span class="graph-label" id="graphLabel">Rendimiento energético</span>
-            <span class="graph-unit justify-content-right" id="graphUnit">kW · Line Interactive</span>
+            <span class="graph-label" id="graphLabel"></span>
+            <span class="graph-unit" id="graphUnit"></span>
           </div>
-          <!-- Video loop (reemplazar src con el .mp4 real) TODO -->
-          <video class="graph-video" id="graphVideo" autoplay loop muted playsinline></video>
-          <!-- Imagen placeholder de la gráfica (2160×480, 9:2) — sustituir por video final -->
           <img class="graph-img" id="graphImg" src="" alt="Gráfica del modelo activo" />
         </section>
 
-      </section><!-- /right-col -->
-      </aside>
+      </aside><!-- /section-a -->
 
-
-      <!-- ─── DERECHA (1/2): B  -->
+      <!-- SECCIÓN B — render vídeo columna izquierda -->
       <section class="right-col">
-
-        <!-- SECCIÓN B — Render del data center -->
         <section class="section-b" id="sectionB" aria-label="Render del data center">
           <div class="render-wrap" id="renderWrap">
-
-            <!-- Logo empresa (esquina superior derecha) -->
-            <div class="render-logo">
-              <svg width="120" height="28" viewBox="0 0 120 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect width="14" height="14" rx="3" fill="white" fill-opacity="0.9"/>
-                <rect x="16" width="14" height="14" rx="3" fill="white" fill-opacity="0.6"/>
-                <rect y="16" width="14" height="12" rx="3" fill="white" fill-opacity="0.6"/>
-                <rect x="16" y="16" width="14" height="12" rx="3" fill="white" fill-opacity="0.9"/>
-                <text x="36" y="11" fill="white" font-family="Syne" font-weight="700" font-size="10" letter-spacing="1">POWER</text>
-                <text x="36" y="24" fill="white" font-family="Syne" font-weight="400" font-size="9" letter-spacing="2" fill-opacity="0.8">ELECTRONICS</text>
-              </svg>
-            </div>
-
-            <!-- Imagen del render -->
-            <img class="render-img" id="renderImg" src="" alt="Render 3D del data center activo" />
-
-            <!-- Overlay de puntos de foco -->
-            <div class="focus-layer" id="focusLayer" aria-hidden="true"></div>
-
-            <!-- Etiqueta del modelo activo en el render -->
-            <div class="render-tag" id="renderTag">Line Interactive</div>
+            <video class="render-video" id="renderVideo" autoplay loop muted playsinline></video>
           </div>
         </section>
+      </section><!-- /right-col -->
 
-    </main><!-- /main -->
+    </main>
 
-    <!-- ═══════════════════════════════════════════
-         SECCIÓN D — Navbar inferior de modelos
-    ═══════════════════════════════════════════ -->
     <nav class="section-d" id="sectionD" aria-label="Selector de modelo">
       <div class="model-nav" id="modelNav"></div>
     </nav>
 
-  </div><!-- /app -->
+  </div>
 
-  <!-- Scripts: primero data, luego app -->
   <script src="data.js"></script>
   <script src="app.js"></script>
 
