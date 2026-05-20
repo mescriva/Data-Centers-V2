@@ -85,9 +85,22 @@ function renderSectionB(model) {
 
   if (dom.renderVideo.getAttribute("src") !== src) {
     dom.renderVideo.setAttribute("src", src);
+
     dom.renderVideo.load();
+
+   // TRUCO DE REINICIO ANTICIPADO:
+    // Forzamos el rebobinado manual un instante antes de terminar el archivo
+    dom.renderVideo.addEventListener("timeupdate", function() {
+      const buffer = 0.05; // Margen de error en segundos (puedes ajustar a 0.1 si sigue fallando)
+      if (this.currentTime >= this.duration - buffer) {
+        this.currentTime = 0;
+        this.play().catch(() => {});
+      }
+    });
+
     dom.renderVideo.play().catch(() => {});
   }
+  
 }
 
 
