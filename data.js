@@ -31,9 +31,9 @@ const MODELS = [
     graphLabel: "Line Interactive Chart",
     graphUnit: "PUE · Line Interactive",
     legend: [
-      { label: "P POI",   color: COLORS_LABEL.blue },
+      { label: "POI",   color: COLORS_LABEL.blue },
       { label: "PE BESS",   color: COLORS_LABEL.orange },
-      { label: "P Load",   color: COLORS_LABEL.green }
+      { label: "Data Center",   color: COLORS_LABEL.green }
     ],
     equipos: [
       {
@@ -59,10 +59,10 @@ const MODELS = [
     graphLabel: "Double Conversion Chart",
     graphUnit: "kW/rack · Load Smoothing Capabilities - sub titulo gráfica 2 lineas",
     legend: [
-      { label: "P POI",   color: COLORS_LABEL.blue },
-      { label: "Pinv gfll",    color: COLORS_LABEL.orange },
-      { label: "P load",  color: COLORS_LABEL.green },
-      { label:"P pinv Gfm", color: COLORS_LABEL.yellow }
+      { label: "POI",   color: COLORS_LABEL.blue },
+      { label: "PE BESS GFM",    color: COLORS_LABEL.orange },
+      { label: "Data Center",  color: COLORS_LABEL.green },
+      { label:"PE BESS GFL", color: COLORS_LABEL.yellow }
     ],
     equipos: [
       {
@@ -88,9 +88,9 @@ const MODELS = [
     graphLabel: "Load Sensing Chart",
     graphUnit: "MWh · Modelo 3",
     legend: [
-      { label: "P POI",  color: COLORS_LABEL.blue },
+      { label: "POI",  color: COLORS_LABEL.blue },
       { label: "PE BESS",  color: COLORS_LABEL.orange },
-      { label: "P Load",   color: COLORS_LABEL.green }
+      { label: "Data Center",   color: COLORS_LABEL.green }
     ],
     equipos: [
       {
@@ -124,16 +124,16 @@ const MODELS = [
     graphLabel: "Hybrid Load Sensing Chart",
     graphUnit: "MW · Modelo 4",
      legend: [
-      { label: "P POI",  color: COLORS_LABEL.blue },
+      { label: "POI",  color: COLORS_LABEL.blue },
       { label: "PE BESS",  color: COLORS_LABEL.orange },
-      { label: "P Load",   color: COLORS_LABEL.green }
+      { label: "Data Center",   color: COLORS_LABEL.green }
     ],
     equipos: [
       {
         id: "m4-xmv670",
         title: "Power Plant Controller",
         short: "Measures real-time load demand and sends power references to coordinate the inverter response.",
-        long: "Measures real-time load demand and sends power references to coordinate the inverter response, ensuring optimal performance and efficiency.",
+        long: "Measures real-time load demand and sends power references to coordinate the inverter response.",
         schemeImg: "./assets/schemes/m4.png",
         focus: { x: 52, y: 48 }
       },
@@ -141,7 +141,7 @@ const MODELS = [
         id: "m4-liquid",
          title: "PCSM & Multi PCSM Battery Inverter",
         short: "Operates in grid-forming mode to reduce power peaks, support stability, and optimize grid consumption.",
-        long: "Operates in grid-forming mode to reduce power peaks, support stability, and optimize grid consumption, ensuring efficient energy management.",
+        long: "Operates in grid-forming mode to reduce power peaks, support stability, and optimize grid consumption.",
         schemeImg: "./assets/schemes/m4.png",
         focus: { x: 30, y: 60 }
       }
@@ -160,9 +160,9 @@ const MODELS = [
     graphLabel: "OFF Grid: GT+ BESS BTM Chart",
     graphUnit: "ms · Modelo 5",
      legend: [
-      { label: "P POI",  color: COLORS_LABEL.blue },
-      { label: "P Load",   color: COLORS_LABEL.green },
-      { label: "PE BESS",  color: COLORS_LABEL.orange }
+      { label: "Gas Turbine",  color: COLORS_LABEL.blue },
+      { label: "PE BESS",  color: COLORS_LABEL.orange },
+      { label: "Data Center",   color: COLORS_LABEL.green }
       
     ],
     equipos: [
@@ -191,9 +191,9 @@ const MODELS = [
     graphLabel: "800 V Power Supply Chart",
     graphUnit: "% ocupación · Modelo 6",
      legend: [
-      { label: "P POI",  color: COLORS_LABEL.blue },
-      { label: "Pinv gfll",  color: COLORS_LABEL.orange },
-      { label: "P Load",   color: COLORS_LABEL.green }
+      { label: "POI",  color: COLORS_LABEL.blue },
+      { label: "PE BESS",  color: COLORS_LABEL.orange },
+      { label: "Data Center",   color: COLORS_LABEL.green }
       
     ],
     equipos: [
