@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Data Centers Solution — Expo Screen</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
+
 <body>
 
   <div class="app">
@@ -40,8 +42,10 @@
       <!-- SECCIÓN B — render vídeo columna izquierda -->
       <section class="right-col">
         <section class="section-b" id="sectionB" aria-label="Render del data center">
+          <!-- CAMBIAR: dos videos en lugar de uno -->
           <div class="render-wrap" id="renderWrap">
-            <video class="render-video" id="renderVideo" autoplay loop muted playsinline></video>
+            <video class="render-video" id="renderVideoA" autoplay loop muted playsinline></video>
+            <video class="render-video render-video--back" id="renderVideoB" autoplay loop muted playsinline></video>
           </div>
         </section>
       </section><!-- /right-col -->
@@ -58,4 +62,5 @@
   <script src="app.js"></script>
 
 </body>
+
 </html>

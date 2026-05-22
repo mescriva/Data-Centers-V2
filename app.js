@@ -73,9 +73,60 @@ function renderSectionD() {
   }).join("");
 }
 
+// ── ESTADO DEL PLAYER DUAL ────────────────────────────────
+const player = {
+  active: null,   // el elemento <video> que está visible ahora
+  back:   null,   // el elemento <video> que precarga en segundo plano
+};
 
+// Inicializa los dos elementos después de que el DOM esté listo
+function initPlayer() {
+  player.active = document.getElementById("renderVideoA");
+  player.back   = document.getElementById("renderVideoB");
+}
+
+// ── RENDER: SECCIÓN B ─────────────────────────────────────
+const FALLBACK_SRC = "./assets/renders/line_interactive.mp4";
+
+function renderSectionB(model) {
+  const src = (model.render && model.render.endsWith(".mp4"))
+    ? model.render
+    : FALLBACK_SRC;
+
+  // Si el video activo ya tiene este src, no hacer nada
+  if (player.active.getAttribute("src") === src) return;
+
+  // 1. Carga el nuevo src en el video de fondo (ya estaba oculto)
+  player.back.setAttribute("src", src);
+  player.back.load();
+
+  // 2. En cuanto tenga datos suficientes para reproducir, hace el swap
+  player.back.oncanplay = () => {
+    player.back.play().catch(() => {});
+
+    // Swap de opacidades: back sube a 1, active baja a 0
+    player.back.style.opacity  = "1";
+    player.active.style.opacity = "0";
+
+    // Tras la transición, limpia el video que quedó atrás
+    setTimeout(() => {
+      player.active.pause();
+      player.active.removeAttribute("src");
+      player.active.load();
+      player.active.style.opacity = "0";
+
+      // Intercambia los roles para el próximo cambio
+      [player.active, player.back] = [player.back, player.active];
+    }, 650); // ligeramente mayor que la transición CSS (0.6s)
+
+    player.back.oncanplay = null; // limpia el listener
+  };
+}
+
+
+/*
 // ── RENDER: SECCIÓN B (render fijo) ───────────────────────
-const RENDER_SRC = "./assets/renders/line_interactive.mp4"; /* TODO CHANGE THIS FOR MP4 LOOP video*/
+const RENDER_SRC = "./assets/renders/line_interactive.mp4";  TODO CHANGE THIS FOR MP4 LOOP video
 
 function renderSectionB(model) {
   const FALLBACK = "./assets/renders/line_interactive.mp4";
@@ -102,6 +153,7 @@ function renderSectionB(model) {
   }
   
 }
+*/
 
 
 // ── RENDER: SECCIÓN C (gráfica / video) ───────────────────
@@ -166,6 +218,9 @@ function renderSectionAList(model) {
 function render() {
   const model = getModel();
   initEquipState(model);
+
+  // Inicializa el player solo la primera vez
+  if (!player.active) initPlayer();
 
   renderSectionD();
   renderSectionB(model);
