@@ -19,10 +19,10 @@ const COLORS_LABEL = {
 
 const MODELS = [
 
-  // ─── MODELO 1 — Standard ──────────────────────────────
+  // ─── MODELO 1 — Line Interactive ──────────────────────────────
   {
     id: "m1",
-    name: "Data Center Standard",
+    name: "Data Center Line Interactive",
     shortName: "Line Interactive",
     description: "Line Interactive architecture decouples the inverter from grid disturbances while limiting fault currents and supporting smoother transitions between grid-connected and islanded operation.",
     description2: "With grid-forming operation and advanced control capabilities, this configuration enhances system stability and supports reliable performance under demanding load profiles.",
@@ -47,14 +47,14 @@ const MODELS = [
     ]
   },
 
-  // ─── LOAD SMOOTHING CAPABILITIES — High Density ───────
+  // ─── MODELO 2 — Double Conversion ─────────────────────
   {
     id: "m2",
-    name: "Data Center High Density",
+    name: "Data Center Double Conversion",
     shortName: "Double Conversion",
     description: "Double conversion architecture provides complete isolation from grid disturbances, delivering clean and stable power to critical data center loads.",
     description2: "This configuration ensures optimal power quality and uninterrupted supply with zero transfer time, making it one of the most reliable solutions for mission-critical environments.",
-    render: "./assets/renders/line_interactive.mp4",
+    render: "./assets/renders/double_conversion.mp4",
     graph: "./assets/graphs/m2.png",
     graphLabel: "Double Conversion Chart",
     graphUnit: "kW/rack · Load Smoothing Capabilities - sub titulo gráfica 2 lineas",
@@ -79,7 +79,7 @@ const MODELS = [
   // ─── MODELO 3 — Load Sensing ───────────────────────
   {
     id: "m3",
-    name: "Data Center Solar + BESS",
+    name: "Data Center Load Sensing",
     shortName: "Load Sensing",
     description: "Load Sensing measures real-time data center demand and sends the required power references to the grid-following inverter.",
     description2: "This enables fast response to load variations, helping reduce grid consumption and smooth significant power peaks while maintaining operational efficiency.",
@@ -115,7 +115,7 @@ const MODELS = [
   // ─── MODELO 4 — Hybrid Load Sensing ────────────────────────────
   {
     id: "m4",
-    name: "Data Center Hyperscale",
+    name: "Data Center Hybrid Load Sensing",
     shortName: "Hybrid Load Sensing",
     description: "Hybrid Load Sensing uses an external control device to measure real-time load demand and send power references to the grid-forming inverter.",
     description2: "This solution helps minimize grid consumption, reduce significant power peaks, and achieve performance close to line-interactive systems without the need for a choke.",
@@ -151,11 +151,11 @@ const MODELS = [
   // ─── MODELO 5 — OFF Grid GT BESS BTM ────────────────────────
   {
     id: "m5",
-    name: "Data Center Edge",
+    name: "Data Center OFF Grid GT + BESS BTM",
     shortName: "OFF Grid: GT+ BESS BTM",
     description: "Off-grid data centers use gas turbines for primary, continuous, and high-density power, while BESS provides backup power and stability services.",
     description2: "The BESS delivers near-instantaneous protection against momentary dips and failures, creating a scalable, reliable, and more sustainable alternative to traditional diesel-based backup systems.",
-    render: "./assets/renders/line_interactive.mp4",
+    render: "./assets/renders/off_grid.mp4",
     graph: "./assets/graphs/m5.png",
     graphLabel: "OFF Grid: GT+ BESS BTM Chart",
     graphUnit: "ms · Modelo 5",
@@ -182,11 +182,11 @@ const MODELS = [
   // ─── MODELO 6 — 800 V POWER SUPPLY ─────────────────────
   {
     id: "m6",
-    name: "Data Center Hybrid Colocation",
+    name: "Data Center 800 V Power Supply",
     shortName: "800 V Power Supply",
     description: "AI data centers are no longer limited only by GPUs, but by grid interconnection and energy efficiency. Traditional AC architectures can lose up to 10% of approved power before reaching compute.",
     description2:"By moving to a direct 800 V DC architecture, redundant conversion stages are reduced, improving efficiency, simplifying system design, and enabling faster scalability for next-generation data centers.",
-    render: "./assets/renders/line_interactive.mp4",
+    render: "./assets/renders/800_V.mp4",
     graph: "./assets/graphs/m6.png",
     graphLabel: "800 V Power Supply Chart",
     graphUnit: "% ocupación · Modelo 6",
