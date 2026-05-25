@@ -224,4 +224,4 @@ fitToViewport();
 // Primero precarga todos los vídeos, luego pinta la UI
 preloadAllVideos();
 preloadAllGraphs();
-render();
+render(); 
