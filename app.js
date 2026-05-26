@@ -29,6 +29,7 @@ function preloadAllVideos() {
   MODELS.forEach(model => {
     const src = model.render || "";
     const video = document.createElement("video");
+    video.setAttribute("autoplay", "");
     video.setAttribute("loop", "");
     video.setAttribute("muted", "");
     video.setAttribute("playsinline", "");
