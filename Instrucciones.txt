@@ -1,4 +1,4 @@
-KIOSKO TÁCTIL OFFLINE - GUÍA RÁPIDA (WINDOWS)
+DATACENTERS SCREEN - GUÍA RÁPIDA (WINDOWS)
 ================================================
 
 Este archivo está pensado para abrirse con Bloc de notas (Notepad).
@@ -20,34 +20,28 @@ Para reproducir la versión compilada (carpeta dist):
 - Windows 10 u 11
 - Navegador actualizado (Microsoft Edge o Google Chrome)
 - Permiso para abrir localhost en el firewall (si aplica)
-
-Si además quieres recompilar/editar el proyecto:
-- Node.js 18 o superior (incluye npm)
-- Visual Studio Code (recomendado)
+- Node.js y npm en las versiones del archivo (npm -v) (si se arranca en servidor local)
 
 
 2) CÓMO EJECUTAR LA VERSIÓN COMPILADA (RECOMENDADO PARA USO FINAL)
 ------------------------------------------------------------------
 Antes de ejecutar, asegúrate de que la carpeta ZIP ya está descomprimida.
 
-Opción A (más simple):
+Opción A (más simple, sin necesidad de acceso a Red - Internet):
 - Abrir la carpeta dist (ya extraída del ZIP).
-- Doble clic en uno de los lanzadores .bat, por ejemplo:
-  - 01-ABRIR-DATA-CENTERS.bat
-  - 02-ABRIR-SOLAR.bat
-  - 03-ABRIR-STORAGE.bat
-  - 04-ABRIR-MOBILITY.bat
+- Doble clic en el lanzador .bat:
+  inicar.bat
 
-Opción B (manual con servidor local):
-1. Abrir PowerShell en la carpeta dist.
-2. Ejecutar:
-   python -m http.server 8000
+Opción B (arranque con servidor local, localhost:3000):
+
+1. Abrir Visual Studio Code y la carpeta del proyecto.
+2. Nueva terminal para ejecutar:
+   Npx serve .
 3. Abrir en navegador:
-   http://localhost:8000
+   http://localhost:3000
 
 NOTA:
-- No se recomienda abrir index.html directamente con file://
-- Para funcionamiento correcto (Service Worker y almacenamiento), usar localhost.
+- No se recomienda abrir index.html con doble clic por posible error de CORS.
 
 IMPORTANTE PARA ACTUALIZACIONES:
 - Si recibes una versión nueva, reemplaza la carpeta dist completa por la nueva.
@@ -63,48 +57,14 @@ IMPORTANTE PARA ACTUALIZACIONES:
 4. Instalar Node.js LTS desde: https://nodejs.org/
 5. Instalar dependencias:
    npm install
-6. Levantar entorno de desarrollo:
-   npm run dev
-7. Compilar para producción:
-   npm run build
-
-La compilación vuelve a generar la carpeta dist.
+6. Lanzar el servidor local:
+   Npx serve .
 
 
-4) CÓMO SE DESCARGAN LOS DATOS
-------------------------------
-Los eventos de uso se guardan en el navegador (IndexedDB/localStorage).
-
-Para descargar los datos a Excel:
-- Atajo de teclado: Ctrl + Shift + E
-  o
-- Abrir la ruta de administración en el navegador:
-  http://localhost:5173/admin/export
-  (si estás en otro puerto, cambiar el puerto)
-
-En la ruta /admin/export:
-- Pulsa el botón "Descargar Excel".
-- Espera el mensaje de confirmación y revisa la carpeta Descargas.
-
-Resultado:
-- Se descarga un archivo .xlsx con nombre tipo:
-  kiosk-interactions-YYYYMMDD-HHMM.xlsx
-
-Recomendación:
-- Ejecutar siempre en ventana normal (no incógnito) para asegurar guardado de datos.
-
-
-5) PROBLEMAS FRECUENTES
+4) PROBLEMAS FRECUENTES
 -----------------------
-- No abre el kiosko:
-  Revisar que el navegador permita abrir localhost y que no bloquee scripts.
-
-- No se guardan datos:
-  Evitar modo incógnito y comprobar permisos de almacenamiento del navegador.
-
-- No descarga Excel:
-  Revisar bloqueadores de descarga del navegador y permisos de carpeta Descargas.
-  Si entraste a /admin/export, confirmar que se pulsó el botón "Descargar Excel".
+- No abre el datacenter screen:
+  Revisar que el navegador permita abrir localhost y que no salte el CORS.
 
 
 Fin de la guía.
