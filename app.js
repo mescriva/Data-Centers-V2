@@ -225,3 +225,22 @@ fitToViewport();
 preloadAllVideos();
 preloadAllGraphs();
 render(); 
+
+(function tryPlayInitial() {
+  const first = videoMap[state.modeloId];
+  if (!first) return;
+
+  const attempt = () => {
+    first.play().catch(() => {
+      document.addEventListener("click",    () => first.play().catch(() => {}), { once: true });
+      document.addEventListener("touchend", () => first.play().catch(() => {}), { once: true });
+    });
+  };
+
+  // readyState >= 2 → ya hay datos mínimos para reproducir
+  if (first.readyState >= 2) {
+    attempt();
+  } else {
+    first.addEventListener("canplay", attempt, { once: true });
+  }
+})();

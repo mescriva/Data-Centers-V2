@@ -16,11 +16,11 @@ Primero extrae y después abre/ejecuta los archivos desde la carpeta descomprimi
 
 1) QUÉ NECESITA EL ORDENADOR (WINDOWS)
 --------------------------------------
-Para reproducir la versión compilada (carpeta dist):
+Para reproducir la versión compilada:
 - Windows 10 u 11
 - Navegador actualizado (Microsoft Edge o Google Chrome)
 - Permiso para abrir localhost en el firewall (si aplica)
-- Node.js y npm en las versiones del archivo (npm -v) (si se arranca en servidor local)
+- Node.js y npm en las versiones del archivo (npm -v) (si se arranca en servidor local localhost:3000)
 
 
 2) CÓMO EJECUTAR LA VERSIÓN COMPILADA (RECOMENDADO PARA USO FINAL)
@@ -42,18 +42,13 @@ Opción B (arranque con servidor local, localhost:3000):
 
 NOTA:
 - No se recomienda abrir index.html con doble clic por posible error de CORS.
-
-IMPORTANTE PARA ACTUALIZACIONES:
-- Si recibes una versión nueva, reemplaza la carpeta dist completa por la nueva.
-- Los lanzadores .bat actualizados cierran automáticamente cualquier servidor anterior en el mismo puerto antes de abrir el kiosko.
-- Si el navegador muestra versión antigua, cerrar todas las ventanas y volver a abrir el .bat.
-
+- Si lanzamos npx serve . de nuevo se consume otro puerto ya que el 3000 estará ocupado hasta que hagamos "kill terminal".
 
 3) CÓMO INSTALAR EL PROYECTO COMPLETO (SOLO SI VAS A DESARROLLAR)
 ------------------------------------------------------------------
 1. Recibir/descargar el ZIP del proyecto.
 2. Descomprimir el ZIP con "Extraer todo..." en Windows.
-3. Abrir terminal en la raíz del proyecto descomprimido (no en dist).
+3. Abrir terminal en la raíz del proyecto descomprimido.
 4. Instalar Node.js LTS desde: https://nodejs.org/
 5. Instalar dependencias:
    npm install
