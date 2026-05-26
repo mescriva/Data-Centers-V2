@@ -1,65 +1,40 @@
-DATACENTERS SCREEN - GUÍA RÁPIDA (WINDOWS)
-================================================
+DATACENTERS SCREEN - INICIO RÁPIDO
+==================================
 
-Este archivo está pensado para abrirse con Bloc de notas (Notepad).
+Guía de arranque para este software (DataCenter_MVP).
 
-IMPORTANTE (FORMATO DE ENTREGA)
-------------------------------
-El proyecto se entrega como un archivo ZIP.
-En Windows debes descomprimirlo primero para extraer todos los archivos:
-- Clic derecho sobre el ZIP -> "Extraer todo..."
-- Elegir carpeta de destino y confirmar extracción
-
-No ejecutes el proyecto desde dentro del ZIP comprimido.
-Primero extrae y después abre/ejecuta los archivos desde la carpeta descomprimida.
-
-
-1) QUÉ NECESITA EL ORDENADOR (WINDOWS)
---------------------------------------
-Para reproducir la versión compilada:
+1) REQUISITOS
+-------------
 - Windows 10 u 11
-- Navegador actualizado (Microsoft Edge o Google Chrome)
-- Permiso para abrir localhost en el firewall (si aplica)
-- Node.js y npm en las versiones del archivo (npm -v) (si se arranca en servidor local localhost:3000)
+- Navegador actualizado (Edge o Chrome)
+- Proyecto descomprimido (si se recibió en ZIP)
 
 
-2) CÓMO EJECUTAR LA VERSIÓN COMPILADA (RECOMENDADO PARA USO FINAL)
-------------------------------------------------------------------
-Antes de ejecutar, asegúrate de que la carpeta ZIP ya está descomprimida.
+2) ARRANQUE DEL PROYECTO
+------------------------
+Opción recomendada para uso final:
+1. Abrir la carpeta del proyecto.
+2. Hacer doble clic en: iniciar.bat
 
-Opción A (más simple, sin necesidad de acceso a Red - Internet):
-- Abrir la carpeta dist (ya extraída del ZIP).
-- Doble clic en el lanzador .bat:
-  inicar.bat
-
-Opción B (arranque con servidor local, localhost:3000):
-
-1. Abrir Visual Studio Code y la carpeta del proyecto.
-2. Nueva terminal para ejecutar:
-   Npx serve .
-3. Abrir en navegador:
-   http://localhost:3000
-
-NOTA:
-- No se recomienda abrir index.html con doble clic por posible error de CORS.
-- Si lanzamos npx serve . de nuevo se consume otro puerto ya que el 3000 estará ocupado hasta que hagamos "kill terminal".
-
-3) CÓMO INSTALAR EL PROYECTO COMPLETO (SOLO SI VAS A DESARROLLAR)
-------------------------------------------------------------------
-1. Recibir/descargar el ZIP del proyecto.
-2. Descomprimir el ZIP con "Extraer todo..." en Windows.
-3. Abrir terminal en la raíz del proyecto descomprimido.
-4. Instalar Node.js LTS desde: https://nodejs.org/
-5. Instalar dependencias:
-   npm install
-6. Lanzar el servidor local:
-   Npx serve .
+Opción alternativa con servidor local:
+1. Abrir una terminal en la carpeta del proyecto.
+2. Ejecutar:
+   npx serve .
+3. Abrir en navegador la URL que indique la terminal (normalmente http://localhost:3000).
 
 
-4) PROBLEMAS FRECUENTES
------------------------
-- No abre el datacenter screen:
-  Revisar que el navegador permita abrir localhost y que no salte el CORS.
+3) ACCIÓN OBLIGATORIA AL INICIAR
+--------------------------------
+Nada más arrancar el proyecto, hay que hacer UN clic en cualquier zona de la pantalla.
+
+Motivo:
+- El primer modelo no empieza a reproducir su video automáticamente hasta que existe
+  interacción del usuario (clic).
+- Después de ese clic inicial, al moverse entre modelos los demás videos sí cargan y
+  reproducen correctamente.
 
 
-Fin de la guía.
+4) NOTA IMPORTANTE
+------------------
+No abrir index.html con doble clic directo, porque el navegador puede bloquear la carga
+de recursos (CORS). Usar iniciar.bat o un servidor local.
