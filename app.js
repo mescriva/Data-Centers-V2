@@ -1,60 +1,94 @@
 // ═══════════════════════════════════════════════════════════
-//  DATA CENTERS — app.js
-//  Lógica de interacción del MVP.
-//  ─────────────────────────────────────────────────────────
-//  Flujo principal:
-//    1. Usuario elige modelo en Sección D   → setModel()
-//    2. Usuario activa switch en card       → toggleEquip()
-//    3. Usuario pulsa flecha de detalle     → openDetail()
-//    4. Usuario pulsa ← volver             → closeDetail()
-//
-//  Sin frameworks. Sin bundler. Vanilla JS con módulos
-//  simulados (variables globales desde data.js cargado antes).
-//
-//  IMPORTANTE: data.js debe cargarse ANTES que este archivo
-//  (ver orden de <script> en index.html)
+//  DATA CENTERS — app.js 
 // ═══════════════════════════════════════════════════════════
 
-
-// ── ESTADO GLOBAL ─────────────────────────────────────────
-// Todo el estado de la UI vive aquí. Sencillo y depurable.
 const state = {
-  modeloId:    MODELS[0].id,  // modelo seleccionado por defecto
-  activeEquip: {}             // { [equipId]: boolean }  ON/OFF
+  modeloId:    MODELS[0].id,
+  activeEquip: {}
 };
 
-
-// ── REFERENCIAS DOM (caché para no buscar en cada render) ──
 const $ = id => document.getElementById(id);
 
 const dom = {
   aText:      $("aText"),
+  aText2:     $("aText2"),
   aBadge:     $("aBadge"),
   aBody:      $("aBody"),
-  renderImg:  $("renderImg"),
-  focusLayer: $("focusLayer"),
-  renderTag:  $("renderTag"),
-  graphVideo: $("graphVideo"),
-  graphCanvas:$("graphCanvas"),
   graphLabel: $("graphLabel"),
   graphUnit:  $("graphUnit"),
-  modelNav:   $("modelNav")
+  graphImg:   $("graphImg"),
+  modelNav:   $("modelNav"),
+  renderWrap: $("renderWrap")
 };
+
+// ── MAPA DE VÍDEOS PRECARGADOS ────────────────────────────
+// videoMap[modelId] = elemento <video> listo para mostrar
+const videoMap = {};
+
+function preloadAllVideos() {
+  MODELS.forEach(model => {
+    const src = model.render || "";
+    const video = document.createElement("video");
+    video.setAttribute("autoplay", "");
+    video.setAttribute("loop", "");
+    video.setAttribute("muted", "");
+    video.setAttribute("playsinline", "");
+    video.setAttribute("preload", "auto");
+    video.style.cssText = [
+      "position:absolute",
+      "inset:0",
+      "width:100%",
+      "height:100%",
+      "object-fit:contain",
+      "object-position:center",
+      "opacity:0",
+      "transition:opacity 0.25s ease",
+      "pointer-events:none"
+    ].join(";");
+
+    if (src) {
+      video.src = src;
+      video.load();
+    }
+
+    dom.renderWrap.appendChild(video);
+    videoMap[model.id] = video;
+  });
+}
+
+function showVideo(modelId) {
+  // Oculta todos y muestra el del modelo activo — sin await, sin canplay
+  Object.entries(videoMap).forEach(([id, video]) => {
+    video.style.opacity = id === modelId ? "1" : "0";
+  });
+  // Asegura que esté reproduciendo (puede haberse pausado)
+  const active = videoMap[modelId];
+  if (active && active.paused) {
+    active.play().catch(() => {});
+  }
+}
+
+// ── MAPA DE IMÁGENES PRECARGADAS ──────────────────────────
+const graphMap = {};
+
+function preloadAllGraphs() {
+  MODELS.forEach(model => {
+    const img = new Image();
+    img.src = `./assets/graphs/${model.id}.png`;
+    graphMap[model.id] = img;
+  });
+}
 
 
 // ── HELPERS ────────────────────────────────────────────────
-
-/** Devuelve el objeto modelo activo */
 function getModel() {
   return MODELS.find(m => m.id === state.modeloId);
 }
 
-/** Devuelve true si el equipo está activo (switch ON) */
 function isOn(equipId) {
   return Boolean(state.activeEquip[equipId]);
 }
 
-/** Inicializa el estado de switches para un modelo (solo la primera vez) */
 function initEquipState(model) {
   model.equipos.forEach(eq => {
     if (state.activeEquip[eq.id] === undefined) {
@@ -64,38 +98,29 @@ function initEquipState(model) {
 }
 
 
-// ── RENDER: SECCIÓN D (navbar modelos) ────────────────────
+// ── SECCIÓN D ─────────────────────────────────────────────
 function renderSectionD() {
   dom.modelNav.innerHTML = MODELS.map(m => {
     const sel = m.id === state.modeloId ? "selected" : "";
-    return `<button class="model-btn ${sel}" data-action="setModel" data-model="${m.id}">
+    return `<button class="model-btn ${sel}"
+                    data-action="setModel"
+                    data-model="${m.id}">
               ${m.shortName}
             </button>`;
   }).join("");
 }
 
 
-// ── RENDER: SECCIÓN B (render fijo) ───────────────────────
-const RENDER_SRC = "./assets/renders/render-main.png";
-
+// ── SECCIÓN B ─────────────────────────────────────────────
 function renderSectionB(model) {
-  // Imagen fija para todos los modelos
-  if (!dom.renderImg.src.endsWith("render-main.png")) {
-    dom.renderImg.src = RENDER_SRC;
-  }
-
-  // Etiqueta del modelo sobre el render
-  dom.renderTag.textContent = model.shortName.toUpperCase();
-
-  // Sin nodos de foco
-  dom.focusLayer.innerHTML = "";
+  showVideo(model.id);
 }
 
 
-// ── RENDER: SECCIÓN C (gráfica / video) ───────────────────
+// ── SECCIÓN C ─────────────────────────────────────────────
 function renderSectionC(model) {
-  // Actualizar etiqueta y leyenda
   dom.graphLabel.textContent = model.graphLabel || "Rendimiento energético";
+
   const legendItems = (model.legend || []).map(item =>
     `<span class="graph-legend-item">
        <span class="graph-legend-dot" style="background:${item.color}"></span>
@@ -104,163 +129,37 @@ function renderSectionC(model) {
   ).join("");
   dom.graphUnit.innerHTML = legendItems || (model.graphUnit || `kW · ${model.shortName}`);
 
-  // Si hay asset de vídeo .mp4 real
-  if (model.graph) {
-    dom.graphVideo.src = model.graph;
-    dom.graphVideo.load();
-    dom.graphVideo.play().catch(() => {});
-
-    dom.graphVideo.oncanplay = () => {
-      dom.graphVideo.style.display = "block";
-      dom.graphCanvas.style.display = "none";
-    };
-    dom.graphVideo.onerror = () => {
-      dom.graphVideo.style.display = "none";
-      dom.graphCanvas.style.display = "block";
-      drawPlaceholderChart(dom.graphCanvas, model);
-    };
-  } else {
-    // Sin vídeo → canvas placeholder hasta recibir los .mp4
-    dom.graphVideo.style.display = "none";
-    dom.graphCanvas.style.display = "block";
-    drawPlaceholderChart(dom.graphCanvas, model);
+  // Swap instantáneo: reemplaza el elemento en el DOM por el precargado
+  const cached = graphMap[model.id];
+  if (cached) {
+    cached.className = "graph-img";
+    cached.alt = "Gráfica del modelo activo";
+    dom.graphImg.replaceWith(cached);
+    dom.graphImg = cached;           // actualiza la referencia
   }
 }
 
 
-// ── GRÁFICA PLACEHOLDER (Canvas API) ─────────────────────
-// Dibuja una curva de área suave como placeholder hasta
-// que el cliente proporcione los .mp4 reales.
-function drawPlaceholderChart(canvas, model) {
-  // Esperar al layout para tener dimensiones reales
-  requestAnimationFrame(() => {
-    const rect = canvas.getBoundingClientRect();
-    canvas.width  = rect.width  * window.devicePixelRatio;
-    canvas.height = rect.height * window.devicePixelRatio;
-    const ctx = canvas.getContext("2d");
-    ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
-
-    const W = rect.width;
-    const H = rect.height;
-
-    // Datos de muestra — 12 puntos (meses)
-    const baseValues = {
-      m1: [32, 35, 45, 52, 48, 60, 72, 68, 55, 63, 70, 65],
-      m2: [55, 62, 70, 82, 78, 90, 96, 92, 85, 88, 94, 90],
-      m3: [20, 28, 42, 58, 65, 78, 85, 80, 62, 50, 35, 22],
-      m4: [15, 18, 22, 25, 28, 30, 32, 31, 28, 24, 20, 16],
-      m5: [80, 84, 88, 90, 92, 95, 98, 96, 93, 91, 88, 85],
-      m6: [40, 44, 50, 56, 60, 65, 68, 66, 62, 58, 52, 46]
-    };
-    const vals = baseValues[model.id] || baseValues.m1;
-    const maxVal = Math.max(...vals);
-    const pad = { top: 20, right: 20, bottom: 28, left: 40 };
-    const chartW = W - pad.left - pad.right;
-    const chartH = H - pad.top  - pad.bottom;
-
-    ctx.clearRect(0, 0, W, H);
-
-    // Grid líneas horizontales
-    ctx.strokeStyle = "rgba(13,20,33,0.08)";
-    ctx.lineWidth = 1;
-    [0.25, 0.5, 0.75, 1].forEach(t => {
-      const y = pad.top + chartH * (1 - t);
-      ctx.beginPath();
-      ctx.moveTo(pad.left, y);
-      ctx.lineTo(pad.left + chartW, y);
-      ctx.stroke();
-    });
-
-    // Puntos de la curva
-    const points = vals.map((v, i) => ({
-      x: pad.left + (i / (vals.length - 1)) * chartW,
-      y: pad.top  + chartH * (1 - v / maxVal)
-    }));
-
-    // Área bajo la curva (relleno con gradiente)
-    const grad = ctx.createLinearGradient(0, pad.top, 0, pad.top + chartH);
-    grad.addColorStop(0,   "rgba(27,95,255,0.25)");
-    grad.addColorStop(1,   "rgba(27,95,255,0.02)");
-
-    ctx.beginPath();
-    ctx.moveTo(points[0].x, points[0].y);
-    for (let i = 1; i < points.length; i++) {
-      const cpx = (points[i-1].x + points[i].x) / 2;
-      ctx.bezierCurveTo(cpx, points[i-1].y, cpx, points[i].y, points[i].x, points[i].y);
-    }
-    ctx.lineTo(points[points.length-1].x, pad.top + chartH);
-    ctx.lineTo(points[0].x, pad.top + chartH);
-    ctx.closePath();
-    ctx.fillStyle = grad;
-    ctx.fill();
-
-    // Línea de la curva
-    ctx.beginPath();
-    ctx.moveTo(points[0].x, points[0].y);
-    for (let i = 1; i < points.length; i++) {
-      const cpx = (points[i-1].x + points[i].x) / 2;
-      ctx.bezierCurveTo(cpx, points[i-1].y, cpx, points[i].y, points[i].x, points[i].y);
-    }
-    ctx.strokeStyle = "rgba(27,95,255,0.8)";
-    ctx.lineWidth = 2;
-    ctx.setLineDash([]);
-    ctx.stroke();
-
-    // Eje X: etiquetas de meses
-    const meses = ["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"];
-    ctx.fillStyle = "rgba(13,20,33,0.35)";
-    ctx.font = "10px 'Suisse Int\\'l', sans-serif";
-    ctx.textAlign = "center";
-    points.forEach((p, i) => {
-      ctx.fillText(meses[i], p.x, H - 6);
-    });
-
-    // Eje Y: valor máximo
-    ctx.textAlign = "right";
-    ctx.fillText(maxVal + " kW", pad.left - 6, pad.top + 4);
-  });
-}
-
-
-// ── RENDER: SECCIÓN A — LISTADO DE EQUIPOS ────────────────
+// ── SECCIÓN A ─────────────────────────────────────────────
 function renderSectionAList(model) {
-  // Cabecera: subtítulo (shortName del modelo) + descripción
   dom.aBadge.textContent = model.shortName;
   dom.aText.textContent  = model.description;
-
-  const iconOn  = `<svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="7" cy="7" r="5.5"/><path d="M4.5 7l2 2 3-3"/></svg>`;
-  const iconOff = `<svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="7" cy="7" r="5.5"/><path d="M5 5l4 4M9 5l-4 4"/></svg>`;
+  dom.aText2.textContent = model.description2;
 
   dom.aBody.innerHTML = model.equipos.map((eq, i) => {
-    const on         = isOn(eq.id);
-    const cardActive = on ? "card--active" : "";
-    const labelClass = on ? "card-label--on" : "card-label--off";
-    const labelText  = on ? "Enabled" : "Disabled";
-    const labelIcon  = on ? iconOn : iconOff;
-
+    const on = isOn(eq.id);
     return `
-      <article class="card ${cardActive} anim-fade"
+      <article class="card ${on ? "card--active" : ""} anim-fade"
                data-equip="${eq.id}"
                data-action="toggle"
-               style="animation-delay: ${i * 0.06}s">
-
-        <!-- Fila superior: nombre + label estado -->
-        <div class="card-top">
+               style="animation-delay:${i * 0.06}s">
+        <div class="card-left">
           <div class="card-title">${eq.title}</div>
-          <span class="card-label ${labelClass}" aria-label="${labelText}">
-            ${labelIcon}${labelText}
-          </span>
         </div>
-
-        <!-- Descripción corta -->
         <div class="card-desc">${eq.short}</div>
-
-      </article>
-    `;
+      </article>`;
   }).join("");
 }
-
-
 
 
 // ── RENDER GLOBAL ─────────────────────────────────────────
@@ -276,61 +175,70 @@ function render() {
 
 
 // ── ACCIONES ──────────────────────────────────────────────
-
-/** Cambia el modelo activo */
 function setModel(modelId) {
   state.modeloId = modelId;
   render();
 }
 
-/** Alterna el estado ON/OFF de un equipo — actualiza solo la card afectada */
 function toggleEquip(equipId) {
   state.activeEquip[equipId] = !state.activeEquip[equipId];
   const on = isOn(equipId);
-
   const card = dom.aBody.querySelector(`[data-equip="${equipId}"]`);
-  if (!card) return;
-
-  card.classList.toggle("card--active", on);
-
-  const label = card.querySelector(".card-label");
-  if (label) {
-    const iconOn  = `<svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="7" cy="7" r="5.5"/><path d="M4.5 7l2 2 3-3"/></svg>`;
-    const iconOff = `<svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="7" cy="7" r="5.5"/><path d="M5 5l4 4M9 5l-4 4"/></svg>`;
-    label.className = `card-label ${on ? "card-label--on" : "card-label--off"}`;
-    label.setAttribute("aria-label", on ? "Enabled" : "Disabled");
-    label.innerHTML = `${on ? iconOn : iconOff}${on ? "Enabled" : "Disabled"}`;
-  }
+  if (card) card.classList.toggle("card--active", on);
 }
 
 
-// ── DELEGACIÓN DE EVENTOS ─────────────────────────────────
-// Listener único para toda la interacción. Soporta tanto
-// botones como la card completa (data-action en article).
+// ── EVENTOS ───────────────────────────────────────────────
 document.addEventListener("click", (ev) => {
   const target = ev.target.closest("[data-action]");
   if (!target) return;
 
-  const action = target.dataset.action;
-
-  // ① Cambiar modelo (Sección D)
-  if (action === "setModel") {
+  if (target.dataset.action === "setModel") {
     const modelId = target.dataset.model;
     if (modelId) setModel(modelId);
     return;
   }
 
-  // ② Activar/desactivar equipo (card completa o switch en detalle)
-  if (action === "toggle") {
+  if (target.dataset.action === "toggle") {
     const card    = target.closest("[data-equip]") ?? target;
     const equipId = target.dataset.equip || card.dataset.equip;
     if (equipId) toggleEquip(equipId);
     return;
   }
-
 });
 
 
-// ── INICIALIZACIÓN ────────────────────────────────────────
-// Llamada inicial que pinta toda la UI con el modelo 1.
+// ── ESCALADO 1920×1080 ────────────────────────────────────
+function fitToViewport() {
+  const scale = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
+  document.documentElement.style.setProperty("--scale", scale);
+}
+window.addEventListener("resize", fitToViewport);
+fitToViewport();
+
+
+// ── INIT ──────────────────────────────────────────────────
+preloadAllVideos();
+preloadAllGraphs();
 render();
+
+// Arranca el vídeo del modelo inicial en cuanto hay datos suficientes
+(function startInitialVideo() {
+  const video = videoMap[state.modeloId];
+  if (!video || !video.src) return;
+
+  function playIt() {
+    video.play().catch(() => {
+      // Navegador bloqueó autoplay: primer clic en cualquier zona lo desbloquea
+      document.addEventListener("click", () => video.play().catch(() => {}), { once: true });
+    });
+  }
+
+  // readyState 0 ó 1 → todavía no hay datos, esperamos canplay
+  // readyState 2, 3, 4 → ya hay datos, intentamos directo
+  if (video.readyState >= 2) {
+    playIt();
+  } else {
+    video.addEventListener("canplay", playIt, { once: true });
+  }
+})();
