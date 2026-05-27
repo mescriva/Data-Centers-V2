@@ -46,10 +46,6 @@ Se puede ejecutar el archivo y visualizar en cualquier pantalla sin acceso a Int
 # Con Node.js (npx, sin instalar nada):
 npx serve .
 
-# O con Python 3:
-python3 -m http.server 8080
-```
-
 3. Abre en Chrome: `http://localhost:3000` (o el puerto que indique el servidor)
 
 > ⚠️ No abras index.html directamente con doble clic — el navegador bloqueará la carga de assets por política de seguridad CORS.
