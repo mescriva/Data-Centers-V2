@@ -22,8 +22,10 @@
   /* Texto */
   --text-900: #101214;   /* gris-07 */
   --text-700: #353e44;   /* gris-05 */
-  --text-500: #83919f;   /* gris-03 */
+  --text-600: #505D68;   /* gris-04 */
+  --text-500: #505D68;   /* gris-03 es #83919f pero repito el 04 por asegurar bugs*/
   --text-300: #b9c1c7;   /* gris-02 */
+
 
   /* Neon blue */
   --blue:       #3033ff;
@@ -86,7 +88,7 @@ html, body {
 /* Diseño bloqueado a 1920×1080. Se escala uniformemente al viewport
    con transform: scale() vía la variable --scale (calculada en app.js).
    Así todo el contenido — renders, gráfica y textos — mantiene
-   proporciones y nada se deforma al redimensionar la ventana. */
+   proporciones y nada se deforma al redimensionar la ventana. d*/
 .app {
   position: absolute;
   top: 50%;
@@ -184,7 +186,7 @@ html, body {
 .a-text {
   font-size: 12.5px;
   line-height: 1.65;
-  color: var(--text-500); /* gris-03 para el texto descriptivo */
+  color: var(--text-600); /* gris-04 para el texto descriptivo */
   font-weight: 400;
   transition: opacity 0.3s;
   margin-top: 4px;
@@ -226,7 +228,7 @@ html, body {
 .card-desc {
   font-size: 12.5px;
   line-height: 1.4;
-  color: var(--text-500);
+  color: var(--text-600);
   font-weight: 400;
   min-width: 0;
   white-space: wrap;
@@ -337,9 +339,9 @@ html, body {
 
 .graph-label {
   font-family: 'Suisse Int\'l', sans-serif;
-  font-weight: 450;   /* Book */
+  /* font-weight: 450;    Book */
   font-size: 20px;
-  color: var(--text-900);
+  color: var(--text-600);
 }
 
 .graph-unit {
@@ -347,7 +349,7 @@ html, body {
   align-items: center;
   gap: 14px;
   font-size: 12px;
-  color: var(--text-300);
+  color: var(--text-600);
 }
 
 .graph-legend-item {
@@ -355,7 +357,7 @@ html, body {
   align-items: center;
   gap: 5px;
   font-size: 11px;
-  color: var(--text-500);
+  color: var(--text-600);
   white-space: nowrap;
 }
 
@@ -412,12 +414,12 @@ html, body {
   position: relative;
   border: 1px solid transparent;
   background: transparent;
-  color: var(--text-500);
+  color: var(--text-600);
   padding: 10px 16px;
   border-radius: var(--radius-pill);
   font-family: 'Suisse Int\'l', sans-serif;
   font-size: 13px;
-  font-weight: 400;
+  /* font-weight: 400; quitado parecia negrita */
   cursor: pointer;
   transition: background 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s;
   white-space: nowrap;
@@ -426,7 +428,7 @@ html, body {
 }
 
 .model-btn:hover:not(.selected) {
-  color: var(--text-700);
+  color: var(--text-600);
   background: rgba(255,255,255,0.18);
 }
 
