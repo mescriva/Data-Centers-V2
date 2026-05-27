@@ -22,8 +22,10 @@
   /* Texto */
   --text-900: #101214;   /* gris-07 */
   --text-700: #353e44;   /* gris-05 */
+  --text-600: #505D68;   /* gris-04 */
   --text-500: #83919f;   /* gris-03 */
   --text-300: #b9c1c7;   /* gris-02 */
+
 
   /* Neon blue */
   --blue:       #3033ff;
@@ -86,7 +88,7 @@ html, body {
 /* Diseño bloqueado a 1920×1080. Se escala uniformemente al viewport
    con transform: scale() vía la variable --scale (calculada en app.js).
    Así todo el contenido — renders, gráfica y textos — mantiene
-   proporciones y nada se deforma al redimensionar la ventana. */
+   proporciones y nada se deforma al redimensionar la ventana. d*/
 .app {
   position: absolute;
   top: 50%;
@@ -412,12 +414,12 @@ html, body {
   position: relative;
   border: 1px solid transparent;
   background: transparent;
-  color: var(--text-500);
+  color: rgba(53,62,68);
   padding: 10px 16px;
   border-radius: var(--radius-pill);
   font-family: 'Suisse Int\'l', sans-serif;
   font-size: 13px;
-  font-weight: 400;
+  font-weight: 500;
   cursor: pointer;
   transition: background 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s;
   white-space: nowrap;
