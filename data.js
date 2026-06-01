@@ -1,236 +1,189 @@
 // ═══════════════════════════════════════════════════════════
 //  DATA CENTERS — data.js
-//  Contiene los datos de los 6 modelos y sus equipos.
-//  ─────────────────────────────────────────────────────────
-//  CÓMO ACTUALIZAR:
-//   · render:     ruta a imagen .webp del render base del modelo
-//   · graph:      ruta al .mp4 de la gráfica en bucle
-//   · focus.x/y:  posición del punto sobre el render en %
-//   · schemeImg:  ruta a imagen .webp del esquema del equipo
 // ═══════════════════════════════════════════════════════════
-
+//
+//  Convención de assets por combinación de equipos activos:
+//
+//    Render base del modelo (todos activos):
+//      ./assets/renders/{id}.mp4          → ej. m4.mp4
+//
+//    Combinación parcial (solo algunos activos):
+//      ./assets/renders/{id}_{keys}.mp4   → ej. m4_ppc.mp4
+//                                            m4_pcsm.mp4
+//                                            m4_none.mp4
+//
+//    Gráfica: misma lógica con ./assets/graphs/{id}[_{keys}].png
+//
+//    {keys} = renderKey de cada equipo activo, unidos por "-"
+//    y ordenados según aparecen en el array `equipos`.
+//    Si ningún equipo está activo → se usa el sufijo "none".
+//
+//  Si el archivo no existe el código cae al asset base del modelo.
+// ═══════════════════════════════════════════════════════════
 
 const MODELS = [
 
-  // ─── MODELO 1 — Line Interactive ──────────────────────────────
+  // ─── MODELO 1 — Line Interactive ───────────────────────
   {
     id: "m1",
     name: "Data Center Line Interactive",
     shortName: "Line Interactive",
     description: "Line Interactive architecture decouples the inverter from grid disturbances while limiting fault currents and supporting smoother transitions between grid-connected and islanded operation.",
     description2: "With grid-forming operation and advanced control capabilities, this configuration enhances system stability and supports reliable performance under demanding load profiles.",
-    render: "./assets/renders/line_interactive.mp4",
-    graph: "./assets/graphs/m1.png",
     graphLabel: "Line Interactive Chart",
-    graphUnit: "PUE · Line Interactive",
     legend: [
-      { label: "POI",   color: "var(--neonBlue500)"  },
-      { label: "PE BESS",   color: "var(--orange500)" },
-      { label: "Data Center",   color: "var(--mobilityGreen500)" }
+      { label: "POI",         color: "var(--neonBlue500)"      },
+      { label: "PE BESS",     color: "var(--orange500)"         },
+      { label: "Data Center", color: "var(--mobilityGreen500)" }
     ],
     equipos: [
       {
-        id: "m1-pcs",
-        title: "PCSM & Multi PCSM Battery Inverter",
-        short: "Supports the load during disturbances, stabilizes power flow, and enables islanded operation when required.",
-        long: "Supports the load during disturbances, stabilizes power flow, and enables islanded operation when required.",
-        schemeImg: "./assets/schemes/m1.png",
-        focus: { x: 72, y: 78 }
+        id:        "m1-pcs",
+        renderKey: "pcs",
+        title:     "PCSM & Multi PCSM Battery Inverter",
+        short:     "Supports the load during disturbances, stabilizes power flow, and enables islanded operation when required."
       }
     ]
   },
 
-  // ─── MODELO 2 — Double Conversion ─────────────────────
+  // ─── MODELO 2 — Double Conversion ──────────────────────
   {
     id: "m2",
     name: "Data Center Double Conversion",
     shortName: "Double Conversion",
     description: "Double conversion architecture provides complete isolation from grid disturbances, delivering clean and stable power to critical data center loads.",
     description2: "This configuration ensures optimal power quality and uninterrupted supply with zero transfer time, making it one of the most reliable solutions for mission-critical environments.",
-    render: "./assets/renders/double_conversion.mp4",
-    graph: "./assets/graphs/m2.png",
     graphLabel: "Double Conversion Chart",
-    graphUnit: "kW/rack · Load Smoothing Capabilities - sub titulo gráfica 2 lineas",
     legend: [
-      { label: "POI",   color: "var(--neonBlue500)"  },
-      { label: "PE BESS GFM",    color: "var(--orange500)" },
+      { label: "POI",          color: "var(--neonBlue500)"      },
+      { label: "PE BESS GFM",  color: "var(--orange500)"         },
       { label: "Data Center",  color: "var(--mobilityGreen500)" },
-      { label:"PE BESS GFL", color: "var(--yellow500)" }
+      { label: "PE BESS GFL",  color: "var(--yellow500)"         }
     ],
     equipos: [
       {
-        id: "m2-gpu",
-         title: "PCSM & Multi PCSM Battery Inverter",
-        short: "Conditions and stabilizes the energy flow, ensuring clean power delivery to critical data center loads.",
-        long: "Conditions and stabilizes the energy flow, ensuring clean power delivery to critical data center loads.",
-        schemeImg: "./assets/schemes/m2.png",
-        focus: { x: 45, y: 22 }
+        id:        "m2-gpu",
+        renderKey: "pcs",
+        title:     "PCSM & Multi PCSM Battery Inverter",
+        short:     "Conditions and stabilizes the energy flow, ensuring clean power delivery to critical data center loads."
       }
     ]
   },
 
-  // ─── MODELO 3 — Load Sensing ───────────────────────
+  // ─── MODELO 3 — Load Sensing ────────────────────────────
   {
     id: "m3",
     name: "Data Center Load Sensing",
     shortName: "Load Sensing",
     description: "Load Sensing measures real-time data center demand and sends the required power references to the grid-following inverter.",
     description2: "This enables fast response to load variations, helping reduce grid consumption and smooth significant power peaks while maintaining operational efficiency.",
-    render: "./assets/renders/load_sensing.mp4",
-    graph: "./assets/graphs/m3.png",
     graphLabel: "Load Sensing Chart",
-    graphUnit: "MWh · Modelo 3",
     legend: [
-      { label: "POI",  color: "var(--neonBlue500)" },
-      { label: "PE BESS",  color: "var(--orange500)" },
-      { label: "Data Center",   color: "var(--mobilityGreen500)" }
+      { label: "POI",         color: "var(--neonBlue500)"      },
+      { label: "PE BESS",     color: "var(--orange500)"         },
+      { label: "Data Center", color: "var(--mobilityGreen500)" }
     ],
     equipos: [
       {
-        id: "m3-solar",
-        title: "Power Plant Controller",
-        short: "Tracks load demand in real time and sends power references to optimize inverter response.",
-        long: "Tracks load demand in real time and sends power references to optimize inverter response.",
-        schemeImg: "./assets/schemes/m3.png",
-        focus: { x: 78, y: 18 }
+        id:        "m3-solar",
+        renderKey: "ppc",
+        title:     "Power Plant Controller",
+        short:     "Tracks load demand in real time and sends power references to optimize inverter response."
       },
       {
-        id: "m3-bess",
-         title: "PCSM & Multi PCSM Battery Inverter",
-        short: "Responds to load changes, reduces power peaks, and supports efficient energy exchange with the grid.",
-        long: "Responds to load changes, reduces power peaks, and supports efficient energy exchange with the grid.",
-        schemeImg: "./assets/schemes/m3.png",
-        focus: { x: 60, y: 35 }
+        id:        "m3-bess",
+        renderKey: "pcs",
+        title:     "PCSM & Multi PCSM Battery Inverter",
+        short:     "Responds to load changes, reduces power peaks, and supports efficient energy exchange with the grid."
       }
     ]
   },
 
-  // ─── MODELO 4 — Hybrid Load Sensing ────────────────────────────
+  // ─── MODELO 4 — Hybrid Load Sensing ────────────────────
   {
     id: "m4",
     name: "Data Center Hybrid Load Sensing",
     shortName: "Hybrid Load Sensing",
     description: "Hybrid Load Sensing uses an external control device to measure real-time load demand and send power references to the grid-forming inverter.",
     description2: "This solution helps minimize grid consumption, reduce significant power peaks, and achieve performance close to line-interactive systems without the need for a choke.",
-    render: "./assets/renders/hybrid_load_sensing.mp4",
-    graph: "./assets/graphs/m4.png",
     graphLabel: "Hybrid Load Sensing Chart",
-    graphUnit: "MW · Modelo 4",
-     legend: [
-      { label: "POI",  color: "var(--neonBlue500)" },
-      { label: "PE BESS",  color: "var(--orange500)" },
-      { label: "Data Center",   color: "var(--mobilityGreen500)" }
+    legend: [
+      { label: "POI",         color: "var(--neonBlue500)"      },
+      { label: "PE BESS",     color: "var(--orange500)"         },
+      { label: "Data Center", color: "var(--mobilityGreen500)" }
     ],
     equipos: [
       {
-        id: "m4-xmv670",
-        title: "Power Plant Controller",
-        short: "Measures real-time load demand and sends power references to coordinate the inverter response.",
-        long: "Measures real-time load demand and sends power references to coordinate the inverter response.",
-        schemeImg: "./assets/schemes/m4.png",
-        focus: { x: 52, y: 48 }
+        id:        "m4-xmv670",
+        renderKey: "ppc",
+        title:     "Power Plant Controller",
+        short:     "Measures real-time load demand and sends power references to coordinate the inverter response."
       },
       {
-        id: "m4-liquid",
-         title: "PCSM & Multi PCSM Battery Inverter",
-        short: "Operates in grid-forming mode to reduce power peaks, support stability, and optimize grid consumption.",
-        long: "Operates in grid-forming mode to reduce power peaks, support stability, and optimize grid consumption.",
-        schemeImg: "./assets/schemes/m4.png",
-        focus: { x: 30, y: 60 }
+        id:        "m4-liquid",
+        renderKey: "pcs",
+        title:     "PCSM & Multi PCSM Battery Inverter",
+        short:     "Operates in grid-forming mode to reduce power peaks, support stability, and optimize grid consumption."
       }
     ]
   },
 
-  // ─── MODELO 5 — OFF Grid GT BESS BTM ────────────────────────
+  // ─── MODELO 5 — OFF Grid GT + BESS BTM ─────────────────
   {
     id: "m5",
     name: "Data Center OFF Grid GT + BESS BTM",
     shortName: "OFF Grid: GT+ BESS BTM",
     description: "Off-grid data centers use gas turbines for primary, continuous, and high-density power, while BESS provides backup power and stability services.",
     description2: "The BESS delivers near-instantaneous protection against momentary dips and failures, creating a scalable, reliable, and more sustainable alternative to traditional diesel-based backup systems.",
-    render: "./assets/renders/off_grid.mp4",
-    graph: "./assets/graphs/m5.png",
     graphLabel: "OFF Grid: GT+ BESS BTM Chart",
-    graphUnit: "ms · Modelo 5",
-     legend: [
-      { label: "Gas Turbine",  color: "var(--neonBlue500)" },
-      { label: "PE BESS",  color: "var(--orange500)" },
-      { label: "Data Center",   color: "var(--mobilityGreen500)" }
-      
+    legend: [
+      { label: "Gas Turbine",  color: "var(--neonBlue500)"      },
+      { label: "PE BESS",      color: "var(--orange500)"         },
+      { label: "Data Center",  color: "var(--mobilityGreen500)" }
     ],
     equipos: [
       {
-        id: "m5-container",
-        title: "PCSM & Multi PCSM Battery Inverter",
-        short: "Stabilizes the off-grid system, manages battery response, and provides fast backup power during disturbances.",
-        long: "Stabilizes the off-grid system, manages battery response, and provides fast backup power during disturbances.",
-        schemeImg: "./assets/schemes/m5.png",
-        focus: { x: 35, y: 45 }
+        id:        "m5-container",
+        renderKey: "pcs",
+        title:     "PCSM & Multi PCSM Battery Inverter",
+        short:     "Stabilizes the off-grid system, manages battery response, and provides fast backup power during disturbances."
       }
     ]
   },
 
-  
-
-  // ─── MODELO 6 — 800 V POWER SUPPLY ─────────────────────
+  // ─── MODELO 6 — 800 V Power Supply ─────────────────────
   {
     id: "m6",
     name: "Data Center 800 V Power Supply",
     shortName: "800 V Power Supply",
     description: "AI data centers are no longer limited only by GPUs, but by grid interconnection and energy efficiency. Traditional AC architectures can lose up to 10% of approved power before reaching compute.",
-    description2:"By moving to a direct 800 V DC architecture, redundant conversion stages are reduced, improving efficiency, simplifying system design, and enabling faster scalability for next-generation data centers.",
-    render: "./assets/renders/800_V.mp4",
-    graph: "./assets/graphs/m6.png",
+    description2: "By moving to a direct 800 V DC architecture, redundant conversion stages are reduced, improving efficiency, simplifying system design, and enabling faster scalability for next-generation data centers.",
     graphLabel: "800 V Power Supply Chart",
-    graphUnit: "% ocupación · Modelo 6",
-     legend: [
-      { label: "POI",  color: "var(--neonBlue500)" },
-      { label: "PE BESS",  color: "var(--orange500)" },
-      { label: "Data Center",   color: "var(--mobilityGreen500)" }
-      
+    legend: [
+      { label: "POI",         color: "var(--neonBlue500)"      },
+      { label: "PE BESS",     color: "var(--orange500)"         },
+      { label: "Data Center", color: "var(--mobilityGreen500)" }
     ],
     equipos: [
-     /*  {
-        id: "m6-zone-priv",
-        title: "HEM Solar Inverter",
-        short: "Converts solar energy into AC power for on-site generation.",
-        long: "Converts solar energy into AC power for on-site generation.",
-        schemeImg: "./assets/schemes/m6.png",
-        focus: { x: 25, y: 40 }
-      }, */
-     /*  {
-        id: "m6-zone-colo",
-        title: "PCSM & Multi PCSM Battery Inverter",
-        short: "Manages battery power for backup, peak shaving, and grid support.",
-        long: "Manages battery power for backup, peak shaving, and grid support.",
-        schemeImg: "./assets/schemes/m6.png",
-        focus: { x: 65, y: 45 }
-      }, */
       {
-        id: "m6-zone-colo",
-        title: "AIPCS 800 V Power Supply",
-        short: "Delivers regulated 800 V DC power to critical data center loads.",
-        long: "Delivers regulated 800 V DC power to critical data center loads.",
-        schemeImg: "./assets/schemes/m6.png",
-        focus: { x: 65, y: 45 }
+        id:        "m6-aipcs",
+        renderKey: "aipcs",
+        title:     "AIPCS 800 V Power Supply",
+        short:     "Delivers regulated 800 V DC power to critical data center loads."
       },
       {
-        id: "m6-zone-colo",
-        title: "DC/DC Converter",
-        short: "Connects batteries to the 800 V DC bus for fast power exchange.",
-        long: "Connects batteries to the 800 V DC bus for fast power exchange.",
-        schemeImg: "./assets/schemes/m6.png",
-        focus: { x: 65, y: 45 }
+        id:        "m6-dcdc",
+        renderKey: "dcdc",
+        title:     "DC/DC Converter",
+        short:     "Connects batteries to the 800 V DC bus for fast power exchange."
       },
       {
-        id: "m6-noc",
-        title: "XMV670 & XMV670K MV and SD750FR LV Drive",
-        short: "Ensure efficient cooling by controlling medium-voltage motors and optimizing pumps and fans.",
-        long: "Ensure efficient cooling by controlling medium-voltage motors and optimizing pumps and fans.",
-        schemeImg: "./assets/schemes/m6.png",
-        focus: { x: 45, y: 20 }
+        id:        "m6-noc",
+        renderKey: "xmv",
+        title:     "XMV670 & XMV670K MV and SD750FR LV Drive",
+        short:     "Ensure efficient cooling by controlling medium-voltage motors and optimizing pumps and fans."
       }
     ]
   }
 
-]; // fin MODELS
+];
