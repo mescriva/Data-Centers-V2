@@ -1,0 +1,40 @@
+DATACENTERS SCREEN - INICIO RÁPIDO
+==================================
+
+Guía de arranque para este software (DataCenter_MVP).
+
+1) REQUISITOS
+-------------
+- Windows 10 u 11
+- Navegador actualizado (Edge o Chrome)
+- Proyecto descomprimido (si se recibió en ZIP)
+
+
+2) ARRANQUE DEL PROYECTO
+------------------------
+Opción recomendada para uso final:
+1. Abrir la carpeta del proyecto.
+2. Hacer doble clic en: iniciar.bat
+
+Opción alternativa con servidor local:
+1. Abrir una terminal en la carpeta del proyecto.
+2. Ejecutar:
+   npx serve .
+3. Abrir en navegador la URL que indique la terminal (normalmente http://localhost:3000).
+
+
+3) ACCIÓN OBLIGATORIA AL INICIAR
+--------------------------------
+Nada más arrancar el proyecto, hay que hacer UN clic en cualquier zona de la pantalla.
+
+Motivo:
+- El primer modelo no empieza a reproducir su video automáticamente hasta que existe
+  interacción del usuario (clic).
+- Después de ese clic inicial, al moverse entre modelos los demás videos sí cargan y
+  reproducen correctamente.
+
+
+4) NOTA IMPORTANTE
+------------------
+No abrir index.html con doble clic directo, porque el navegador puede bloquear la carga
+de recursos (CORS). Usar iniciar.bat o un servidor local.
