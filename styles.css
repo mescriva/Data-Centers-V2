@@ -114,7 +114,12 @@ html, body {
   min-height: 0;
 }
 
-.right-col { grid-column: 2; grid-row: 1; }
+.right-col {
+  display: grid;
+  grid-template-rows: 620px 1fr;
+  gap: var(--gap);
+  min-height: 0;
+}
 .section-a { grid-column: 1; grid-row: 1; }
 
 /* ── SECCIÓN A ───────────────────────────────────────────── */
@@ -243,22 +248,16 @@ html, body {
   transition: color 0.2s;
 }
 
-/* ── SECCIÓN B — Render ──────────────────────────────────── */
-.right-col {
-  display: grid;
-  grid-template-rows: 1fr;
-  gap: var(--gap);
-  min-height: 0;
-}
+/* ── SECCIÓN B — Render  + grafica abajo ──────────────────────────────────── */
+
 
 .section-b {
   border-radius: var(--radius-md);
   overflow: hidden;
   position: relative;
   background: var(--render-bg);
-  aspect-ratio: 16/9;
   width: 100%;
-  height: auto;
+  height: 100%;
 }
 
 .render-wrap {
@@ -277,20 +276,19 @@ html, body {
   width: 100%;
   background-color: var(--gris00);
   gap: auto;
-  padding: 32px 28px;
   border-radius: var(--radius-md);
   min-height: 0;
-  overflow: hidden;
+  padding: 10px;
 }
 
 .graph-header {
   display: flex;
-  flex-direction: column;
-  gap: 8px;
+  flex-direction: row;
+  gap: 50px;
   padding-left: 62px;
-  align-items: start;
+  align-items: center;
   flex-shrink: 0;
-  padding-bottom: 32px;
+ 
 }
 
 .graph-label {
@@ -328,7 +326,7 @@ html, body {
   flex: 1;
   min-height: 0;
   border-radius: var(--radius-sm);
-  object-fit: contain;
+  object-fit: cover;
   object-position: left;
   display: block;
 }
