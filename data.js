@@ -34,9 +34,9 @@ const MODELS = [
     description2: "With grid-forming operation and advanced control capabilities, this configuration enhances system stability and supports reliable performance under demanding load profiles.",
     graphLabel: "Line Interactive Chart",
     legend: [
-      { label: "POI",         color: "var(--neonBlue500)"      },
-      { label: "PE BESS",     color: "var(--orange500)"         },
-      { label: "Data Center", color: "var(--mobilityGreen500)" }
+      { label: "POI",         color: "var(--yellow500)" },
+      { label: "PE BESS",     color: "var(--orange500)" },
+      { label: "P Load", color: "var(--mobilityGreen500)" }
     ],
     equipos: [
       {
@@ -59,7 +59,7 @@ const MODELS = [
     description2: "This configuration ensures optimal power quality and uninterrupted supply with zero transfer time, making it one of the most reliable solutions for mission-critical environments.",
     graphLabel: "Double Conversion Chart",
     legend: [
-      { label: "POI",          color: "var(--neonBlue500)"      },
+      { label: "POI",          color: "var(--yellow500)"      },
       { label: "PE BESS GFM",  color: "var(--orange500)"         },
       { label: "Data Center",  color: "var(--mobilityGreen500)" },
       { label: "PE BESS GFL",  color: "var(--yellow500)"         }
@@ -85,7 +85,7 @@ const MODELS = [
     description2: "This enables fast response to load variations, helping reduce grid consumption and smooth significant power peaks while maintaining operational efficiency.",
     graphLabel: "Load Sensing Chart",
     legend: [
-      { label: "POI",         color: "var(--neonBlue500)"      },
+      { label: "POI",         color: "var(--yellow500)"      },
       { label: "PE BESS",     color: "var(--orange500)"         },
       { label: "Data Center", color: "var(--mobilityGreen500)" }
     ],
@@ -116,7 +116,7 @@ const MODELS = [
     description2: "This solution helps minimize grid consumption, reduce significant power peaks, and achieve performance close to line-interactive systems without the need for a choke.",
     graphLabel: "Hybrid Load Sensing Chart",
     legend: [
-      { label: "POI",         color: "var(--neonBlue500)"      },
+      { label: "POI",         color: "var(--yellow500)"      },
       { label: "PE BESS",     color: "var(--orange500)"         },
       { label: "Data Center", color: "var(--mobilityGreen500)" }
     ],
@@ -147,7 +147,7 @@ const MODELS = [
     description2: "The BESS delivers near-instantaneous protection against momentary dips and failures, creating a scalable, reliable, and more sustainable alternative to traditional diesel-based backup systems.",
     graphLabel: "OFF Grid: GT+ BESS BTM Chart",
     legend: [
-      { label: "Gas Turbine",  color: "var(--neonBlue500)"      },
+      { label: "Gas Turbine",  color: "var(--yellow500)"      },
       { label: "PE BESS",      color: "var(--orange500)"         },
       { label: "Data Center",  color: "var(--mobilityGreen500)" }
     ],
