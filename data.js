@@ -26,6 +26,8 @@ const MODELS = [
   // ─── MODELO 1 — Line Interactive ───────────────────────
   {
     id: "m1",
+    videoId: "v1",
+    graphId: "g1",
     name: "Data Center Line Interactive",
     shortName: "Line Interactive",
     description: "Line Interactive architecture decouples the inverter from grid disturbances while limiting fault currents and supporting smoother transitions between grid-connected and islanded operation.",
@@ -49,6 +51,8 @@ const MODELS = [
   // ─── MODELO 2 — Double Conversion ──────────────────────
   {
     id: "m2",
+    videoId: "v2",
+    graphId: "g2",
     name: "Data Center Double Conversion",
     shortName: "Double Conversion",
     description: "Double conversion architecture provides complete isolation from grid disturbances, delivering clean and stable power to critical data center loads.",
@@ -73,6 +77,8 @@ const MODELS = [
   // ─── MODELO 3 — Load Sensing ────────────────────────────
   {
     id: "m3",
+    videoId: "v3",
+    graphId: "g3",
     name: "Data Center Load Sensing",
     shortName: "Load Sensing",
     description: "Load Sensing measures real-time data center demand and sends the required power references to the grid-following inverter.",
@@ -102,6 +108,8 @@ const MODELS = [
   // ─── MODELO 4 — Hybrid Load Sensing ────────────────────
   {
     id: "m4",
+    videoId: "v4",
+    graphId: "g4",
     name: "Data Center Hybrid Load Sensing",
     shortName: "Hybrid Load Sensing",
     description: "Hybrid Load Sensing uses an external control device to measure real-time load demand and send power references to the grid-forming inverter.",
@@ -131,6 +139,8 @@ const MODELS = [
   // ─── MODELO 5 — OFF Grid GT + BESS BTM ─────────────────
   {
     id: "m5",
+    videoId: "v5",
+    graphId: "g5",
     name: "Data Center OFF Grid GT + BESS BTM",
     shortName: "OFF Grid: GT+ BESS BTM",
     description: "Off-grid data centers use gas turbines for primary, continuous, and high-density power, while BESS provides backup power and stability services.",
@@ -154,6 +164,8 @@ const MODELS = [
   // ─── MODELO 6 — 800 V Power Supply ─────────────────────
   {
     id: "m6",
+    videoId: "v6",
+    graphId: "g6",
     name: "Data Center 800 V Power Supply",
     shortName: "800 V Power Supply",
     description: "AI data centers are no longer limited only by GPUs, but by grid interconnection and energy efficiency. Traditional AC architectures can lose up to 10% of approved power before reaching compute.",

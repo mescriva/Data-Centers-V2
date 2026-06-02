@@ -66,7 +66,7 @@ function getOrCreateVideo(src) {
     inset:          "0",
     width:          "100%",
     height:         "100%",
-    objectFit:      "contain",
+    objectFit:      "cover",
     objectPosition: "center",
     opacity:        "0",
     transition:     "opacity 0.25s ease",
@@ -82,7 +82,14 @@ function getOrCreateVideo(src) {
 // Precarga todos los assets base al arrancar
 function preloadBaseAssets() {
   MODELS.forEach(model => {
-    getOrCreateVideo(`./assets/renders/${model.id}.mp4`);
+    getOrCreateVideo(`./assets/renders/${model.videoId}.mp4`);
+  });
+}
+
+// preloadBaseGraphs
+function preloadBaseGraphs() {
+  MODELS.forEach(model => {
+    getOrCreateImage(`./assets/graphs/${model.graphId}.png`);
   });
 }
 
@@ -96,12 +103,6 @@ function getOrCreateImage(src) {
   img.src = src;
   imageCache[src] = img;
   return img;
-}
-
-function preloadBaseGraphs() {
-  MODELS.forEach(model => {
-    getOrCreateImage(`./assets/graphs/${model.id}.png`);
-  });
 }
 
 
@@ -197,16 +198,14 @@ function initEquipState(model) {
 
 
 // ── ACTUALIZAR RENDER + GRÁFICA ───────────────────────────
+// updateAssets
 async function updateAssets() {
   const model = getModel();
-  const [renderSrc, graphSrc] = await Promise.all([
-    resolvedRenderPath(model),
-    resolvedGraphPath(model)
-  ]);
+  const renderSrc = `./assets/renders/${model.videoId}.mp4`;
+  const graphSrc  = `./assets/graphs/${model.graphId}.png`;
   showVideo(renderSrc);
   showGraph(model, graphSrc);
 }
-
 
 // ── SECCIÓN D — Navegación de modelos ────────────────────
 function renderSectionD() {
@@ -242,6 +241,17 @@ function renderSectionA(model) {
   }).join("");
 }
 
+function renderPathFor(model, keys) {
+  const allKeys = model.equipos.map(eq => eq.renderKey).join("-");
+  if (keys === allKeys) return `./assets/renders/${model.videoId}.mp4`;
+  return `./assets/renders/${model.videoId}_${keys}.mp4`;
+}
+
+function graphPathFor(model, keys) {
+  const allKeys = model.equipos.map(eq => eq.renderKey).join("-");
+  if (keys === allKeys) return `./assets/graphs/${model.graphId}.png`;
+  return `./assets/graphs/${model.graphId}_${keys}.png`;
+}
 
 // ── RENDER GLOBAL ─────────────────────────────────────────
 function render() {
@@ -308,7 +318,7 @@ render();
 // Arranca el vídeo inicial
 (function startInitialVideo() {
   const model = getModel();
-  const src   = `./assets/renders/${model.id}.mp4`;
+  const src = `./assets/renders/${model.videoId}.mp4`;
   const video = getOrCreateVideo(src);
   if (!video.src) return;
 
