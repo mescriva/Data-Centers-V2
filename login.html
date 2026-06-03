@@ -30,7 +30,8 @@
       <h2 class="login-title">Data Centers</h2>
       <p class="login-subtitle">Circuit Configurations</p>
 
-      <p class="login-label">Contraseña</p>
+      <div>
+      <p class="login-label">Introduce el PIN</p>
 
       <!-- 4 dígitos hasheados -->
       <div class="pin-dots" id="pinDots" aria-live="polite" aria-label="Pin introducido">
@@ -42,21 +43,26 @@
 
       <!-- Mensaje de error -->
       <p class="login-error" id="loginError" aria-live="assertive"></p>
-
+      </div>
+      
       <!-- Teclado numérico -->
       <div class="pin-keyboard" id="pinKeyboard">
         <button class="pin-key" data-digit="1">1</button>
         <button class="pin-key" data-digit="2">2</button>
         <button class="pin-key" data-digit="3">3</button>
+
         <button class="pin-key" data-digit="4">4</button>
         <button class="pin-key" data-digit="5">5</button>
         <button class="pin-key" data-digit="6">6</button>
+
         <button class="pin-key" data-digit="7">7</button>
         <button class="pin-key" data-digit="8">8</button>
         <button class="pin-key" data-digit="9">9</button>
-        <button class="pin-key pin-key--clear" id="pinClear" title="Borrar">⌫</button>
-        <button class="pin-key" data-digit="0">0</button>
+
         <button class="pin-key pin-key--empty" disabled></button>
+        <button class="pin-key" data-digit="0">0</button>
+        <button class="pin-key pin-key--clear" id="pinClear" title="Borrar">⌫</button>
+        
       </div>
 
       <!-- Botón acceder -->

@@ -41,7 +41,8 @@
 .login-card {
   position: relative;
   z-index: 1;
-  width: 380px;
+  width: 600px;
+  height: 650px;
   padding: 40px 36px 36px;
   background: rgba(255, 255, 255, 0.10);
   backdrop-filter: blur(28px) saturate(1.4);
@@ -55,7 +56,8 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0;
+  justify-content: center;
+  gap: 10px;
   animation: loginFadeIn 0.5s ease both;
 }
 
@@ -68,7 +70,7 @@
 .login-logo-row {
   width: 100%;
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
   margin-bottom: 20px;
 }
 
@@ -92,11 +94,14 @@
 }
 
 .login-subtitle {
+  display: flex;
   font-family: 'Suisse Int\'l', sans-serif;
   font-weight: var(--font-weight-book);
   font-size: 14px;
   color: rgba(255, 255, 255, 0.50);
   text-align: center;
+  align-items: center;
+  justify-content: center;
   margin-bottom: 32px;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -110,7 +115,7 @@
   color: rgba(255, 255, 255, 0.45);
   text-transform: uppercase;
   letter-spacing: 0.10em;
-  align-self: flex-start;
+  align-self: center;
   margin-bottom: 12px;
 }
 
@@ -120,13 +125,12 @@
   gap: 14px;
   align-items: center;
   justify-content: center;
-  margin-bottom: 10px;
 }
 
 .pin-dot {
   width: 16px;
   height: 16px;
-  border-radius: 50%;
+  border-radius: 100%;
   border: 2px solid rgba(255, 255, 255, 0.30);
   background: transparent;
   transition: background 0.2s, border-color 0.2s, transform 0.15s;
@@ -158,10 +162,10 @@
 /* ── MENSAJE DE ERROR ────────────────────────────────────── */
 .login-error {
   font-size: 12px;
-  color: #ff6b6b;
+  color: var(--red500);
   text-align: center;
   min-height: 18px;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
   opacity: 0;
   transition: opacity 0.2s;
   font-family: 'Suisse Int\'l', sans-serif;
@@ -175,19 +179,18 @@
 .pin-keyboard {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
-  width: 100%;
-  margin-bottom: 20px;
+  gap: 20px;
 }
 
 .pin-key {
   aspect-ratio: 1;
-  border-radius: var(--radius-sm);
+  border-radius: 100%;
   border: 1px solid rgba(255, 255, 255, 0.14);
   background: rgba(255, 255, 255, 0.08);
   color: var(--blanco);
   font-family: 'Suisse Int\'l', sans-serif;
   font-size: 20px;
+  padding: 10px;
   font-weight: var(--font-weight-book);
   cursor: pointer;
   transition: background 0.15s, box-shadow 0.15s, transform 0.1s;
@@ -196,6 +199,7 @@
   justify-content: center;
   -webkit-tap-highlight-color: transparent;
   user-select: none;
+  
 }
 
 .pin-key:hover:not(:disabled) {
