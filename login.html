@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Data Centers — Login</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="login.css" />
+</head>
+<body>
+
+  <!-- LOGIN OVERLAY -->
+  <div class="login-overlay" id="loginOverlay">
+
+    <!-- Vídeo de fondo -->
+    <video class="login-bg-video" autoplay loop muted playsinline>
+      <source src="./assets/renders/v1.mp4" type="video/mp4" />
+    </video>
+
+    <!-- Capa de scrim sobre el vídeo -->
+    <div class="login-scrim"></div>
+
+    <!-- Formulario glass -->
+    <div class="login-card" role="main" aria-label="Pantalla de acceso">
+
+      <div class="login-logo-row">
+        <img class="login-logo" src="./assets/logo-pe.svg" alt="Power Electronics" />
+      </div>
+
+      <h2 class="login-title">Data Centers</h2>
+      <p class="login-subtitle">Circuit Configurations</p>
+
+      <div>
+      <p class="login-label">Introduce el PIN</p>
+
+      <!-- 4 dígitos hasheados -->
+      <div class="pin-dots" id="pinDots" aria-live="polite" aria-label="Pin introducido">
+        <span class="pin-dot" data-index="0"></span>
+        <span class="pin-dot" data-index="1"></span>
+        <span class="pin-dot" data-index="2"></span>
+        <span class="pin-dot" data-index="3"></span>
+      </div>
+
+      <!-- Mensaje de error -->
+      <p class="login-error" id="loginError" aria-live="assertive"></p>
+      </div>
+      
+      <!-- Teclado numérico -->
+      <div class="pin-keyboard" id="pinKeyboard">
+        <button class="pin-key" data-digit="1">1</button>
+        <button class="pin-key" data-digit="2">2</button>
+        <button class="pin-key" data-digit="3">3</button>
+
+        <button class="pin-key" data-digit="4">4</button>
+        <button class="pin-key" data-digit="5">5</button>
+        <button class="pin-key" data-digit="6">6</button>
+
+        <button class="pin-key" data-digit="7">7</button>
+        <button class="pin-key" data-digit="8">8</button>
+        <button class="pin-key" data-digit="9">9</button>
+
+        <button class="pin-key pin-key--empty" disabled></button>
+        <button class="pin-key" data-digit="0">0</button>
+        <button class="pin-key pin-key--clear" id="pinClear" title="Borrar">⌫</button>
+        
+      </div>
+
+      <!-- Botón acceder -->
+      <button class="login-btn" id="loginBtn" disabled>Acceder</button>
+
+    </div><!-- /login-card -->
+
+  </div><!-- /login-overlay -->
+
+  <!-- APP PRINCIPAL (oculta hasta login correcto) -->
+  <div class="app" id="appRoot" style="display:none;">
+
+    <main class="main">
+      <aside class="section-a" id="sectionA" aria-label="Información del modelo y equipos">
+        <header class="a-header">
+          <div class="a-title-row">
+            <div>
+              <h1 class="a-title">Data Centers</h1>
+              <h1 class="a-title">Circuit Configurations</h1>
+            </div>
+            <img class="a-logo" src="./assets/logo-pe.svg" alt="Power Electronics" />
+          </div>
+          <div class="a-badge" id="aBadge"></div>
+          <p class="a-text" id="aText"></p>
+          <p class="a-text" id="aText2"></p>
+        </header>
+        <div class="a-body" id="aBody"></div>
+      </aside>
+
+      <section class="right-col">
+        <section class="section-b" id="sectionB" aria-label="Render del data center">
+          <div class="render-wrap" id="renderWrap">
+            <video class="render-video" id="renderVideoA" autoplay loop muted playsinline></video>
+            <video class="render-video render-video--back" id="renderVideoB" autoplay loop muted playsinline></video>
+          </div>
+        </section>
+        <section class="section-c" id="sectionC" aria-label="Gráfica del data center">
+          <div class="graph-header">
+            <span class="graph-label" id="graphLabel"></span>
+            <span class="graph-unit" id="graphUnit"></span>
+          </div>
+          <img class="graph-img" id="graphImg" src="" alt="Gráfica del modelo activo" />
+        </section>
+      </section>
+    </main>
+
+    <nav class="section-d" id="sectionD" aria-label="Selector de modelo">
+      <div class="model-nav" id="modelNav"></div>
+    </nav>
+
+  </div>
+
+  <!-- Indicador de sesión / inactividad (debug) -->
+  <div class="session-bar" id="sessionBar" style="display:none;">
+    <span id="sessionStatus">●</span>
+    <span id="sessionTimer"></span>
+    <button id="sessionLogout" title="Cerrar sesión">✕</button>
+  </div>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+  <script src="login.js"></script>
+
+</body>
+</html>

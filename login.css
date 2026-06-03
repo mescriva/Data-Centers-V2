@@ -1,0 +1,335 @@
+/* ═══════════════════════════════════════════════════════════
+   DATA CENTERS — LOGIN  |  login.css
+═══════════════════════════════════════════════════════════ */
+
+/* ── OVERLAY ─────────────────────────────────────────────── */
+.login-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* Video de fondo */
+.login-bg-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  pointer-events: none;
+}
+
+/* Scrim oscuro sobre el vídeo */
+.login-scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(16, 18, 20, 0.72) 0%,
+    rgba(26, 29, 51, 0.68) 100%
+  );
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+}
+
+/* ── CARD GLASS ──────────────────────────────────────────── */
+.login-card {
+  position: relative;
+  z-index: 1;
+  width: 600px;
+  height: 650px;
+  padding: 40px 36px 36px;
+  background: rgba(255, 255, 255, 0.10);
+  backdrop-filter: blur(28px) saturate(1.4);
+  -webkit-backdrop-filter: blur(28px) saturate(1.4);
+  border-radius: var(--radius-lg);
+  box-shadow:
+    0 24px 64px 0 rgba(0, 0, 0, 0.40),
+    inset 0px -4px 0px 0px rgba(255, 255, 255, 0.12),
+    inset 1px  2px 0px 0px rgba(255, 255, 255, 0.28);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  animation: loginFadeIn 0.5s ease both;
+}
+
+@keyframes loginFadeIn {
+  from { opacity: 0; transform: translateY(16px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0)    scale(1);    }
+}
+
+/* ── LOGO ────────────────────────────────────────────────── */
+.login-logo-row {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.login-logo {
+  height: 28px;
+  width: auto;
+  opacity: 0.85;
+  filter: brightness(0) invert(1);
+}
+
+/* ── TÍTULOS ─────────────────────────────────────────────── */
+.login-title {
+  font-family: 'Suisse Int\'l', sans-serif;
+  font-weight: var(--font-weight-book);
+  font-size: 28px;
+  color: var(--blanco);
+  line-height: 1.1;
+  text-align: center;
+  letter-spacing: -0.02em;
+  margin-bottom: 4px;
+}
+
+.login-subtitle {
+  display: flex;
+  font-family: 'Suisse Int\'l', sans-serif;
+  font-weight: var(--font-weight-book);
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.50);
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 32px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+/* ── LABEL CONTRASEÑA ────────────────────────────────────── */
+.login-label {
+  font-family: 'Suisse Int\'l', sans-serif;
+  font-size: 11px;
+  font-weight: var(--font-weight-medium);
+  color: rgba(255, 255, 255, 0.45);
+  text-transform: uppercase;
+  letter-spacing: 0.10em;
+  align-self: center;
+  margin-bottom: 12px;
+}
+
+/* ── PIN DOTS ────────────────────────────────────────────── */
+.pin-dots {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  justify-content: center;
+}
+
+.pin-dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 100%;
+  border: 2px solid rgba(255, 255, 255, 0.30);
+  background: transparent;
+  transition: background 0.2s, border-color 0.2s, transform 0.15s;
+}
+
+.pin-dot.filled {
+  background: var(--neonBlue400);
+  border-color: var(--neonBlue400);
+  box-shadow: 0 0 10px var(--neonBlue500);
+  transform: scale(1.15);
+}
+
+/* Estado de error: los dots se agitan y se ponen rojos */
+.pin-dots.error .pin-dot {
+  border-color: #ff4d4d;
+  background: rgba(255, 77, 77, 0.25);
+  animation: pinShake 0.4s ease;
+}
+
+@keyframes pinShake {
+  0%  { transform: translateX(0); }
+  20% { transform: translateX(-5px); }
+  40% { transform: translateX(5px); }
+  60% { transform: translateX(-4px); }
+  80% { transform: translateX(4px); }
+  100%{ transform: translateX(0); }
+}
+
+/* ── MENSAJE DE ERROR ────────────────────────────────────── */
+.login-error {
+  font-size: 12px;
+  color: var(--red500);
+  text-align: center;
+  min-height: 18px;
+  margin-bottom: 10px;
+  opacity: 0;
+  transition: opacity 0.2s;
+  font-family: 'Suisse Int\'l', sans-serif;
+}
+
+.login-error.visible {
+  opacity: 1;
+}
+
+/* ── TECLADO NUMÉRICO ────────────────────────────────────── */
+.pin-keyboard {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.pin-key {
+  aspect-ratio: 1;
+  border-radius: 100%;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--blanco);
+  font-family: 'Suisse Int\'l', sans-serif;
+  font-size: 20px;
+  padding: 10px;
+  font-weight: var(--font-weight-book);
+  cursor: pointer;
+  transition: background 0.15s, box-shadow 0.15s, transform 0.1s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  
+}
+
+.pin-key:hover:not(:disabled) {
+  background: rgba(48, 51, 255, 0.25);
+  border-color: rgba(172, 173, 255, 0.35);
+}
+
+.pin-key:active:not(:disabled) {
+  background: rgba(48, 51, 255, 0.40);
+  transform: scale(0.94);
+  box-shadow: 0 0 18px 0 rgba(48, 51, 255, 0.35);
+}
+
+.pin-key--clear {
+  background: rgba(255, 255, 255, 0.05);
+  font-size: 18px;
+}
+
+.pin-key--clear:hover {
+  background: rgba(255, 100, 100, 0.18) !important;
+  border-color: rgba(255, 100, 100, 0.30) !important;
+}
+
+.pin-key--empty {
+  background: transparent !important;
+  border-color: transparent !important;
+  cursor: default;
+}
+
+/* ── BOTÓN ACCEDER ───────────────────────────────────────── */
+.login-btn {
+  width: 100%;
+  padding: 14px;
+  border-radius: var(--radius-pill);
+  border: 1px solid transparent;
+  background: linear-gradient(135deg, var(--neonBlue500), var(--neonBlue600));
+  color: var(--blanco);
+  font-family: 'Suisse Int\'l', sans-serif;
+  font-size: var(--title-title-M);
+  font-weight: var(--font-weight-medium);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: opacity 0.2s, box-shadow 0.2s, transform 0.1s;
+  position: relative;
+}
+
+.login-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  padding: 1px;
+  border-radius: inherit;
+  background: linear-gradient(to bottom, #ffffff55, #3033ff);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+.login-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.login-btn:not(:disabled):hover {
+  box-shadow: var(--shadow-glow);
+  transform: translateY(-1px);
+}
+
+.login-btn:not(:disabled):active {
+  transform: scale(0.98);
+}
+
+/* ── BARRA DE SESIÓN (debug / inactividad) ───────────────── */
+.session-bar {
+  position: fixed;
+  bottom: 16px;
+  right: 16px;
+  z-index: 10000;
+  background: rgba(16, 18, 20, 0.85);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(48, 51, 255, 0.40);
+  border-radius: var(--radius-pill);
+  padding: 6px 14px 6px 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Suisse Int\'l', monospace, sans-serif;
+  font-size: 12px;
+  color: var(--blanco);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+
+#sessionStatus {
+  color: var(--mobilityGreen500);
+  font-size: 10px;
+}
+
+#sessionStatus.warning {
+  color: var(--orange500);
+  animation: blink 0.8s step-start infinite;
+}
+
+@keyframes blink {
+  50% { opacity: 0; }
+}
+
+#sessionLogout {
+  background: none;
+  border: none;
+  color: rgba(255,255,255,0.45);
+  cursor: pointer;
+  font-size: 12px;
+  padding: 0;
+  line-height: 1;
+  transition: color 0.2s;
+}
+
+#sessionLogout:hover {
+  color: #ff6b6b;
+}
+
+/* ── TRANSICIÓN APP→LOGIN ────────────────────────────────── */
+.login-overlay.hidden {
+  pointer-events: none;
+  animation: loginFadeOut 0.4s ease forwards;
+}
+
+@keyframes loginFadeOut {
+  to { opacity: 0; }
+}

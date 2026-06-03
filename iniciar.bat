@@ -12,7 +12,7 @@ start "" "C:\Program Files\Google\Chrome\Application\chrome.exe" ^
   --autoplay-policy=no-user-gesture-required ^
   --disable-gesture-requirement-for-media-playback ^
   --allow-file-access-from-files ^
-  --app="file:///%DIR%index.html" ^
+  --app="file:///%DIR%login.html" ^
   --start-fullscreen
 
 exit
