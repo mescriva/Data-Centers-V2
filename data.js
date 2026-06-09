@@ -1,25 +1,6 @@
 // ═══════════════════════════════════════════════════════════
 //  DATA CENTERS — data.js
 // ═══════════════════════════════════════════════════════════
-//
-//  Convención de assets por combinación de equipos activos:
-//
-//    Render base del modelo (todos activos):
-//      ./assets/renders/{id}.mp4          → ej. m4.mp4
-//
-//    Combinación parcial (solo algunos activos):
-//      ./assets/renders/{id}_{keys}.mp4   → ej. m4_ppc.mp4
-//                                            m4_pcsm.mp4
-//                                            m4_none.mp4
-//
-//    Gráfica: misma lógica con ./assets/graphs/{id}[_{keys}].png
-//
-//    {keys} = renderKey de cada equipo activo, unidos por "-"
-//    y ordenados según aparecen en el array `equipos`.
-//    Si ningún equipo está activo → se usa el sufijo "none".
-//
-//  Si el archivo no existe el código cae al asset base del modelo.
-// ═══════════════════════════════════════════════════════════
 
 const MODELS = [
 
@@ -33,10 +14,13 @@ const MODELS = [
     description: "Line Interactive architecture decouples the inverter from grid disturbances while limiting fault currents and supporting smoother transitions between grid-connected and islanded operation.",
     description2: "With grid-forming operation and advanced control capabilities, this configuration enhances system stability and supports reliable performance under demanding load profiles.",
     graphLabel: "Line Interactive Chart",
+    // graphHtml: path to a self-contained HTML graph file (optional).
+    // If present, the graph area renders an iframe with that file instead of a PNG.
+    graphHtml: "./assets/graphs/0_Loss_of_synchronous_machine_discharging.html",
     legend: [
       { label: "POI",         color: "var(--yellow500)" },
       { label: "PE BESS",     color: "var(--orange500)" },
-      { label: "P Load", color: "var(--mobilityGreen500)" }
+      { label: "P Load",      color: "var(--mobilityGreen500)" }
     ],
     equipos: [
       {
@@ -58,6 +42,7 @@ const MODELS = [
     description: "Double conversion architecture provides complete isolation from grid disturbances, delivering clean and stable power to critical data center loads.",
     description2: "This configuration ensures optimal power quality and uninterrupted supply with zero transfer time, making it one of the most reliable solutions for mission-critical environments.",
     graphLabel: "Double Conversion Chart",
+    graphHtml: "./assets/graphs/0_Loss_of_synchronous_machine_discharging.html",
     legend: [
       { label: "POI",          color: "var(--yellow500)"      },
       { label: "PE BESS GFM",  color: "var(--orange500)"         },
@@ -84,6 +69,7 @@ const MODELS = [
     description: "Load Sensing measures real-time data center demand and sends the required power references to the grid-following inverter.",
     description2: "This enables fast response to load variations, helping reduce grid consumption and smooth significant power peaks while maintaining operational efficiency.",
     graphLabel: "Load Sensing Chart",
+    graphHtml: "./assets/graphs/0_Loss_of_synchronous_machine_discharging.html",
     legend: [
       { label: "POI",         color: "var(--yellow500)"      },
       { label: "PE BESS",     color: "var(--orange500)"         },
@@ -115,6 +101,7 @@ const MODELS = [
     description: "Hybrid Load Sensing uses an external control device to measure real-time load demand and send power references to the grid-forming inverter.",
     description2: "This solution helps minimize grid consumption, reduce significant power peaks, and achieve performance close to line-interactive systems without the need for a choke.",
     graphLabel: "Hybrid Load Sensing Chart",
+    graphHtml: "./assets/graphs/0_Loss_of_synchronous_machine_discharging.html",
     legend: [
       { label: "POI",         color: "var(--yellow500)"      },
       { label: "PE BESS",     color: "var(--orange500)"         },
@@ -146,6 +133,7 @@ const MODELS = [
     description: "Off-grid data centers use gas turbines for primary, continuous, and high-density power, while BESS provides backup power and stability services.",
     description2: "The BESS delivers near-instantaneous protection against momentary dips and failures, creating a scalable, reliable, and more sustainable alternative to traditional diesel-based backup systems.",
     graphLabel: "OFF Grid: GT+ BESS BTM Chart",
+    graphHtml: "./assets/graphs/0_Loss_of_synchronous_machine_discharging.html",
     legend: [
       { label: "Gas Turbine",  color: "var(--yellow500)"      },
       { label: "PE BESS",      color: "var(--orange500)"         },
@@ -161,16 +149,18 @@ const MODELS = [
     ]
   },
 
-  // ─── MODELO 6 — 800 V Power Supply ─────────────────────
+  // ─── MODELO 6 — 800 V Power Supply (PUBLIC / DEFAULT) ──
   {
     id: "m6",
     videoId: "v6",
     graphId: "g6",
     name: "Data Center 800 V Power Supply",
     shortName: "800 V Power Supply",
+    isPublic: true,   // ← visible without login; loaded by default
     description: "AI data centers are no longer limited only by GPUs, but by grid interconnection and energy efficiency. Traditional AC architectures can lose up to 10% of approved power before reaching compute.",
     description2: "By moving to a direct 800 V DC architecture, redundant conversion stages are reduced, improving efficiency, simplifying system design, and enabling faster scalability for next-generation data centers.",
     graphLabel: "800 V Power Supply Chart",
+    graphHtml: "./assets/graphs/0_Loss_of_synchronous_machine_discharging.html",
     legend: [
       { label: "POI",         color: "var(--neonBlue500)"      },
       { label: "PE BESS",     color: "var(--orange500)"         },

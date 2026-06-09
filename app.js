@@ -2,9 +2,12 @@
 //  DATA CENTERS — app.js
 // ═══════════════════════════════════════════════════════════
 
+// Default model is the public one (800 V Power Supply = m6)
+const DEFAULT_MODEL_ID = MODELS.find(m => m.isPublic)?.id ?? MODELS[0].id;
+
 const state = {
-  modeloId:    MODELS[0].id,
-  activeEquip: {}   // equipId → true/false
+  modeloId:    DEFAULT_MODEL_ID,
+  activeEquip: {}
 };
 
 const $ = id => document.getElementById(id);
@@ -18,15 +21,12 @@ const dom = {
   graphUnit:  $("graphUnit"),
   graphImg:   $("graphImg"),
   modelNav:   $("modelNav"),
-  renderWrap: $("renderWrap")
+  renderWrap: $("renderWrap"),
+  sectionC:   $("sectionC"),
 };
 
 
 // ── RUTAS DE ASSETS ───────────────────────────────────────
-// Devuelve la ruta de render o gráfica para la combinación
-// de equipos activos del modelo. Si el archivo no existe
-// (comprobado con un Image/fetch previo) cae al asset base.
-
 function getActiveKeys(model) {
   const active = model.equipos
     .filter(eq => state.activeEquip[eq.id])
@@ -36,25 +36,22 @@ function getActiveKeys(model) {
 
 function renderPathFor(model, keys) {
   const allKeys = model.equipos.map(eq => eq.renderKey).join("-");
-  // Estado por defecto (todos activos) → asset base del modelo
-  if (keys === allKeys) return `./assets/renders/${model.id}.mp4`;
-  return `./assets/renders/${model.id}_${keys}.mp4`;
+  if (keys === allKeys) return `./assets/renders/${model.videoId}.mp4`;
+  return `./assets/renders/${model.videoId}_${keys}.mp4`;
 }
 
 function graphPathFor(model, keys) {
   const allKeys = model.equipos.map(eq => eq.renderKey).join("-");
-  if (keys === allKeys) return `./assets/graphs/${model.id}.png`;
-  return `./assets/graphs/${model.id}_${keys}.png`;
+  if (keys === allKeys) return `./assets/graphs/${model.graphId}.png`;
+  return `./assets/graphs/${model.graphId}_${keys}.png`;
 }
 
 
 // ── PRELOAD DE VÍDEOS ─────────────────────────────────────
-// videoCache[src] = elemento <video> listo, adjunto al DOM pero invisible
 const videoCache = {};
 
 function getOrCreateVideo(src) {
   if (videoCache[src]) return videoCache[src];
-
   const video = document.createElement("video");
   video.setAttribute("autoplay", "");
   video.setAttribute("loop", "");
@@ -79,17 +76,15 @@ function getOrCreateVideo(src) {
   return video;
 }
 
-// Precarga todos los assets base al arrancar
 function preloadBaseAssets() {
   MODELS.forEach(model => {
     getOrCreateVideo(`./assets/renders/${model.videoId}.mp4`);
   });
 }
 
-// preloadBaseGraphs
 function preloadBaseGraphs() {
   MODELS.forEach(model => {
-    getOrCreateImage(`./assets/graphs/${model.graphId}.png`);
+    if (!model.graphHtml) getOrCreateImage(`./assets/graphs/${model.graphId}.png`);
   });
 }
 
@@ -107,8 +102,6 @@ function getOrCreateImage(src) {
 
 
 // ── DETECCIÓN DE ASSET ────────────────────────────────────
-// Comprueba si un mp4/png existe. Devuelve Promise<boolean>.
-// Usa un fetch HEAD sin cuerpo para no descargar el archivo.
 async function assetExists(url) {
   try {
     const res = await fetch(url, { method: "HEAD" });
@@ -118,11 +111,9 @@ async function assetExists(url) {
   }
 }
 
-// Devuelve la ruta definitiva (combinación o fallback al base)
 async function resolvedRenderPath(model) {
   const keys = getActiveKeys(model);
   const path  = renderPathFor(model, keys);
-  // Si ya es el asset base no hace falta comprobar
   if (path === `./assets/renders/${model.id}.mp4`) return path;
   const exists = await assetExists(path);
   return exists ? path : `./assets/renders/${model.id}.mp4`;
@@ -143,14 +134,10 @@ let currentVideoSrc = null;
 function showVideo(src) {
   if (src === currentVideoSrc) return;
   currentVideoSrc = src;
-
   const next = getOrCreateVideo(src);
-
-  // Oculta todos los demás
   Object.entries(videoCache).forEach(([s, v]) => {
     v.style.opacity = s === src ? "1" : "0";
   });
-
   if (next.paused) {
     next.play().catch(() => {
       document.addEventListener("click", () => next.play().catch(() => {}), { once: true });
@@ -159,8 +146,42 @@ function showVideo(src) {
 }
 
 
-// ── MOSTRAR GRÁFICA ───────────────────────────────────────
-function showGraph(model, graphSrc) {
+// ── MOSTRAR GRÁFICA (iframe HTML o imagen PNG) ────────────
+let graphExpandModal = null;
+
+function ensureGraphModal() {
+  if (graphExpandModal) return;
+
+  graphExpandModal = document.createElement("div");
+  graphExpandModal.id = "graphModal";
+  graphExpandModal.innerHTML = `
+    <div class="graph-modal-backdrop"></div>
+    <div class="graph-modal-inner">
+      <button class="graph-modal-close" title="Cerrar">✕</button>
+      <iframe class="graph-modal-frame" src="" frameborder="0" allowfullscreen></iframe>
+    </div>`;
+  document.body.appendChild(graphExpandModal);
+
+  graphExpandModal.querySelector(".graph-modal-backdrop").addEventListener("click", closeGraphModal);
+  graphExpandModal.querySelector(".graph-modal-close").addEventListener("click", closeGraphModal);
+}
+
+function openGraphModal(src) {
+  ensureGraphModal();
+  graphExpandModal.querySelector(".graph-modal-frame").src = src;
+  graphExpandModal.classList.add("open");
+}
+
+function closeGraphModal() {
+  if (!graphExpandModal) return;
+  graphExpandModal.classList.remove("open");
+  // small delay before clearing src to avoid flash on re-open
+  setTimeout(() => {
+    graphExpandModal.querySelector(".graph-modal-frame").src = "";
+  }, 300);
+}
+
+function showGraph(model) {
   dom.graphLabel.textContent = model.graphLabel || "Rendimiento energético";
 
   const legendItems = (model.legend || []).map(item =>
@@ -171,11 +192,41 @@ function showGraph(model, graphSrc) {
   ).join("");
   dom.graphUnit.innerHTML = legendItems;
 
-  const cached = getOrCreateImage(graphSrc);
-  cached.className = "graph-img";
-  cached.alt = "Gráfica del modelo activo";
-  dom.graphImg.replaceWith(cached);
-  dom.graphImg = cached;
+  // Clear previous graph content
+  const container = document.getElementById("graphContent");
+  container.innerHTML = "";
+
+  if (model.graphHtml) {
+    // Render interactive HTML graph via iframe
+    const wrapper = document.createElement("div");
+    wrapper.className = "graph-iframe-wrapper";
+
+    const iframe = document.createElement("iframe");
+    iframe.src = model.graphHtml;
+    iframe.frameBorder = "0";
+    iframe.className = "graph-iframe";
+    iframe.setAttribute("scrolling", "no");
+
+    const expandBtn = document.createElement("button");
+    expandBtn.className = "graph-expand-btn";
+    expandBtn.title = "Ampliar gráfica";
+    expandBtn.innerHTML = `<svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M3 3h5M3 3v5M3 3l6 6M17 17h-5M17 17v-5M17 17l-6-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+    </svg>`;
+    expandBtn.addEventListener("click", () => openGraphModal(model.graphHtml));
+
+    wrapper.appendChild(iframe);
+    wrapper.appendChild(expandBtn);
+    container.appendChild(wrapper);
+  } else {
+    // Fallback: static PNG image
+    const graphSrc = `./assets/graphs/${model.graphId}.png`;
+    const cached = getOrCreateImage(graphSrc);
+    cached.className = "graph-img graph-img--clickable";
+    cached.alt = "Gráfica del modelo activo";
+    cached.onclick = () => openGraphModal(graphSrc);
+    container.appendChild(cached);
+  }
 }
 
 
@@ -191,21 +242,20 @@ function isOn(equipId) {
 function initEquipState(model) {
   model.equipos.forEach(eq => {
     if (state.activeEquip[eq.id] === undefined) {
-      state.activeEquip[eq.id] = true; // todos activos por defecto
+      state.activeEquip[eq.id] = true;
     }
   });
 }
 
 
 // ── ACTUALIZAR RENDER + GRÁFICA ───────────────────────────
-// updateAssets
 async function updateAssets() {
   const model = getModel();
   const renderSrc = `./assets/renders/${model.videoId}.mp4`;
-  const graphSrc  = `./assets/graphs/${model.graphId}.png`;
   showVideo(renderSrc);
-  showGraph(model, graphSrc);
+  showGraph(model);
 }
+
 
 // ── SECCIÓN D — Navegación de modelos ────────────────────
 function renderSectionD() {
@@ -241,17 +291,6 @@ function renderSectionA(model) {
   }).join("");
 }
 
-function renderPathFor(model, keys) {
-  const allKeys = model.equipos.map(eq => eq.renderKey).join("-");
-  if (keys === allKeys) return `./assets/renders/${model.videoId}.mp4`;
-  return `./assets/renders/${model.videoId}_${keys}.mp4`;
-}
-
-function graphPathFor(model, keys) {
-  const allKeys = model.equipos.map(eq => eq.renderKey).join("-");
-  if (keys === allKeys) return `./assets/graphs/${model.graphId}.png`;
-  return `./assets/graphs/${model.graphId}_${keys}.png`;
-}
 
 // ── RENDER GLOBAL ─────────────────────────────────────────
 function render() {
@@ -271,12 +310,8 @@ function setModel(modelId) {
 
 function toggleEquip(equipId) {
   state.activeEquip[equipId] = !state.activeEquip[equipId];
-
-  // Actualiza clase de la card sin re-renderizar toda la lista
   const card = dom.aBody.querySelector(`[data-equip="${equipId}"]`);
   if (card) card.classList.toggle("card--active", isOn(equipId));
-
-  // Carga los nuevos assets para la combinación actual
   updateAssets();
 }
 
@@ -288,7 +323,24 @@ document.addEventListener("click", ev => {
 
   if (target.dataset.action === "setModel") {
     const modelId = target.dataset.model;
-    if (modelId) setModel(modelId);
+    if (!modelId) return;
+
+    const model = MODELS.find(m => m.id === modelId);
+    if (!model) return;
+
+    // If the target model is public, switch directly (no login needed)
+    if (model.isPublic) {
+      setModel(modelId);
+      return;
+    }
+
+    // Otherwise, require login via the login system
+    if (typeof requireLoginForModel === "function") {
+      requireLoginForModel(modelId);
+    } else {
+      // Fallback: just switch (login.js not loaded yet)
+      setModel(modelId);
+    }
     return;
   }
 
@@ -315,7 +367,6 @@ preloadBaseAssets();
 preloadBaseGraphs();
 render();
 
-// Arranca el vídeo inicial
 (function startInitialVideo() {
   const model = getModel();
   const src = `./assets/renders/${model.videoId}.mp4`;
