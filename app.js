@@ -18,7 +18,8 @@ const dom = {
   aBody:      $("aBody"),
   graphLabel: $("graphLabel"),
   graphUnit:  $("graphUnit"),
-  graphImg:   $("graphImg"),
+  graphContainer: $("graphHtmlContainer"),
+/*   graphImg:   $("graphImg"), */
   modelNav:   $("modelNav"),
   renderWrap: $("renderWrap"),
   sectionC:   $("sectionC"),
@@ -254,7 +255,7 @@ function showGraph(model) {
   ).join("");
   dom.graphUnit.innerHTML = legendItems;
 
-  const container = document.getElementById("graphContent");
+  const container = document.getElementById("graphHtmlContainer");
   container.innerHTML = "";
 
   // Reset zoom state

@@ -8,7 +8,7 @@
 (function () {
 
   // ── CONFIG ──────────────────────────────────────────────
-  const CORRECT_PIN         = "1234";
+  const CORRECT_PIN         = "0000";
   const MAX_INACTIVITY_MS   = 3 * 60 * 1000;
   const SESSION_KEY         = "dc_session_token";
   const PUBLIC_MODEL_ID     = MODELS.find(m => m.isPublic)?.id ?? "m6";
