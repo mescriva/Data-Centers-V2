@@ -25,7 +25,7 @@ const MODELS = [
         title:      "PCSM & Multi PCSM Battery Inverter",
         short:      "Supports the load during disturbances, stabilizes power flow, and enables islanded operation when required.",
         graphLabel: "Line Interactive — PCSM",
-        graphHtml:  "./assets/graphs/0_Loss_of_synchronous_machine_discharging.html",
+        graphHtml:  "./assets/graphs/0_prueba.html",
         legend: [
           { label: "POI",     color: "var(--yellow500)" },
           { label: "PE BESS", color: "var(--orange500)" },
@@ -52,7 +52,7 @@ const MODELS = [
         title:      "PCSM & Multi PCSM Battery Inverter",
         short:      "Conditions and stabilizes the energy flow, ensuring clean power delivery to critical data center loads.",
         graphLabel: "Double Conversion — PCSM",
-        graphHtml:  "./assets/graphs/0_Loss_of_synchronous_machine_discharging.html",
+        graphHtml:  "./assets/graphs/0_prueba.html",
         legend: [
           { label: "POI",         color: "var(--yellow500)" },
           { label: "PE BESS GFM", color: "var(--orange500)" },
@@ -80,7 +80,7 @@ const MODELS = [
         title:      "Power Plant Controller",
         short:      "Tracks load demand in real time and sends power references to optimize inverter response.",
         graphLabel: "Load Sensing — Power Plant Controller",
-        graphHtml:  "./assets/graphs/0_Loss_of_synchronous_machine_discharging.html",
+        graphHtml:  "./assets/graphs/0_prueba.html",
         legend: [
           { label: "POI",         color: "var(--yellow500)" },
           { label: "PE BESS",     color: "var(--orange500)" },
@@ -94,7 +94,7 @@ const MODELS = [
         title:      "PCSM & Multi PCSM Battery Inverter",
         short:      "Responds to load changes, reduces power peaks, and supports efficient energy exchange with the grid.",
         graphLabel: "Load Sensing — PCSM",
-        graphHtml:  "./assets/graphs/0_Loss_of_synchronous_machine_discharging.html",
+        graphHtml:  "./assets/graphs/0_prueba.html",
         legend: [
           { label: "POI",         color: "var(--yellow500)" },
           { label: "PE BESS",     color: "var(--orange500)" },
@@ -121,7 +121,7 @@ const MODELS = [
         title:      "Power Plant Controller",
         short:      "Measures real-time load demand and sends power references to coordinate the inverter response.",
         graphLabel: "Hybrid Load Sensing — Power Plant Controller",
-        graphHtml:  "./assets/graphs/0_Loss_of_synchronous_machine_discharging.html",
+        graphHtml:  "./assets/graphs/0_prueba.html",
         legend: [
           { label: "POI",         color: "var(--yellow500)" },
           { label: "PE BESS",     color: "var(--orange500)" },
@@ -135,7 +135,7 @@ const MODELS = [
         title:      "PCSM & Multi PCSM Battery Inverter",
         short:      "Operates in grid-forming mode to reduce power peaks, support stability, and optimize grid consumption.",
         graphLabel: "Hybrid Load Sensing — PCSM",
-        graphHtml:  "./assets/graphs/0_Loss_of_synchronous_machine_discharging.html",
+        graphHtml:  "./assets/graphs/0_prueba.html",
         legend: [
           { label: "POI",         color: "var(--yellow500)" },
           { label: "PE BESS",     color: "var(--orange500)" },
@@ -162,7 +162,7 @@ const MODELS = [
         title:      "PCSM & Multi PCSM Battery Inverter",
         short:      "Stabilizes the off-grid system, manages battery response, and provides fast backup power during disturbances.",
         graphLabel: "OFF Grid — PCSM",
-        graphHtml:  "./assets/graphs/0_Loss_of_synchronous_machine_discharging.html",
+        graphHtml:  "./assets/graphs/0_prueba.html",
         legend: [
           { label: "Gas Turbine", color: "var(--yellow500)" },
           { label: "PE BESS",     color: "var(--orange500)" },
@@ -189,7 +189,7 @@ const MODELS = [
         title:      "AIPCS 800 V Power Supply",
         short:      "Delivers regulated 800 V DC power to critical data center loads.",
         graphLabel: "800 V Power Supply — AIPCS",
-        graphHtml:  "./assets/graphs/0_Loss_of_synchronous_machine_discharging.html",
+        graphHtml:  "./assets/graphs/0_prueba.html",
         legend: [
           { label: "POI",         color: "var(--neonBlue500)" },
           { label: "PE BESS",     color: "var(--orange500)" },
@@ -203,7 +203,7 @@ const MODELS = [
         title:      "DC/DC Converter",
         short:      "Connects batteries to the 800 V DC bus for fast power exchange.",
         graphLabel: "800 V Power Supply — DC/DC Converter",
-        graphHtml:  "./assets/graphs/0_Loss_of_synchronous_machine_discharging.html",
+        graphHtml:  "./assets/graphs/0_prueba.html",
         legend: [
           { label: "POI",         color: "var(--neonBlue500)" },
           { label: "PE BESS",     color: "var(--orange500)" },
@@ -217,7 +217,7 @@ const MODELS = [
         title:      "XMV670 & XMV670K MV and SD750FR LV Drive",
         short:      "Ensure efficient cooling by controlling medium-voltage motors and optimizing pumps and fans.",
         graphLabel: "800 V Power Supply — XMV670",
-        graphHtml:  "./assets/graphs/0_Loss_of_synchronous_machine_discharging.html",
+        graphHtml:  "./assets/graphs/0_prueba.html",
         legend: [
           { label: "POI",         color: "var(--neonBlue500)" },
           { label: "PE BESS",     color: "var(--orange500)" },

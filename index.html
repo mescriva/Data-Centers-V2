@@ -9,9 +9,7 @@
 </head>
 <body>
 
-  <!-- ══════════════════════════════════════════════════════
-       LOGIN OVERLAY  (oculto por defecto)
-  ══════════════════════════════════════════════════════════ -->
+  <!-- LOGIN OVERLAY  (oculto por defecto) -->
   <div class="login-overlay" id="loginOverlay" style="display:none;">
 
     <video class="login-bg-video" autoplay loop muted playsinline>
@@ -57,12 +55,10 @@
       <button class="login-btn" id="loginBtn" disabled>Acceder</button>
 
     </div>
-  </div><!-- /login-overlay -->
+  </div>
 
 
-  <!-- ══════════════════════════════════════════════════════
-       APP PRINCIPAL
-  ══════════════════════════════════════════════════════════ -->
+  <!-- APP PRINCIPAL -->
   <div class="app" id="appRoot" style="display:none;">
 
     <main class="main">
@@ -92,7 +88,7 @@
           <div class="render-wrap" id="renderWrap"></div>
         </section>
 
-        <!-- SECCIÓN C — Gráfica HTML -->
+        <!-- SECCIÓN C — Gráfica HTML interactiva -->
         <section class="section-c" id="sectionC" aria-label="Gráfica del data center">
 
           <div class="graph-header">
@@ -101,16 +97,15 @@
           </div>
 
           <!--
-            #graphWrap : contenedor con overflow:hidden (o auto en zoom).
-                         Doble clic aquí activa el zoom.
-            #graphFrame: el <iframe> que carga el HTML de Plotly.
-                         Su width/height aumentan con el nivel de zoom para
-                         hacer scroll y explorar la gráfica ampliada.
-            #graphReset: botón ✕ centrado arriba, sólo visible con zoom activo.
+            #graphWrap  : contenedor con overflow oculto/auto según zoom.
+                          Doble clic aquí activa el zoom 2×.
+            #graphHtml  : el <iframe> estático que carga el HTML de Plotly.
+                          width/height se escalan con el zoom para permitir scroll.
+            #graphReset : botón ✕ centrado arriba, visible sólo con zoom activo.
           -->
           <div class="graph-wrap" id="graphWrap">
             <iframe
-              id="graphFrame"
+              id="graphHtml"
               class="graph-frame"
               src=""
               frameborder="0"
@@ -129,7 +124,7 @@
       <div class="model-nav" id="modelNav"></div>
     </nav>
 
-  </div><!-- /appRoot -->
+  </div>
 
 
   <!-- BARRA DE SESIÓN — esquina superior derecha, sólo en modelos protegidos -->

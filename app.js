@@ -21,7 +21,7 @@ const dom = {
   graphLabel:  $("graphLabel"),
   graphLegend: $("graphLegend"),
   graphWrap:   $("graphWrap"),       // contenedor de la gráfica (zoom + iframe)
-  graphFrame:  $("graphFrame"),      // el <iframe> fijo en el HTML
+  graphHtml:  $("graphHtml"),      // el <iframe> fijo en el HTML
   graphReset:  $("graphReset"),      // botón ✕ reset zoom
   modelNav:    $("modelNav"),
   renderWrap:  $("renderWrap"),
@@ -100,8 +100,69 @@ function showVideo(src) {
 }
 
 
+// ── CACHÉ DE GRÁFICAS HTML EN BLOB URL ───────────────────
+// Guarda una Blob URL por cada HTML de gráfica para no recargarlo
+// cada vez que cambias de equipo/modelo.
+const graphBlobCache = new Map();
+
+// Controla peticiones concurrentes para evitar que una carga antigua
+// pise una más nueva si el usuario cambia rápido de equipo.
+let graphLoadToken = 0;
+
+/**
+ * Normaliza una ruta local/externa para que sea consistente.
+ * Reutiliza la lógica actual de resolveGraphSrc.
+ */
+function normalizeGraphPath(raw) {
+  const value = String(raw ?? "").trim();
+  if (!value) return "";
+
+  // URLs externas o ya resueltas
+  if (/^(https?:|data:|blob:)/i.test(value)) return value;
+
+  // Rutas relativas locales
+  if (value.startsWith("./") || value.startsWith("../")) return value;
+  if (value.startsWith("/")) return `.${value}`; // "/assets/..." -> "./assets/..."
+  return `./${value}`;
+}
+
+/**
+ * Devuelve una Blob URL reutilizable para el HTML de la gráfica.
+ * Si ya se creó antes, la reutiliza desde caché.
+ */
+async function getGraphBlobUrl(graphPath) {
+  const normalizedPath = normalizeGraphPath(graphPath);
+  if (!normalizedPath) return "";
+
+  if (graphBlobCache.has(normalizedPath)) {
+    return graphBlobCache.get(normalizedPath);
+  }
+
+  const response = await fetch(normalizedPath, { cache: "no-store" });
+  if (!response.ok) {
+    throw new Error(`No se pudo cargar la gráfica (${response.status} ${response.statusText}) en ${normalizedPath}`);
+  }
+
+  const htmlText = await response.text();
+  const blob = new Blob([htmlText], { type: "text/html" });
+  const blobUrl = URL.createObjectURL(blob);
+
+  graphBlobCache.set(normalizedPath, blobUrl);
+  return blobUrl;
+}
+
+/**
+ * Libera las Blob URLs al cerrar la página.
+ */
+window.addEventListener("beforeunload", () => {
+  for (const url of graphBlobCache.values()) {
+    URL.revokeObjectURL(url);
+  }
+  graphBlobCache.clear();
+});
+
 // ── GRÁFICA — iframe fijo + zoom por CSS ─────────────────
-// El <iframe id="graphFrame"> existe en el HTML y nunca se destruye.
+// El <iframe id="graphHtml"> existe en el HTML y nunca se destruye.
 // Cambiamos su .src y aplicamos transform de escala sobre #graphWrap
 // para el zoom de doble clic.
 
@@ -112,19 +173,19 @@ const ZOOM_FACTOR = 2;
 const ZOOM_MAX    = 4;
 
 function applyZoom() {
-  if (!dom.graphFrame) return;
+  if (!dom.graphHtml) return;
   if (zoomScale <= 1) {
-    dom.graphFrame.style.transform       = "none";
-    dom.graphFrame.style.transformOrigin = "top left";
-    dom.graphFrame.style.width           = "100%";
-    dom.graphFrame.style.height          = "100%";
+    dom.graphHtml.style.transform       = "none";
+    dom.graphHtml.style.transformOrigin = "top left";
+    dom.graphHtml.style.width           = "100%";
+    dom.graphHtml.style.height          = "100%";
     if (dom.graphWrap) dom.graphWrap.style.overflow = "hidden";
     if (dom.graphReset) dom.graphReset.style.display = "none";
   } else {
     const pct = zoomScale * 100;
-    dom.graphFrame.style.transform       = "none";
-    dom.graphFrame.style.width           = pct + "%";
-    dom.graphFrame.style.height          = pct + "%";
+    dom.graphHtml.style.transform       = "none";
+    dom.graphHtml.style.width           = pct + "%";
+    dom.graphHtml.style.height          = pct + "%";
     if (dom.graphWrap) dom.graphWrap.style.overflow = "auto";
     if (dom.graphReset) dom.graphReset.style.display = "flex";
   }
@@ -135,13 +196,35 @@ function resetZoom() {
   applyZoom();
 }
 
-function showGraph(equipo) {
+function resolveGraphSrc(equipo) {
+  const raw = equipo?.graphHtml ?? equipo?.graphFrame ?? "";
+  return normalizeGraphPath(raw);
+}
+
+function preloadGraphAssets() {
+  const uniqueGraphPaths = [
+    ...new Set(
+      MODELS.flatMap(model =>
+        model.equipos.map(eq => resolveGraphSrc(eq)).filter(Boolean)
+      )
+    )
+  ];
+
+  uniqueGraphPaths.forEach(path => {
+    getGraphBlobUrl(path).catch(error => {
+      console.warn("[graph] No se pudo precargar:", path, error);
+    });
+  });
+}
+
+async function showGraph(equipo) {
   if (!equipo) return;
 
-  // Etiqueta
-  if (dom.graphLabel) dom.graphLabel.textContent = equipo.graphLabel || "";
+  // ── 1. Actualizar cabecera y leyenda ───────────────────
+  if (dom.graphLabel) {
+    dom.graphLabel.textContent = equipo.graphLabel || "";
+  }
 
-  // Leyenda
   if (dom.graphLegend) {
     dom.graphLegend.innerHTML = (equipo.legend || []).map(item =>
       `<span class="graph-legend-item">
@@ -151,18 +234,41 @@ function showGraph(equipo) {
     ).join("");
   }
 
-  // Cambiar src del iframe si es necesario
-  if (dom.graphFrame) {
-    const newSrc = equipo.graphHtml || "";
-    // comparamos sólo la parte final para evitar problemas con URLs absolutas
-    if (!dom.graphFrame.src.endsWith(newSrc.replace("./", ""))) {
-      dom.graphFrame.src = newSrc;
-    }
+  // ── 2. Resetear zoom al cambiar de gráfica ─────────────
+  resetZoom();
+
+  // ── 3. Cargar HTML de gráfica como Blob URL ────────────
+  if (!dom.graphHtml) return;
+
+  const graphPath = resolveGraphSrc(equipo);
+
+  if (!graphPath) {
+    console.warn("[graph] Ruta vacía en data.js para equipo:", equipo?.id);
+    dom.graphHtml.removeAttribute("src");
+    return;
   }
 
-  // Resetear zoom al cambiar de equipo
-  resetZoom();
+  const requestToken = ++graphLoadToken;
+
+  try {
+    const blobUrl = await getGraphBlobUrl(graphPath);
+
+    // Si mientras cargaba el usuario cambió a otro equipo,
+    // ignoramos esta respuesta vieja.
+    if (requestToken !== graphLoadToken) return;
+
+    if (dom.graphHtml.getAttribute("src") !== blobUrl) {
+      dom.graphHtml.setAttribute("src", blobUrl);
+      console.log("[graph] loading blob:", blobUrl, "from:", graphPath, "equipo:", equipo?.id);
+    }
+  } catch (error) {
+    console.error("[graph] Error cargando HTML de gráfica:", error);
+
+    // Limpieza visual si falla la carga
+    dom.graphHtml.removeAttribute("src");
+  }
 }
+
 
 // Eventos de zoom — se registran una sola vez
 (function initZoomEvents() {
@@ -335,6 +441,7 @@ fitToViewport();
 
 // ── INIT ──────────────────────────────────────────────────
 preloadBaseAssets();
+preloadGraphAssets();
 render();
 
 (function startInitialVideo() {

@@ -211,6 +211,7 @@ html, body {
   background-color: var(--gris00);
   transition: background 0.2s, opacity 0.2s;
   border-radius: var(--radius-sm);
+  border: 2px solid var(--neonBlue500);
 }
 
 .card:hover {
@@ -218,7 +219,7 @@ html, body {
 }
 
 .card:not(.card--active) {
-  opacity: 0.4;
+  border: 2px solid var(--gris03);
 }
 
 .card:not(.card--active) .card-title {
@@ -356,7 +357,7 @@ html, body {
   width: 100%;
   overflow: hidden;       /* override a 'auto' cuando hay zoom */
   border-radius: var(--radius-sm);
-  margin-top: 8px;
+/*   margin-top: 8px; */
   cursor: default;
 }
 
