@@ -244,7 +244,7 @@ function setupGraphZoom(container) {
 
 
 // ── MOSTRAR GRÁFICA ───────────────────────────────────────
-function showGraph(model) {
+/* function showGraph(model) {
   dom.graphLabel.textContent = model.graphLabel || "Rendimiento energético";
 
   const legendItems = (model.legend || []).map(item =>
@@ -324,13 +324,79 @@ function showGraph(model) {
     resetBtn.addEventListener("click", (e) => {
       e.stopPropagation();
       resetGraphZoom(wrapper);
-    });
-    wrapper.appendChild(resetBtn);
+ */    // ── MOSTRAR GRÁFICA CORREGIDA ─────────────────────────────
+function showGraph(model) {
+  dom.graphLabel.textContent = model.graphLabel || "Rendimiento energético";
 
-    container.appendChild(wrapper);
-    setupGraphZoom(wrapper);
+  const legendItems = (model.legend || []).map(item =>
+    `<span class="graph-legend-item">
+       <span class="graph-legend-dot" style="background:${item.color}"></span>
+       ${item.label}
+     </span>`
+  ).join("");
+  dom.graphUnit.innerHTML = legendItems;
+
+  // Usamos el contenedor correcto que mapeaste en dom
+  const container = dom.graphContainer || document.getElementById("graphHtmlContainer");
+  if (!container) return;
+  container.innerHTML = "";
+
+  // Reset zoom state
+  graphZoom = { scale: 1, translateX: 0, isDragging: false, startX: 0, startTranslateX: 0 };
+
+  // Creamos la estructura base para el Zoom
+  const wrapper = document.createElement("div");
+  wrapper.className = "graph-zoom-container";
+  wrapper.style.cssText = "position:relative;overflow:hidden;width:100%;height:100%;flex:1;min-height:0;border-radius:var(--radius-sm);";
+
+  const inner = document.createElement("div");
+  inner.className = "graph-zoom-inner";
+  inner.style.cssText = "width:100%;height:100%;will-change:transform;display:flex;align-items:center;justify-content:center;";
+
+  // VERIFICACIÓN: ¿El modelo tiene un archivo HTML asignado?
+  if (model.graphHtml) {
+    // CASO INTERACTIVO: Renderizar el HTML mediante iframe
+    const iframe = document.createElement("iframe");
+    iframe.src = model.graphHtml; // Toma dinámicamente la ruta de data.js
+    iframe.style.cssText = "width:100%;height:100%;border:none;background:transparent;";
+    iframe.setAttribute("scrolling", "no");
+    iframe.className = "graph-iframe";
+
+    inner.appendChild(iframe);
+  } else {
+    // CASO ESTÁTICO (FALLBACK): Si el modelo usa PNG tradicional
+    // Resolvemos la ruta dinámica de la imagen para este modelo y sus equipos activos
+    resolvedGraphPath(model).then(src => {
+      const cached = getOrCreateImage(src);
+      cached.className = "graph-img";
+      cached.alt = model.graphLabel || "Gráfica del modelo activo";
+      cached.style.cssText = "max-width:100%;max-height:100%;object-fit:contain;pointer-events:none;cursor:zoom-in;";
+      
+      // Añadir la imagen al contenedor solo cuando la promesa se resuelva
+      inner.appendChild(cached);
+    }).catch(() => {
+      inner.innerHTML = "<p style='color:white;'>Error al cargar la imagen de la gráfica.</p>";
+    });
   }
-}
+
+  // Añadir elementos comunes (Botón de Reset)
+  wrapper.appendChild(inner);
+
+  const resetBtn = document.createElement("button");
+  resetBtn.className = "graph-zoom-reset";
+  resetBtn.title = "Restablecer zoom";
+  resetBtn.innerHTML = "✕";
+  resetBtn.style.display = "none";
+  resetBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    resetGraphZoom(wrapper);
+  });
+  wrapper.appendChild(resetBtn);
+
+  container.appendChild(wrapper);
+  setupGraphZoom(wrapper);
+};
+   
 
 
 // ── HELPERS ───────────────────────────────────────────────
