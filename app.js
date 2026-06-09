@@ -2,7 +2,6 @@
 //  DATA CENTERS — app.js
 // ═══════════════════════════════════════════════════════════
 
-// Default model is the public one (800 V Power Supply = m6)
 const DEFAULT_MODEL_ID = MODELS.find(m => m.isPublic)?.id ?? MODELS[0].id;
 
 const state = {
@@ -146,41 +145,104 @@ function showVideo(src) {
 }
 
 
-// ── MOSTRAR GRÁFICA (iframe HTML o imagen PNG) ────────────
-let graphExpandModal = null;
+// ── GRAPH ZOOM STATE ──────────────────────────────────────
+let graphZoom = { scale: 1, translateX: 0, isDragging: false, startX: 0, startTranslateX: 0 };
 
-function ensureGraphModal() {
-  if (graphExpandModal) return;
-
-  graphExpandModal = document.createElement("div");
-  graphExpandModal.id = "graphModal";
-  graphExpandModal.innerHTML = `
-    <div class="graph-modal-backdrop"></div>
-    <div class="graph-modal-inner">
-      <button class="graph-modal-close" title="Cerrar">✕</button>
-      <iframe class="graph-modal-frame" src="" frameborder="0" allowfullscreen></iframe>
-    </div>`;
-  document.body.appendChild(graphExpandModal);
-
-  graphExpandModal.querySelector(".graph-modal-backdrop").addEventListener("click", closeGraphModal);
-  graphExpandModal.querySelector(".graph-modal-close").addEventListener("click", closeGraphModal);
+function resetGraphZoom(container) {
+  graphZoom.scale = 1;
+  graphZoom.translateX = 0;
+  applyGraphTransform(container);
+  const btn = container.querySelector(".graph-zoom-reset");
+  if (btn) btn.style.display = "none";
 }
 
-function openGraphModal(src) {
-  ensureGraphModal();
-  graphExpandModal.querySelector(".graph-modal-frame").src = src;
-  graphExpandModal.classList.add("open");
+function applyGraphTransform(container) {
+  const inner = container.querySelector(".graph-zoom-inner");
+  if (!inner) return;
+  inner.style.transform = `translateX(${graphZoom.translateX}px) scaleX(${graphZoom.scale})`;
+  inner.style.transformOrigin = "left center";
 }
 
-function closeGraphModal() {
-  if (!graphExpandModal) return;
-  graphExpandModal.classList.remove("open");
-  // small delay before clearing src to avoid flash on re-open
-  setTimeout(() => {
-    graphExpandModal.querySelector(".graph-modal-frame").src = "";
-  }, 300);
+function clampTranslateX(container) {
+  if (graphZoom.scale <= 1) { graphZoom.translateX = 0; return; }
+  const containerW = container.offsetWidth;
+  const scaledW = containerW * graphZoom.scale;
+  const maxTranslate = 0;
+  const minTranslate = containerW - scaledW;
+  graphZoom.translateX = Math.min(maxTranslate, Math.max(minTranslate, graphZoom.translateX));
 }
 
+function setupGraphZoom(container) {
+  // Reset state
+  graphZoom = { scale: 1, translateX: 0, isDragging: false, startX: 0, startTranslateX: 0 };
+
+  // Wrap content in zoom-inner
+  const inner = container.querySelector(".graph-zoom-inner");
+  if (!inner) return;
+
+  // Double-click to zoom
+  container.addEventListener("dblclick", (e) => {
+    if (graphZoom.scale >= 3) {
+      resetGraphZoom(container);
+      return;
+    }
+    const rect = container.getBoundingClientRect();
+    const clickX = e.clientX - rect.left;
+    // Zoom 2x centred on click point
+    const newScale = Math.min(graphZoom.scale * 2, 4);
+    // Keep the clicked point stationary
+    const scaleRatio = newScale / graphZoom.scale;
+    graphZoom.translateX = clickX - scaleRatio * (clickX - graphZoom.translateX);
+    graphZoom.scale = newScale;
+    clampTranslateX(container);
+    applyGraphTransform(container);
+    const btn = container.querySelector(".graph-zoom-reset");
+    if (btn) btn.style.display = "flex";
+  });
+
+  // Drag / pan (only when zoomed)
+  container.addEventListener("mousedown", (e) => {
+    if (graphZoom.scale <= 1) return;
+    graphZoom.isDragging = true;
+    graphZoom.startX = e.clientX;
+    graphZoom.startTranslateX = graphZoom.translateX;
+    container.style.cursor = "grabbing";
+    e.preventDefault();
+  });
+
+  document.addEventListener("mousemove", (e) => {
+    if (!graphZoom.isDragging) return;
+    const dx = e.clientX - graphZoom.startX;
+    graphZoom.translateX = graphZoom.startTranslateX + dx;
+    clampTranslateX(container);
+    applyGraphTransform(container);
+  });
+
+  document.addEventListener("mouseup", () => {
+    if (!graphZoom.isDragging) return;
+    graphZoom.isDragging = false;
+    container.style.cursor = graphZoom.scale > 1 ? "grab" : "default";
+  });
+
+  // Touch pan
+  let touchStartX = 0, touchStartTX = 0;
+  container.addEventListener("touchstart", (e) => {
+    if (graphZoom.scale <= 1) return;
+    touchStartX = e.touches[0].clientX;
+    touchStartTX = graphZoom.translateX;
+  }, { passive: true });
+
+  container.addEventListener("touchmove", (e) => {
+    if (graphZoom.scale <= 1) return;
+    const dx = e.touches[0].clientX - touchStartX;
+    graphZoom.translateX = touchStartTX + dx;
+    clampTranslateX(container);
+    applyGraphTransform(container);
+  }, { passive: true });
+}
+
+
+// ── MOSTRAR GRÁFICA ───────────────────────────────────────
 function showGraph(model) {
   dom.graphLabel.textContent = model.graphLabel || "Rendimiento energético";
 
@@ -192,14 +254,23 @@ function showGraph(model) {
   ).join("");
   dom.graphUnit.innerHTML = legendItems;
 
-  // Clear previous graph content
   const container = document.getElementById("graphContent");
   container.innerHTML = "";
 
+  // Reset zoom state
+  graphZoom = { scale: 1, translateX: 0, isDragging: false, startX: 0, startTranslateX: 0 };
+
   if (model.graphHtml) {
-    // Render interactive HTML graph via iframe
+    // Render interactive HTML graph via iframe inside zoom wrapper
     const wrapper = document.createElement("div");
-    wrapper.className = "graph-iframe-wrapper";
+    wrapper.className = "graph-iframe-wrapper graph-zoom-container";
+    wrapper.style.position = "relative";
+    wrapper.style.overflow = "hidden";
+
+    // zoom-inner wraps the iframe for transform
+    const inner = document.createElement("div");
+    inner.className = "graph-zoom-inner";
+    inner.style.cssText = "width:100%;height:100%;will-change:transform;";
 
     const iframe = document.createElement("iframe");
     iframe.src = model.graphHtml;
@@ -207,25 +278,56 @@ function showGraph(model) {
     iframe.className = "graph-iframe";
     iframe.setAttribute("scrolling", "no");
 
-    const expandBtn = document.createElement("button");
-    expandBtn.className = "graph-expand-btn";
-    expandBtn.title = "Ampliar gráfica";
-    expandBtn.innerHTML = `<svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M3 3h5M3 3v5M3 3l6 6M17 17h-5M17 17v-5M17 17l-6-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
-    </svg>`;
-    expandBtn.addEventListener("click", () => openGraphModal(model.graphHtml));
+    inner.appendChild(iframe);
+    wrapper.appendChild(inner);
 
-    wrapper.appendChild(iframe);
-    wrapper.appendChild(expandBtn);
+    // Reset / X button
+    const resetBtn = document.createElement("button");
+    resetBtn.className = "graph-zoom-reset";
+    resetBtn.title = "Restablecer zoom";
+    resetBtn.innerHTML = "✕";
+    resetBtn.style.display = "none";
+    resetBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      resetGraphZoom(wrapper);
+    });
+    wrapper.appendChild(resetBtn);
+
     container.appendChild(wrapper);
+    setupGraphZoom(wrapper);
+
   } else {
-    // Fallback: static PNG image
-    const graphSrc = `./assets/graphs/${model.graphId}.png`;
+    // Fallback: static PNG image with zoom
+    const wrapper = document.createElement("div");
+    wrapper.className = "graph-zoom-container";
+    wrapper.style.cssText = "position:relative;overflow:hidden;width:100%;flex:1;min-height:0;border-radius:var(--radius-sm);";
+
+    const inner = document.createElement("div");
+    inner.className = "graph-zoom-inner";
+    inner.style.cssText = "width:100%;height:100%;will-change:transform;";
+
+    const graphSrc = `assets/graphs/0_Loss of synchronous machine discharging.html`;
     const cached = getOrCreateImage(graphSrc);
-    cached.className = "graph-img graph-img--clickable";
+    cached.className = "graph-img";
     cached.alt = "Gráfica del modelo activo";
-    cached.onclick = () => openGraphModal(graphSrc);
-    container.appendChild(cached);
+    cached.style.cursor = "zoom-in";
+
+    inner.appendChild(cached);
+    wrapper.appendChild(inner);
+
+    const resetBtn = document.createElement("button");
+    resetBtn.className = "graph-zoom-reset";
+    resetBtn.title = "Restablecer zoom";
+    resetBtn.innerHTML = "✕";
+    resetBtn.style.display = "none";
+    resetBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      resetGraphZoom(wrapper);
+    });
+    wrapper.appendChild(resetBtn);
+
+    container.appendChild(wrapper);
+    setupGraphZoom(wrapper);
   }
 }
 
@@ -299,6 +401,8 @@ function render() {
   renderSectionD();
   renderSectionA(model);
   updateAssets();
+  // Notify login.js about model change (for session bar visibility)
+  if (typeof window.onModelChanged === "function") window.onModelChanged();
 }
 
 
@@ -316,7 +420,7 @@ function toggleEquip(equipId) {
 }
 
 
-// ── EVENTOS ───────────────────────────────────────────────
+// ── EVENTOS ──────────────────────────────────────────────
 document.addEventListener("click", ev => {
   const target = ev.target.closest("[data-action]");
   if (!target) return;
@@ -328,17 +432,16 @@ document.addEventListener("click", ev => {
     const model = MODELS.find(m => m.id === modelId);
     if (!model) return;
 
-    // If the target model is public, switch directly (no login needed)
+    // Public model: switch directly, no login ever
     if (model.isPublic) {
       setModel(modelId);
       return;
     }
 
-    // Otherwise, require login via the login system
+    // Protected model: always require login
     if (typeof requireLoginForModel === "function") {
       requireLoginForModel(modelId);
     } else {
-      // Fallback: just switch (login.js not loaded yet)
       setModel(modelId);
     }
     return;
