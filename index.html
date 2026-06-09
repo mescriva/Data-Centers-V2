@@ -3,24 +3,20 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Data Centers — Login</title>
+  <title>Data Centers — Circuit Configurations</title>
   <link rel="stylesheet" href="styles.css" />
   <link rel="stylesheet" href="login.css" />
 </head>
 <body>
 
-  <!-- LOGIN OVERLAY -->
+  <!-- LOGIN OVERLAY  (oculto por defecto) -->
   <div class="login-overlay" id="loginOverlay" style="display:none;">
 
-    <!-- Vídeo de fondo -->
     <video class="login-bg-video" autoplay loop muted playsinline>
       <source src="./assets/renders/v1.mp4" type="video/mp4" />
     </video>
-
-    <!-- Capa de scrim sobre el vídeo -->
     <div class="login-scrim"></div>
 
-    <!-- Formulario glass -->
     <div class="login-card" role="main" aria-label="Pantalla de acceso">
 
       <div class="login-logo-row">
@@ -32,49 +28,42 @@
 
       <div>
         <p class="login-label">Introduce el PIN</p>
-
-        <!-- 4 dígitos -->
-        <div class="pin-dots" id="pinDots" aria-live="polite" aria-label="Pin introducido">
-          <span class="pin-dot" data-index="0"></span>
-          <span class="pin-dot" data-index="1"></span>
-          <span class="pin-dot" data-index="2"></span>
-          <span class="pin-dot" data-index="3"></span>
+        <div class="pin-dots" id="pinDots" aria-live="polite">
+          <span class="pin-dot"></span>
+          <span class="pin-dot"></span>
+          <span class="pin-dot"></span>
+          <span class="pin-dot"></span>
         </div>
-
-        <!-- Mensaje de error -->
         <p class="login-error" id="loginError" aria-live="assertive"></p>
       </div>
 
-      <!-- Teclado numérico -->
       <div class="pin-keyboard" id="pinKeyboard">
         <button class="pin-key" data-digit="1">1</button>
         <button class="pin-key" data-digit="2">2</button>
         <button class="pin-key" data-digit="3">3</button>
-
         <button class="pin-key" data-digit="4">4</button>
         <button class="pin-key" data-digit="5">5</button>
         <button class="pin-key" data-digit="6">6</button>
-
         <button class="pin-key" data-digit="7">7</button>
         <button class="pin-key" data-digit="8">8</button>
         <button class="pin-key" data-digit="9">9</button>
-
         <button class="pin-key pin-key--empty" disabled></button>
         <button class="pin-key" data-digit="0">0</button>
         <button class="pin-key pin-key--clear" id="pinClear" title="Borrar">⌫</button>
       </div>
 
-      <!-- Botón acceder -->
       <button class="login-btn" id="loginBtn" disabled>Acceder</button>
 
-    </div><!-- /login-card -->
+    </div>
+  </div>
 
-  </div><!-- /login-overlay -->
 
   <!-- APP PRINCIPAL -->
   <div class="app" id="appRoot" style="display:none;">
 
     <main class="main">
+
+      <!-- SECCIÓN A — Panel lateral izquierdo -->
       <aside class="section-a" id="sectionA" aria-label="Información del modelo y equipos">
         <header class="a-header">
           <div class="a-title-row">
@@ -85,37 +74,60 @@
             <img class="a-logo" src="./assets/logo-pe.svg" alt="Power Electronics" />
           </div>
           <div class="a-badge" id="aBadge"></div>
-          <p class="a-text" id="aText"></p>
-          <p class="a-text" id="aText2"></p>
+          <p class="a-text"  id="aText"></p>
+          <p class="a-text"  id="aText2"></p>
         </header>
         <div class="a-body" id="aBody"></div>
       </aside>
 
+      <!-- Columna derecha: render arriba, gráfica abajo -->
       <section class="right-col">
+
+        <!-- SECCIÓN B — Render / vídeo -->
         <section class="section-b" id="sectionB" aria-label="Render del data center">
-          <div class="render-wrap" id="renderWrap">
-            <video class="render-video" id="renderVideoA" autoplay loop muted playsinline></video>
-            <video class="render-video render-video--back" id="renderVideoB" autoplay loop muted playsinline></video>
-          </div>
+          <div class="render-wrap" id="renderWrap"></div>
         </section>
+
+        <!-- SECCIÓN C — Gráfica HTML interactiva -->
         <section class="section-c" id="sectionC" aria-label="Gráfica del data center">
+
           <div class="graph-header">
-            <span class="graph-label" id="graphLabel"></span>
-            <span class="graph-unit" id="graphUnit"></span>
+            <span class="graph-label"  id="graphLabel"></span>
+            <span class="graph-legend" id="graphLegend"></span>
           </div>
-          <!-- Dynamic graph content: iframe (HTML) or img (PNG) injected by app.js -->
-          <div id="graphHtmlContainer"></div>
+
+          <!--
+            #graphWrap  : contenedor con overflow oculto/auto según zoom.
+                          Doble clic aquí activa el zoom 2×.
+            #graphHtml  : el <iframe> estático que carga el HTML de Plotly.
+                          width/height se escalan con el zoom para permitir scroll.
+            #graphReset : botón ✕ centrado arriba, visible sólo con zoom activo.
+          -->
+          <div class="graph-wrap" id="graphWrap">
+            <iframe
+              id="graphHtml"
+              class="graph-frame"
+              src=""
+              frameborder="0"
+              scrolling="no"
+              allowfullscreen
+            ></iframe>
+            <button class="graph-zoom-reset" id="graphReset" title="Restablecer zoom">✕</button>
+          </div>
+
         </section>
       </section>
     </main>
 
+    <!-- SECCIÓN D — Selector de modelos (barra inferior) -->
     <nav class="section-d" id="sectionD" aria-label="Selector de modelo">
       <div class="model-nav" id="modelNav"></div>
     </nav>
 
   </div>
 
-  <!-- Barra de sesión — esquina superior derecha, glass pill -->
+
+  <!-- BARRA DE SESIÓN — esquina superior derecha, sólo en modelos protegidos -->
   <div class="session-bar" id="sessionBar" style="display:none;">
     <button id="sessionLogout" title="Cerrar sesión">
       <span class="session-bar-label">Cerrar sesión</span>
