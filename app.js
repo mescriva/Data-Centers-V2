@@ -7,7 +7,7 @@ const DEFAULT_MODEL_ID = MODELS.find(m => m.isPublic)?.id ?? MODELS[0].id;
 
 const state = {
   modeloId:      DEFAULT_MODEL_ID,
-  activeEquipId: null   // id del equipo (card) actualmente seleccionado
+  activeOptionId: null   // id de la opcion (card) actualmente seleccionada
 };
 
 const $ = id => document.getElementById(id);
@@ -17,6 +17,10 @@ const dom = {
   aBadge:      $("aBadge"),
   aText:       $("aText"),
   aText2:      $("aText2"),
+  aEquipos:    $("aEquipos"),
+  aComponent1: $("aComponent1"),
+  aComponent2: $("aComponent2"),
+  aComponent3: $("aComponent3"),
   aBody:       $("aBody"),
   graphLabel:  $("graphLabel"),
   graphLegend: $("graphLegend"),
@@ -33,12 +37,12 @@ function getModel() {
   return MODELS.find(m => m.id === state.modeloId);
 }
 
-function getActiveEquipo() {
+function getActiveOption() {
   const model = getModel();
   if (!model) return null;
   return (
-    model.equipos.find(eq => eq.id === state.activeEquipId) ??
-    model.equipos[0] ??
+    model.opciones.find(option => option.id === state.activeOptionId) ??
+    model.opciones[0] ??
     null
   );
 }
@@ -73,10 +77,10 @@ function preloadBaseAssets() {
   MODELS.forEach(model => {
     // vídeo de modelo
     getOrCreateVideo(`./assets/renders/${model.videoId}.mp4`);
-    // vídeos de cada equipo (si difieren del modelo)
-    model.equipos.forEach(eq => {
-      if (eq.videoId && eq.videoId !== model.videoId) {
-        getOrCreateVideo(`./assets/renders/${eq.videoId}.mp4`);
+    // vídeos de cada opcion (si difieren del modelo)
+    model.opciones.forEach(option => {
+      if (option.videoId && option.videoId !== model.videoId) {
+        getOrCreateVideo(`./assets/renders/${option.videoId}.mp4`);
       }
     });
   });
@@ -102,11 +106,11 @@ function showVideo(src) {
 
 // ── CACHÉ DE GRÁFICAS HTML EN BLOB URL ───────────────────
 // Guarda una Blob URL por cada HTML de gráfica para no recargarlo
-// cada vez que cambias de equipo/modelo.
+// cada vez que cambias de opcion/modelo.
 const graphBlobCache = new Map();
 
 // Controla peticiones concurrentes para evitar que una carga antigua
-// pise una más nueva si el usuario cambia rápido de equipo.
+// pise una más nueva si el usuario cambia rápido de opcion.
 let graphLoadToken = 0;
 
 /**
@@ -196,8 +200,8 @@ function resetZoom() {
   applyZoom();
 }
 
-function resolveGraphSrc(equipo) {
-  const raw = equipo?.graphHtml ?? equipo?.graphFrame ?? "";
+function resolveGraphSrc(option) {
+  const raw = option?.graphHtml ?? option?.graphFrame ?? "";
   return normalizeGraphPath(raw);
 }
 
@@ -205,7 +209,7 @@ function preloadGraphAssets() {
   const uniqueGraphPaths = [
     ...new Set(
       MODELS.flatMap(model =>
-        model.equipos.map(eq => resolveGraphSrc(eq)).filter(Boolean)
+        model.opciones.map(option => resolveGraphSrc(option)).filter(Boolean)
       )
     )
   ];
@@ -217,16 +221,16 @@ function preloadGraphAssets() {
   });
 }
 
-async function showGraph(equipo) {
-  if (!equipo) return;
+async function showGraph(option) {
+  if (!option) return;
 
   // ── 1. Actualizar cabecera y leyenda ───────────────────
   if (dom.graphLabel) {
-    dom.graphLabel.textContent = equipo.graphLabel || "";
+    dom.graphLabel.textContent = option.graphLabel || "";
   }
 
   if (dom.graphLegend) {
-    dom.graphLegend.innerHTML = (equipo.legend || []).map(item =>
+    dom.graphLegend.innerHTML = (option.legend || []).map(item =>
       `<span class="graph-legend-item">
          <span class="graph-legend-dot" style="background:${item.color}"></span>
          ${item.label}
@@ -240,10 +244,10 @@ async function showGraph(equipo) {
   // ── 3. Cargar HTML de gráfica como Blob URL ────────────
   if (!dom.graphHtml) return;
 
-  const graphPath = resolveGraphSrc(equipo);
+  const graphPath = resolveGraphSrc(option);
 
   if (!graphPath) {
-    console.warn("[graph] Ruta vacía en data.js para equipo:", equipo?.id);
+    console.warn("[graph] Ruta vacía en data.js para opcion:", option?.id);
     dom.graphHtml.removeAttribute("src");
     return;
   }
@@ -253,13 +257,13 @@ async function showGraph(equipo) {
   try {
     const blobUrl = await getGraphBlobUrl(graphPath);
 
-    // Si mientras cargaba el usuario cambió a otro equipo,
+    // Si mientras cargaba el usuario cambió a otra opcion,
     // ignoramos esta respuesta vieja.
     if (requestToken !== graphLoadToken) return;
 
     if (dom.graphHtml.getAttribute("src") !== blobUrl) {
       dom.graphHtml.setAttribute("src", blobUrl);
-      console.log("[graph] loading blob:", blobUrl, "from:", graphPath, "equipo:", equipo?.id);
+      console.log("[graph] loading blob:", blobUrl, "from:", graphPath, "opcion:", option?.id);
     }
   } catch (error) {
     console.error("[graph] Error cargando HTML de gráfica:", error);
@@ -327,20 +331,30 @@ function renderSectionA(model) {
   dom.aBadge.textContent = model.shortName;
   dom.aText.textContent  = model.description;
   dom.aText2.textContent = model.description2;
+  dom.aComponent1.textContent = model.component1;
+  dom.aComponent2.textContent = model.component2 || ""; // opcional
+  dom.aComponent3.textContent = model.component3 || ""; // opcional
+  
+  const activeId = state.activeOptionId ?? model.opciones[0]?.id;
 
-  const activeId = state.activeEquipId ?? model.equipos[0]?.id;
+dom.aEquipos.innerHTML = model.equipos.map((equipo, i) => `
+    <div class="equipo">
+      ${equipo.title}
+      ${equipo.short}
+    </div>
+  `).join("");
 
-  dom.aBody.innerHTML = model.equipos.map((eq, i) => {
-    const active = eq.id === activeId ? "card--active" : "";
+  dom.aBody.innerHTML = model.opciones.map((option, i) => {
+    const active = option.id === activeId ? "card--active" : "";
     return `
       <article class="card ${active}"
-               data-equip="${eq.id}"
-               data-action="selectEquip"
+               data-option="${option.id}"
+               data-action="selectOption"
                style="animation-delay:${i * 0.06}s">
         <div class="card-left">
-          <div class="card-title">${eq.title}</div>
+          <div class="card-title">${option.title}</div>
         </div>
-        <div class="card-desc">${eq.short}</div>
+        <div class="card-desc">${option.short}</div>
       </article>`;
   }).join("");
 }
@@ -350,9 +364,9 @@ function renderSectionA(model) {
 function render() {
   const model = getModel();
 
-  // Si el equipo activo no pertenece al modelo actual, resetear al primero
-  if (!model.equipos.find(eq => eq.id === state.activeEquipId)) {
-    state.activeEquipId = model.equipos[0]?.id ?? null;
+  // Si la opcion activa no pertenece al modelo actual, resetear a la primera
+  if (!model.opciones.find(option => option.id === state.activeOptionId)) {
+    state.activeOptionId = model.opciones[0]?.id ?? null;
   }
 
   renderSectionD();
@@ -366,30 +380,30 @@ function render() {
 // ── ACTUALIZAR RENDER + GRÁFICA ───────────────────────────
 function updateAssets() {
   const model  = getModel();
-  const equipo = getActiveEquipo();
+  const option = getActiveOption();
 
-  // Vídeo del equipo seleccionado (fallback al vídeo del modelo)
-  const videoId  = equipo?.videoId ?? model.videoId;
+  // Vídeo de la opcion seleccionada (fallback al vídeo del modelo)
+  const videoId  = option?.videoId ?? model.videoId;
   showVideo(`./assets/renders/${videoId}.mp4`);
 
-  // Gráfica del equipo seleccionado
-  showGraph(equipo);
+  // Gráfica de la opcion seleccionada
+  showGraph(option);
 }
 
 
 // ── ACCIONES ──────────────────────────────────────────────
 function setModel(modelId) {
   state.modeloId    = modelId;
-  state.activeEquipId = null;  // vuelve al primer equipo del modelo
+  state.activeOptionId = null;  // vuelve a la primera opcion del modelo
   render();
 }
 
-function selectEquip(equipId) {
-  state.activeEquipId = equipId;
+function selectOption(optionId) {
+  state.activeOptionId = optionId;
 
   // Actualizar highlight de cards sin re-renderizar todo
   dom.aBody.querySelectorAll(".card").forEach(card => {
-    card.classList.toggle("card--active", card.dataset.equip === equipId);
+    card.classList.toggle("card--active", card.dataset.option === optionId);
   });
 
   updateAssets();
@@ -421,10 +435,10 @@ document.addEventListener("click", ev => {
     return;
   }
 
-  if (target.dataset.action === "selectEquip") {
-    const card    = target.closest("[data-equip]") ?? target;
-    const equipId = target.dataset.equip || card.dataset.equip;
-    if (equipId) selectEquip(equipId);
+  if (target.dataset.action === "selectOption") {
+    const card     = target.closest("[data-option]") ?? target;
+    const optionId = target.dataset.option || card.dataset.option;
+    if (optionId) selectOption(optionId);
     return;
   }
 });
@@ -445,9 +459,9 @@ preloadGraphAssets();
 render();
 
 (function startInitialVideo() {
-  const equipo = getActiveEquipo();
+  const option = getActiveOption();
   const model  = getModel();
-  const src    = `./assets/renders/${equipo?.videoId ?? model.videoId}.mp4`;
+  const src    = `./assets/renders/${option?.videoId ?? model.videoId}.mp4`;
   const video  = getOrCreateVideo(src);
 
   function playIt() {
