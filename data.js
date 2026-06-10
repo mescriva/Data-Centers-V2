@@ -17,6 +17,15 @@ const MODELS = [
     isPublic:    false,
     description: "Line Interactive architecture decouples the inverter from grid disturbances while limiting fault currents and supporting smoother transitions between grid-connected and islanded operation.",
     description2:"With grid-forming operation and advanced control capabilities, this configuration enhances system stability and supports reliable performance under demanding load profiles.",
+    
+     equipos: [
+      {
+        id:"aipcs",
+        title: "lorem",
+        short: "lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+      }
+    ],
+    
     opciones: [
       {
         id:         "m1-pcs",
@@ -30,6 +39,34 @@ const MODELS = [
           { label: "POI",     color: "var(--yellow500)" },
           { label: "PE BESS", color: "var(--orange500)" },
           { label: "P Load",  color: "var(--mobilityGreen500)" }
+        ]
+      },
+      {
+        id:         "m3-ppc5",
+        renderKey:  "ppc",
+        videoId:    "v3",
+        title:      "lorem",
+        short:      "Tracks load demand in real time and sends power references to optimize inverter response.",
+        graphLabel: "Load Sensing — Power Plant Controller",
+        graphHtml:  "./assets/graphs/0_prueba.html",
+        legend: [
+          { label: "POI",         color: "var(--yellow500)" },
+          { label: "PE BESS",     color: "var(--orange500)" },
+          { label: "Data Center", color: "var(--mobilityGreen500)" }
+        ]
+      },
+      {
+        id:         "m3-ppc2",
+        renderKey:  "ppc",
+        videoId:    "v3",
+        title:      "lorem",
+        short:      "Tracks load demand in real time and sends power references to optimize inverter response.",
+        graphLabel: "Load Sensing — Power Plant Controller",
+        graphHtml:  "./assets/graphs/0_prueba.html",
+        legend: [
+          { label: "POI",         color: "var(--yellow500)" },
+          { label: "PE BESS",     color: "var(--orange500)" },
+          { label: "Data Center", color: "var(--mobilityGreen500)" }
         ]
       }
     ]
@@ -45,13 +82,20 @@ const MODELS = [
     description: "Double conversion architecture provides complete isolation from grid disturbances, delivering clean and stable power to critical data center loads.",
     description2:"This configuration ensures optimal power quality and uninterrupted supply with zero transfer time, making it one of the most reliable solutions for mission-critical environments.",
     
-    
+     equipos: [
+      {
+        id:"aipcs",
+        title: "lorem",
+        short: "lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+      }
+    ],
+
     opciones: [
       {
         id:         "m2-pcs",
         renderKey:  "pcs",
         videoId:    "v2",
-        title:      "PCSM & Multi PCSM Battery Inverter",
+        title:      "lorem",
         short:      "Conditions and stabilizes the energy flow, ensuring clean power delivery to critical data center loads.",
         graphLabel: "Double Conversion — PCSM",
         graphHtml:  "./assets/graphs/0_prueba.html",
@@ -60,6 +104,34 @@ const MODELS = [
           { label: "PE BESS GFM", color: "var(--orange500)" },
           { label: "Data Center", color: "var(--mobilityGreen500)" },
           { label: "PE BESS GFL", color: "var(--yellow500)" }
+        ]
+      },
+       {
+        id:         "m3-ppc2",
+        renderKey:  "ppc",
+        videoId:    "v3",
+        title:      "lorem",
+        short:      "Tracks load demand in real time and sends power references to optimize inverter response.",
+        graphLabel: "Load Sensing — Power Plant Controller",
+        graphHtml:  "./assets/graphs/0_prueba.html",
+        legend: [
+          { label: "POI",         color: "var(--yellow500)" },
+          { label: "PE BESS",     color: "var(--orange500)" },
+          { label: "Data Center", color: "var(--mobilityGreen500)" }
+        ]
+      },
+       {
+        id:         "m3-ppc",
+        renderKey:  "ppc",
+        videoId:    "v3",
+        title:      "lorem",
+        short:      "Tracks load demand in real time and sends power references to optimize inverter response.",
+        graphLabel: "Load Sensing — Power Plant Controller",
+        graphHtml:  "./assets/graphs/0_prueba.html",
+        legend: [
+          { label: "POI",         color: "var(--yellow500)" },
+          { label: "PE BESS",     color: "var(--orange500)" },
+          { label: "Data Center", color: "var(--mobilityGreen500)" }
         ]
       }
     ]
@@ -74,6 +146,20 @@ const MODELS = [
     isPublic:    false,
     description: "Load Sensing measures real-time data center demand and sends the required power references to the grid-following inverter.",
     description2:"This enables fast response to load variations, helping reduce grid consumption and smooth significant power peaks while maintaining operational efficiency.",
+    
+     equipos: [
+      {
+        id:"dc-dc",
+        title: "lorem",
+        short: "lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+      },
+      {
+        id:"pcsms",
+        title: "lorem",
+        short: "lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+      }
+    ],
+    
     opciones: [
       {
         id:         "m3-ppc",
@@ -102,7 +188,21 @@ const MODELS = [
           { label: "PE BESS",     color: "var(--orange500)" },
           { label: "Data Center", color: "var(--mobilityGreen500)" }
         ]
-      }
+      },
+       {
+        id:         "m3-ppc5",
+        renderKey:  "ppc",
+        videoId:    "v3",
+        title:      "Power Plant Controller",
+        short:      "Tracks load demand in real time and sends power references to optimize inverter response.",
+        graphLabel: "Load Sensing — Power Plant Controller",
+        graphHtml:  "./assets/graphs/0_prueba.html",
+        legend: [
+          { label: "POI",         color: "var(--yellow500)" },
+          { label: "PE BESS",     color: "var(--orange500)" },
+          { label: "Data Center", color: "var(--mobilityGreen500)" }
+        ]
+      },
     ]
   },
 
@@ -115,6 +215,20 @@ const MODELS = [
     isPublic:    false,
     description: "Hybrid Load Sensing uses an external control device to measure real-time load demand and send power references to the grid-forming inverter.",
     description2:"This solution helps minimize grid consumption, reduce significant power peaks, and achieve performance close to line-interactive systems without the need for a choke.",
+    
+     equipos: [
+      {
+        id:"aipcs",
+        title: "lorem",
+        short: "lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+      },
+      {
+        id:"dc-dc",
+        title: "lorem",
+        short: "lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+      }
+    ],
+
     opciones: [
       {
         id:         "m4-ppc",
@@ -170,20 +284,21 @@ const MODELS = [
     isPublic:    false,
     description: "Off-grid data centers use gas turbines for primary, continuous, and high-density power, while BESS provides backup power and stability services.",
     description2:"The BESS delivers near-instantaneous protection against momentary dips and failures, creating a scalable, reliable, and more sustainable alternative to traditional diesel-based backup systems.",
-    component1: "AIPCS 800 V Power Supply",
-    component1Desc: "Delivers regulated 800 V DC power to critical data center loads.",
-    component2: "DC/DC Converter",
-    component2Desc: "Connects batteries to the 800 V DC bus for fast power exchange.",
-    component3: "PCSM & Multi PCSM Battery Inverter",
-    component3Desc: "Responds to load changes, reduces power peaks, and supports efficient energy exchange with the grid.",
-
+   
+     equipos: [
+      {
+        id:"aipcs",
+        title: "PCSM & Multi PCSM Battery Inverter",
+        short: "Responds to load changes, reduces power peaks, and supports efficient energy exchange with the grid."
+      }
+    ],
     opciones: [
       {
         id:         "m5-pcs",
         renderKey:  "pcs",
         videoId:    "v5",
-        title:      "PCSM & Multi PCSM Battery Inverter",
-        short:      "Stabilizes the off-grid system, manages battery response, and provides fast backup power during disturbances.",
+        title:      "lorem",
+        short:      "lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
         graphLabel: "OFF Grid: GT+ BESS BTM​ Chart",
         graphHtml:  "./assets/graphs/0_prueba.html",
         legend: [

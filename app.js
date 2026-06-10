@@ -339,8 +339,8 @@ function renderSectionA(model) {
 
 dom.aEquipos.innerHTML = model.equipos.map((equipo, i) => `
     <div class="equipo">
-      ${equipo.title}
-      ${equipo.short}
+      <div class="equipo-title">${equipo.title}</div>
+      <div class="equipo-short">${equipo.short}</div>
     </div>
   `).join("");
 
