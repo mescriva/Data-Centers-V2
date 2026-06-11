@@ -1,28 +1,25 @@
 // ═══════════════════════════════════════════════════════════
 //  DATA CENTERS — login.js
 //
-//  PIN: 1234  |  Inactividad: 3 min
+//  PIN: 0000  |  Inactividad: 3 min
 //
-//  Reglas:
-//  · Inicio siempre en m6 (público), sin PIN.
-//  · Clic en m1–m5 → muestra overlay de PIN SIEMPRE.
-//  · Login OK → cambia al modelo pendiente, muestra "Cerrar sesión".
-//  · "Cerrar sesión" / inactividad → vuelve a m6, SIN overlay de PIN.
-//  · Botón m6 → vuelve a m6 directamente, SIN overlay de PIN.
-//  · "Cerrar sesión" oculto mientras se está en m6.
-//
-//  API consola:
-//    LoginDev.getToken()
-//    LoginDev.expireNow()
-//    LoginDev.setInactivity(seg)
-//    LoginDev.status()
+//  Flujo:
+//  · Arranca siempre en m6 (público). Pill: "Log in →"
+//  · Clic "Log in →" O clic en m1–m5 sin sesión → modal PIN.
+//    El modal muestra la app desenfocada detrás.
+//  · PIN correcto → sesión activa. Pill: "Log out →".
+//    - Desde "Log in →" (estaba en m6): se queda en m6.
+//    - Desde clic en m1–m5: navega al modelo clicado.
+//  · Con sesión: navegación libre por todos los modelos.
+//  · "Log out →" o inactividad → vuelve a m6, pill "Log in →".
+//  · X en el modal → cierra sin logear, se queda donde está.
 // ═══════════════════════════════════════════════════════════
 
 (function () {
 
   // ── CONFIG ──────────────────────────────────────────────
   const CORRECT_PIN       = "0000";
-  const MAX_INACTIVITY_MS = 3 * 60 * 1000;   // 3 min
+  const MAX_INACTIVITY_MS = 3 * 60 * 1000;
   const SESSION_KEY       = "dc_session_token";
   const PUBLIC_MODEL_ID   = MODELS.find(m => m.isPublic)?.id ?? "m6";
 
@@ -35,15 +32,16 @@
   let pendingModelId  = null;
 
   // ── DOM ─────────────────────────────────────────────────
-  const overlay    = document.getElementById("loginOverlay");
+  const backdrop   = document.getElementById("loginBackdrop");
   const appRoot    = document.getElementById("appRoot");
   const pinDots    = document.getElementById("pinDots");
   const dots       = pinDots.querySelectorAll(".pin-dot");
   const keyboard   = document.getElementById("pinKeyboard");
   const loginBtn   = document.getElementById("loginBtn");
   const loginError = document.getElementById("loginError");
-  const sessionBar = document.getElementById("sessionBar");
-  const logoutBtn  = document.getElementById("sessionLogout");
+  const btnLogin   = document.getElementById("sessionLoginBtn");
+  const btnLogout  = document.getElementById("sessionLogoutBtn");
+  const btnClose   = document.getElementById("loginClose");
 
   // ── TOKEN ────────────────────────────────────────────────
   function generateToken() {
@@ -55,15 +53,18 @@
   function clearToken()     { sessionStorage.removeItem(SESSION_KEY); sessionToken = null; }
   function getStoredToken() { return sessionStorage.getItem(SESSION_KEY); }
 
-  // ── BARRA DE SESIÓN ──────────────────────────────────────
-  // Visible sólo cuando hay sesión activa Y el modelo activo NO es público.
-  function updateSessionBar() {
-    const model     = (typeof getModel === "function") ? getModel() : null;
-    const onPublic  = model ? !!model.isPublic : true;
-    sessionBar.style.display = (sessionToken && !onPublic) ? "flex" : "none";
+  // ── PILL DE SESIÓN ───────────────────────────────────────
+  function updatePill() {
+    if (sessionToken) {
+      btnLogin.style.display  = "none";
+      btnLogout.style.display = "flex";
+    } else {
+      btnLogin.style.display  = "flex";
+      btnLogout.style.display = "none";
+    }
   }
-  // app.js llama a esto tras cada cambio de modelo
-  window.onModelChanged = updateSessionBar;
+
+  window.onModelChanged = updatePill;
 
   // ── INACTIVIDAD ──────────────────────────────────────────
   function resetInactivityTimer() {
@@ -72,72 +73,82 @@
   }
 
   function onInactivity() {
-    console.info("[Login] Inactividad → regresando a m6.");
-    goPublic();   // silencioso, sin overlay
+    console.info("[Login] Inactividad → volviendo a m6.");
+    doLogout();
   }
 
   ["mousemove", "mousedown", "keydown", "touchstart", "click"].forEach(ev =>
     document.addEventListener(ev, () => { if (sessionToken) resetInactivityTimer(); }, { passive: true })
   );
 
-  // ── NAVEGACIÓN A MODELO PÚBLICO ──────────────────────────
-  // Sin overlay, sin PIN, simplemente cambia el modelo.
-  function goPublic() {
-    clearToken();
-    clearTimeout(inactivityTimer);
-    sessionBar.style.display = "none";
-    if (typeof setModel === "function") setModel(PUBLIC_MODEL_ID);
-  }
-
-  // ── MOSTRAR / OCULTAR OVERLAY ────────────────────────────
-  function showOverlay() {
-    overlay.style.display = "flex";
-    overlay.style.opacity = "";
-    overlay.classList.remove("hidden");
+  // ── MODAL ────────────────────────────────────────────────
+  function showModal() {
+    backdrop.style.display = "flex";
+    appRoot.classList.add("app--blurred");
     resetPin();
     showError("");
   }
 
-  function hideOverlay() {
-    overlay.classList.add("hidden");
-    overlay.addEventListener("animationend", () => {
-      overlay.style.display = "none";
-    }, { once: true });
+  function hideModal() {
+    backdrop.style.display = "none";
+    appRoot.classList.remove("app--blurred");
   }
 
   // ── LOGIN ────────────────────────────────────────────────
-  function login() {
+  function doLogin() {
     sessionToken = generateToken();
     sessionStart = Date.now();
     saveToken(sessionToken);
     console.info(`[Login] Sesión iniciada. Token: ${sessionToken}`);
 
-    hideOverlay();
+    hideModal();
     resetInactivityTimer();
+    updatePill();
 
     if (pendingModelId) {
-      const mid  = pendingModelId;
+      const mid = pendingModelId;
       pendingModelId = null;
       if (typeof setModel === "function") setModel(mid);
     }
-
-    updateSessionBar();
   }
 
   // ── LOGOUT ───────────────────────────────────────────────
-  // "Cerrar sesión" o inactividad → vuelve a m6 SIN overlay.
-  function logout() {
-    console.info("[Login] Sesión cerrada.");
+  function doLogout() {
+    clearToken();
+    clearTimeout(inactivityTimer);
     pendingModelId = null;
-    goPublic();
+    console.info("[Login] Sesión cerrada.");
+    updatePill();
+    if (typeof setModel === "function") setModel(PUBLIC_MODEL_ID);
   }
 
-  // ── API PÚBLICA (llamada desde app.js) ───────────────────
-  // Siempre muestra el overlay, independientemente de si hay sesión.
+  // ── API PÚBLICA para app.js ──────────────────────────────
+  // Llamada cuando el usuario clica m1–m5 sin sesión.
   window.requireLoginForModel = function (modelId) {
+    // Si ya hay sesión activa, navegar directamente sin modal
+    if (sessionToken) {
+      if (typeof setModel === "function") setModel(modelId);
+      return;
+    }
     pendingModelId = modelId;
-    showOverlay();
+    showModal();
   };
+
+  // ── EVENTOS PILL ─────────────────────────────────────────
+  btnLogin.addEventListener("click", () => {
+    pendingModelId = null; // Log in desde m6 → se queda en m6
+    showModal();
+  });
+
+  btnLogout.addEventListener("click", doLogout);
+
+  // X del modal → cierra sin logear
+  btnClose.addEventListener("click", hideModal);
+
+  // Clic en el backdrop oscuro → cierra
+  backdrop.addEventListener("click", (e) => {
+    if (e.target === backdrop) hideModal();
+  });
 
   // ── PIN ──────────────────────────────────────────────────
   function addDigit(d) {
@@ -176,15 +187,15 @@
 
   function attemptLogin() {
     if (pin === CORRECT_PIN) {
-      login();
+      doLogin();
     } else {
       shakeError();
-      showError("PIN incorrecto");
+      showError("Incorrect PIN");
       setTimeout(resetPin, 600);
     }
   }
 
-  // ── EVENTOS DEL TECLADO ──────────────────────────────────
+  // ── EVENTOS TECLADO ──────────────────────────────────────
   keyboard.addEventListener("click", ev => {
     const key = ev.target.closest(".pin-key");
     if (!key || key.disabled) return;
@@ -197,19 +208,18 @@
   });
 
   document.addEventListener("keydown", ev => {
-    if (overlay.style.display === "none") return;
+    if (backdrop.style.display === "none") return;
     if (ev.key >= "0" && ev.key <= "9") addDigit(ev.key);
     if (ev.key === "Backspace")          removeDigit();
+    if (ev.key === "Escape")             hideModal();
     if (ev.key === "Enter" && pin.length === 4) attemptLogin();
   });
 
-  logoutBtn.addEventListener("click", logout);
-
-  // ── API DE CONSOLA ────────────────────────────────────────
+  // ── CONSOLA DEV ──────────────────────────────────────────
   window.LoginDev = {
     getToken()       { const t = getStoredToken(); console.info("[LoginDev] Token:", t ?? "(ninguno)"); return t; },
     expireNow()      { onInactivity(); },
-    setInactivity(s) { maxInactivityMs = s * 1000; if (sessionToken) resetInactivityTimer(); console.info(`[LoginDev] Inactividad: ${s}s`); },
+    setInactivity(s) { maxInactivityMs = s * 1000; if (sessionToken) resetInactivityTimer(); },
     status() {
       const stored  = getStoredToken();
       const elapsed = sessionStart ? Math.round((Date.now() - sessionStart) / 1000) : null;
@@ -221,26 +231,26 @@
 
   // ── INIT ─────────────────────────────────────────────────
   (function init() {
-    // Siempre arranca en el modelo público, sin PIN
-    overlay.style.display  = "none";
-    appRoot.style.display  = "";
-    sessionBar.style.display = "none";
+    // App siempre visible desde el arranque
+    backdrop.style.display = "none";
 
     if (typeof render === "function" && !window.__appInitialized) {
       window.__appInitialized = true;
-      if (typeof preloadBaseAssets === "function") preloadBaseAssets();
+      if (typeof preloadBaseAssets  === "function") preloadBaseAssets();
+      if (typeof preloadGraphAssets === "function") preloadGraphAssets();
       render();
     }
 
-    // Restaurar sesión si existe token previo
+    // Restaurar sesión previa
     const stored = getStoredToken();
     if (stored) {
       sessionToken = stored;
       sessionStart = Date.now();
       resetInactivityTimer();
-      updateSessionBar();
       console.info(`[Login] Sesión restaurada. Token: ${sessionToken}`);
     }
+
+    updatePill();
   })();
 
 })();
