@@ -27,46 +27,46 @@ const MODELS = [
     ],
     
     opciones: [
-      {
-        id:         "m1-pcs",
-        renderKey:  "pcs",
-        videoId:    "v1",
-        title:      "PCSM & Multi PCSM Battery Inverter",
-        short:      "Supports the load during disturbances, stabilizes power flow, and enables islanded operation when required.",
-        graphLabel: "Line Interactive — PCSM",
-        graphHtml:  "./assets/graphs/0_prueba.html",
+     {
+        id:         "m3-ppc2",
+        renderKey:  "ppc",
+        videoId:    "v3",
+        title:      "OP-A",
+        short:      "Tracks load demand in real time and sends power references to optimize inverter response.",
+        graphLabel: "Load Sensing — Power Plant Controller",
+        graphHtml:  "./assets/graphs/LineInteractiveA.html",
         legend: [
-          { label: "POI",     color: "var(--yellow500)" },
-          { label: "PE BESS", color: "var(--orange500)" },
-          { label: "P Load",  color: "var(--mobilityGreen500)" }
+          { label: "POI",         color: "var(--yellow500)" },
+          { label: "PE BESS",     color: "var(--orange500)" },
+          { label: "Data Center", color: "var(--mobilityGreen500)" }
         ]
-      },
+      }, 
       {
         id:         "m3-ppc5",
         renderKey:  "ppc",
         videoId:    "v3",
-        title:      "lorem",
+        title:      "OP-B",
         short:      "Tracks load demand in real time and sends power references to optimize inverter response.",
         graphLabel: "Load Sensing — Power Plant Controller",
-        graphHtml:  "./assets/graphs/0_prueba.html",
+        graphHtml:  "./assets/graphs/LineInteractiveB.html",
         legend: [
           { label: "POI",         color: "var(--yellow500)" },
           { label: "PE BESS",     color: "var(--orange500)" },
           { label: "Data Center", color: "var(--mobilityGreen500)" }
         ]
       },
-      {
-        id:         "m3-ppc2",
-        renderKey:  "ppc",
-        videoId:    "v3",
-        title:      "lorem",
-        short:      "Tracks load demand in real time and sends power references to optimize inverter response.",
-        graphLabel: "Load Sensing — Power Plant Controller",
-        graphHtml:  "./assets/graphs/0_prueba.html",
+       {
+        id:         "m1-pcs",
+        renderKey:  "pcs",
+        videoId:    "v1",
+        title:      "OP-C",
+        short:      "Supports the load during disturbances, stabilizes power flow, and enables islanded operation when required.",
+        graphLabel: "Line Interactive — PCSM",
+        graphHtml:  "./assets/graphs/LineInteractiveC.html",
         legend: [
-          { label: "POI",         color: "var(--yellow500)" },
-          { label: "PE BESS",     color: "var(--orange500)" },
-          { label: "Data Center", color: "var(--mobilityGreen500)" }
+          { label: "POI",     color: "var(--yellow500)" },
+          { label: "PE BESS", color: "var(--orange500)" },
+          { label: "P Load",  color: "var(--mobilityGreen500)" }
         ]
       }
     ]
@@ -95,10 +95,10 @@ const MODELS = [
         id:         "m2-pcs",
         renderKey:  "pcs",
         videoId:    "v2",
-        title:      "lorem",
+        title:      " OP-A",
         short:      "Conditions and stabilizes the energy flow, ensuring clean power delivery to critical data center loads.",
         graphLabel: "Double Conversion — PCSM",
-        graphHtml:  "./assets/graphs/0_prueba.html",
+        graphHtml:  "./assets/graphs/DoubleConversionA.html",
         legend: [
           { label: "POI",         color: "var(--yellow500)" },
           { label: "PE BESS GFM", color: "var(--orange500)" },
@@ -110,24 +110,10 @@ const MODELS = [
         id:         "m3-ppc2",
         renderKey:  "ppc",
         videoId:    "v3",
-        title:      "lorem",
+        title:      "OP-B",
         short:      "Tracks load demand in real time and sends power references to optimize inverter response.",
         graphLabel: "Load Sensing — Power Plant Controller",
-        graphHtml:  "./assets/graphs/0_prueba.html",
-        legend: [
-          { label: "POI",         color: "var(--yellow500)" },
-          { label: "PE BESS",     color: "var(--orange500)" },
-          { label: "Data Center", color: "var(--mobilityGreen500)" }
-        ]
-      },
-       {
-        id:         "m3-ppc",
-        renderKey:  "ppc",
-        videoId:    "v3",
-        title:      "lorem",
-        short:      "Tracks load demand in real time and sends power references to optimize inverter response.",
-        graphLabel: "Load Sensing — Power Plant Controller",
-        graphHtml:  "./assets/graphs/0_prueba.html",
+        graphHtml:  "./assets/graphs/DoubleConversionB.html",
         legend: [
           { label: "POI",         color: "var(--yellow500)" },
           { label: "PE BESS",     color: "var(--orange500)" },
@@ -165,10 +151,10 @@ const MODELS = [
         id:         "m3-ppc",
         renderKey:  "ppc",
         videoId:    "v3",
-        title:      "Power Plant Controller",
+        title:      "OP-A",
         short:      "Tracks load demand in real time and sends power references to optimize inverter response.",
         graphLabel: "Load Sensing — Power Plant Controller",
-        graphHtml:  "./assets/graphs/0_prueba.html",
+        graphHtml:  "./assets/graphs/LoadSensingA.html",
         legend: [
           { label: "POI",         color: "var(--yellow500)" },
           { label: "PE BESS",     color: "var(--orange500)" },
@@ -179,10 +165,10 @@ const MODELS = [
         id:         "m3-pcs",
         renderKey:  "pcs",
         videoId:    "v3",
-        title:      "PCSM & Multi PCSM Battery Inverter",
+        title:      "OP-B",
         short:      "Responds to load changes, reduces power peaks, and supports efficient energy exchange with the grid.",
         graphLabel: "Load Sensing — PCSM",
-        graphHtml:  "./assets/graphs/0_prueba.html",
+        graphHtml:  "./assets/graphs/LoadSensingB.html",
         legend: [
           { label: "POI",         color: "var(--yellow500)" },
           { label: "PE BESS",     color: "var(--orange500)" },
@@ -193,10 +179,10 @@ const MODELS = [
         id:         "m3-ppc5",
         renderKey:  "ppc",
         videoId:    "v3",
-        title:      "Power Plant Controller",
+        title:      "OP-C solo data center conectado",
         short:      "Tracks load demand in real time and sends power references to optimize inverter response.",
         graphLabel: "Load Sensing — Power Plant Controller",
-        graphHtml:  "./assets/graphs/0_prueba.html",
+        graphHtml:  "./assets/graphs/LoadSensingC.html",
         legend: [
           { label: "POI",         color: "var(--yellow500)" },
           { label: "PE BESS",     color: "var(--orange500)" },
@@ -234,10 +220,10 @@ const MODELS = [
         id:         "m4-ppc",
         renderKey:  "ppc",
         videoId:    "v4",
-        title:      "Our Power Plant Controller",
+        title:      "OP-A",
         short:      "lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
         graphLabel: "Hybrid Load Sensing​ Chart",
-        graphHtml:  "./assets/graphs/0_prueba.html",
+        graphHtml:  "./assets/graphs/HLoadSensingA.html",
         legend: [
           { label: "POI",         color: "var(--yellow500)" },
           { label: "PE BESS",     color: "var(--orange500)" },
@@ -248,10 +234,10 @@ const MODELS = [
         id:         "m4-pcs",
         renderKey:  "pcs",
         videoId:    "v4",
-        title:      "External Power Plant Controller",
+        title:      "OP-B",
         short:      "lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
         graphLabel: "Hybrid Load Sensing​ Chart",
-        graphHtml:  "./assets/graphs/0_prueba.html",
+        graphHtml:  "./assets/graphs/HLoadSensingB.html",
         legend: [
           { label: "POI",         color: "var(--yellow500)" },
           { label: "PE BESS",     color: "var(--orange500)" },
@@ -262,10 +248,10 @@ const MODELS = [
         id:         "m4-pcs2",
         renderKey:  "pcs2",
         videoId:    "v4",
-        title:      "Without Storage",
+        title:      "OP-C",
         short:      "lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
         graphLabel: "Hybrid Load Sensing​ Chart",
-        graphHtml:  "./assets/graphs/0_prueba.html",
+        graphHtml:  "./assets/graphs/HLoadSensingC.html",
         legend: [
           { label: "POI",         color: "var(--yellow500)" },
           { label: "PE BESS",     color: "var(--orange500)" },
@@ -297,30 +283,16 @@ const MODELS = [
         id:         "m5-pcs",
         renderKey:  "pcs",
         videoId:    "v5",
-        title:      "lorem",
+        title:      "OP-A",
         short:      "lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
         graphLabel: "OFF Grid: GT+ BESS BTM​ Chart",
-        graphHtml:  "./assets/graphs/0_prueba.html",
+        graphHtml:  "./assets/graphs/OFFGridA.html",
         legend: [
           { label: "Gas Turbine", color: "var(--yellow500)" },
           { label: "PE BESS",     color: "var(--orange500)" },
           { label: "Data Center", color: "var(--mobilityGreen500)" }
         ]
-      },
-       { /*opcion extra para m5*/ 
-        id:         "m6-aipcs",
-        renderKey:  "Big BESS Size",
-        videoId:    "v5",
-        title:      "lorem",
-        short:      "lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-        graphLabel: "OFF Grid: GT+ BESS BTM​ Chart",
-        graphHtml:  "./assets/graphs/0_prueba.html",
-        legend: [
-          { label: "POI",         color: "var(--neonBlue500)" },
-          { label: "PE BESS",     color: "var(--orange500)" },
-          { label: "Data Center", color: "var(--mobilityGreen500)" }
-        ]
-      },
+      }
     ]
   },
 
@@ -356,10 +328,10 @@ const MODELS = [
         id:         "m6-aipcs",
         renderKey:  "Big BESS Size",
         videoId:    "v6",
-        title:      "Big BESS Size",
+        title:      "OP-A",
         short:      "lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
         graphLabel: "800 V Power Supply Chart",
-        graphHtml:  "./assets/graphs/0_prueba.html",
+        graphHtml:  "./assets/graphs/800VPowerSupplyA.html",
         legend: [
           { label: "POI",         color: "var(--neonBlue500)" },
           { label: "PE BESS",     color: "var(--orange500)" },
@@ -370,10 +342,10 @@ const MODELS = [
         id:         "m6-xmv",
         renderKey:  "Small BESS Size",
         videoId:    "v6",
-        title:      "Small BESS Size",
+        title:      "OP-B",
         short:      "lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
         graphLabel: "800 V Power Supply Chart",
-        graphHtml:  "./assets/graphs/0_prueba.html",
+        graphHtml:  "./assets/graphs/800VPowerSupplyB.html",
         legend: [
           { label: "POI",         color: "var(--neonBlue500)" },
           { label: "PE BESS",     color: "var(--orange500)" },
