@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Data Centers — Circuit Configurations</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="login.css" />
+</head>
+<body>
+
+  <!-- APP PRINCIPAL — siempre visible -->
+  <div class="app" id="appRoot">
+
+    <main class="main">
+
+      <!-- SECCIÓN A — Panel lateral izquierdo -->
+      <aside class="section-a" id="sectionA" aria-label="Información del modelo y opciones">
+        <header class="a-header">
+          <div class="a-title-row">
+            <div>
+              <h1 class="a-title">Data Centers</h1>
+              <h1 class="a-title">Circuit Configurations</h1>
+            </div>
+            <img class="a-logo" src="./assets/logo-pe.svg" alt="Power Electronics" />
+          </div>
+          <div class="a-badge" id="aBadge"></div>
+          <p class="a-text"  id="aText"></p>
+          <p class="a-text"  id="aText2"></p>
+
+          <div class="a-equipos" id="aEquipos">
+            <p class="a-component" id="aComponent1"></p>
+            <p class="a-component" id="aComponent2"></p>
+            <p class="a-component" id="aComponent3"></p>
+          </div>
+        </header>
+        <div class="a-body" id="aBody"></div>
+      </aside>
+
+      <!-- Columna derecha: render arriba, gráfica abajo -->
+      <section class="right-col">
+
+        <!-- SECCIÓN B — Render / vídeo -->
+        <section class="section-b" id="sectionB" aria-label="Render del data center">
+          <div class="render-wrap" id="renderWrap"></div>
+
+          <!-- Pill de sesión — esquina superior derecha del render -->
+          <div class="session-pill" id="sessionPill">
+            <!-- Sin sesión: "Log in →" -->
+            <button class="session-pill-btn" id="sessionLoginBtn">
+              Log in <span class="session-pill-arrow">→</span>
+            </button>
+            <!-- Con sesión: "Log out →" -->
+            <button class="session-pill-btn session-pill-btn--out" id="sessionLogoutBtn" style="display:none;">
+              Log out <span class="session-pill-arrow">→</span>
+            </button>
+          </div>
+        </section>
+
+        <!-- SECCIÓN C — Gráfica HTML interactiva -->
+        <section class="section-c" id="sectionC" aria-label="Gráfica del data center">
+          <div class="graph-header">
+            <span class="graph-label"  id="graphLabel"></span>
+            <span class="graph-legend" id="graphLegend"></span>
+          </div>
+          <div class="graph-wrap" id="graphWrap">
+            <iframe
+              id="graphHtml"
+              class="graph-frame"
+              src=""
+              frameborder="0"
+              scrolling="no"
+              allowfullscreen
+            ></iframe>
+            <button class="graph-zoom-reset" id="graphReset" title="Restablecer zoom">✕</button>
+          </div>
+        </section>
+
+      </section>
+    </main>
+
+    <!-- SECCIÓN D — Selector de modelos (barra inferior) -->
+    <nav class="section-d" id="sectionD" aria-label="Selector de modelo">
+      <div class="model-nav" id="modelNav"></div>
+    </nav>
+
+  </div>
+
+  <!-- LOGIN MODAL — centrado, app visible detrás -->
+  <div class="login-modal-backdrop" id="loginBackdrop" style="display:none;">
+    <div class="login-modal" role="dialog" aria-modal="true" aria-label="Pantalla de acceso">
+
+      <!-- Botón cerrar (X) — esquina superior derecha del modal -->
+      <button class="login-modal-close" id="loginClose" title="Cerrar">✕</button>
+
+      <div class="login-logo-row">
+        <img class="login-logo" src="./assets/logo-pe.svg" alt="Power Electronics" />
+      </div>
+
+      <p class="login-modal-desc">Enter the PIN code to see all<br>Data Centers Circuit Configurations</p>
+
+      <div class="pin-dots" id="pinDots" aria-live="polite">
+        <span class="pin-dot"></span>
+        <span class="pin-dot"></span>
+        <span class="pin-dot"></span>
+        <span class="pin-dot"></span>
+      </div>
+      <p class="login-error" id="loginError" aria-live="assertive"></p>
+
+      <div class="pin-keyboard" id="pinKeyboard">
+        <button class="pin-key" data-digit="1">1</button>
+        <button class="pin-key" data-digit="2">2</button>
+        <button class="pin-key" data-digit="3">3</button>
+        <button class="pin-key" data-digit="4">4</button>
+        <button class="pin-key" data-digit="5">5</button>
+        <button class="pin-key" data-digit="6">6</button>
+        <button class="pin-key" data-digit="7">7</button>
+        <button class="pin-key" data-digit="8">8</button>
+        <button class="pin-key" data-digit="9">9</button>
+        <button class="pin-key pin-key--empty" disabled></button>
+        <button class="pin-key" data-digit="0">0</button>
+        <button class="pin-key pin-key--clear" id="pinClear" title="Borrar">⌫</button>
+      </div>
+
+      <button class="login-btn" id="loginBtn" disabled>Access</button>
+
+    </div>
+  </div>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+  <script src="login.js"></script>
+
+</body>
+</html>

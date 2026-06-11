@@ -1,24 +1,27 @@
 // ═══════════════════════════════════════════════════════════
 //  DATA CENTERS — login.js
 //
-//  PIN por defecto: 1234
-//  Tiempo máximo de inactividad: 3 minutos (180 s)
+//  PIN: 0000  |  Inactividad: 3 min
 //
-//  API de consola (para pruebas):
-//    LoginDev.getToken()          → muestra el token actual
-//    LoginDev.expireNow()         → expira la sesión inmediatamente
-//    LoginDev.setInactivity(seg)  → cambia el timeout (ej: 10 s para probar)
-//    LoginDev.status()            → estado completo de la sesión
+//  Flujo:
+//  · Arranca siempre en m6 (público). Pill: "Log in →"
+//  · Clic "Log in →" O clic en m1–m5 sin sesión → modal PIN.
+//    El modal muestra la app desenfocada detrás.
+//  · PIN correcto → sesión activa. Pill: "Log out →".
+//    - Desde "Log in →" (estaba en m6): se queda en m6.
+//    - Desde clic en m1–m5: navega al modelo clicado.
+//  · Con sesión: navegación libre por todos los modelos.
+//  · "Log out →" o inactividad → vuelve a m6, pill "Log in →".
+//  · X en el modal → cierra sin logear, se queda donde está.
 // ═══════════════════════════════════════════════════════════
-
 
 (function () {
 
   // ── CONFIG ──────────────────────────────────────────────
-  const CORRECT_PIN         = "1234";        // PIN de acceso
-  const MAX_INACTIVITY_MS   = 3 * 60 * 1000; // 3 minutos en ms
-  const WARNING_THRESHOLD_S = 30;            // aviso los últimos 30 s
-  const SESSION_KEY         = "dc_session_token";
+  const CORRECT_PIN       = "0000";
+  const MAX_INACTIVITY_MS = 3 * 60 * 1000;
+  const SESSION_KEY       = "dc_session_token";
+  const PUBLIC_MODEL_ID   = MODELS.find(m => m.isPublic)?.id ?? "m6";
 
   // ── ESTADO ──────────────────────────────────────────────
   let pin             = "";
@@ -26,167 +29,150 @@
   let sessionStart    = null;
   let sessionToken    = null;
   let maxInactivityMs = MAX_INACTIVITY_MS;
-  let tickInterval    = null;
+  let pendingModelId  = null;
 
   // ── DOM ─────────────────────────────────────────────────
-  const overlay     = document.getElementById("loginOverlay");
-  const appRoot     = document.getElementById("appRoot");
-  const pinDots     = document.getElementById("pinDots");
-  const dots        = pinDots.querySelectorAll(".pin-dot");
-  const keyboard    = document.getElementById("pinKeyboard");
-  const loginBtn    = document.getElementById("loginBtn");
-  const loginError  = document.getElementById("loginError");
-  const sessionBar  = document.getElementById("sessionBar");
-  const sessionStatus = document.getElementById("sessionStatus");
-  const sessionTimer  = document.getElementById("sessionTimer");
-  const logoutBtn   = document.getElementById("sessionLogout");
+  const backdrop   = document.getElementById("loginBackdrop");
+  const appRoot    = document.getElementById("appRoot");
+  const pinDots    = document.getElementById("pinDots");
+  const dots       = pinDots.querySelectorAll(".pin-dot");
+  const keyboard   = document.getElementById("pinKeyboard");
+  const loginBtn   = document.getElementById("loginBtn");
+  const loginError = document.getElementById("loginError");
+  const btnLogin   = document.getElementById("sessionLoginBtn");
+  const btnLogout  = document.getElementById("sessionLogoutBtn");
+  const btnClose   = document.getElementById("loginClose");
 
-  // ── TOKEN HELPERS ────────────────────────────────────────
+  // ── TOKEN ────────────────────────────────────────────────
   function generateToken() {
-    const arr = new Uint8Array(16);
-    crypto.getRandomValues(arr);
-    return Array.from(arr, b => b.toString(16).padStart(2, "0")).join("");
+    const a = new Uint8Array(16);
+    crypto.getRandomValues(a);
+    return Array.from(a, b => b.toString(16).padStart(2, "0")).join("");
+  }
+  function saveToken(t)     { sessionStorage.setItem(SESSION_KEY, t); }
+  function clearToken()     { sessionStorage.removeItem(SESSION_KEY); sessionToken = null; }
+  function getStoredToken() { return sessionStorage.getItem(SESSION_KEY); }
+
+  // ── PILL DE SESIÓN ───────────────────────────────────────
+  function updatePill() {
+    if (sessionToken) {
+      btnLogin.style.display  = "none";
+      btnLogout.style.display = "flex";
+    } else {
+      btnLogin.style.display  = "flex";
+      btnLogout.style.display = "none";
+    }
   }
 
-  function saveToken(token) {
-    sessionStorage.setItem(SESSION_KEY, token);
-  }
-
-  function clearToken() {
-    sessionStorage.removeItem(SESSION_KEY);
-    sessionToken = null;
-  }
-
-  function getStoredToken() {
-    return sessionStorage.getItem(SESSION_KEY);
-  }
+  window.onModelChanged = updatePill;
 
   // ── INACTIVIDAD ──────────────────────────────────────────
   function resetInactivityTimer() {
     clearTimeout(inactivityTimer);
-    inactivityTimer = setTimeout(handleInactivityExpire, maxInactivityMs);
+    inactivityTimer = setTimeout(onInactivity, maxInactivityMs);
   }
 
-  function handleInactivityExpire() {
-    console.info("[Login] Sesión expirada por inactividad.");
-    logout();
+  function onInactivity() {
+    console.info("[Login] Inactividad → volviendo a m6.");
+    doLogout();
   }
 
-  // Actividad del usuario
-  const ACTIVITY_EVENTS = ["mousemove", "mousedown", "keydown", "touchstart", "click"];
-  function onUserActivity() {
-    if (sessionToken) resetInactivityTimer();
-  }
-  ACTIVITY_EVENTS.forEach(ev =>
-    document.addEventListener(ev, onUserActivity, { passive: true })
+  ["mousemove", "mousedown", "keydown", "touchstart", "click"].forEach(ev =>
+    document.addEventListener(ev, () => { if (sessionToken) resetInactivityTimer(); }, { passive: true })
   );
 
-  // ── TICK DEL TEMPORIZADOR (barra de debug) ───────────────
-  function startTick() {
-    if (tickInterval) clearInterval(tickInterval);
-    tickInterval = setInterval(updateSessionBar, 1000);
-  }
-
-  function stopTick() {
-    clearInterval(tickInterval);
-    tickInterval = null;
-  }
-
-  function updateSessionBar() {
-    if (!sessionToken) return;
-    const elapsed   = Date.now() - sessionStart;
-    const remaining = Math.max(0, maxInactivityMs - elapsed);
-    const secs      = Math.ceil(remaining / 1000);
-    const mins      = Math.floor(secs / 60);
-    const s         = String(secs % 60).padStart(2, "0");
-
-    sessionTimer.textContent = `Sesión activa · Inactividad en ${mins}:${s}`;
-
-    if (secs <= WARNING_THRESHOLD_S) {
-      sessionStatus.classList.add("warning");
-    } else {
-      sessionStatus.classList.remove("warning");
-    }
-  }
-
-  // ── LOGIN / LOGOUT ───────────────────────────────────────
-  function login() {
-    sessionToken  = generateToken();
-    sessionStart  = Date.now();
-    saveToken(sessionToken);
-
-    console.info(`[Login] Sesión iniciada. Token: ${sessionToken}`);
-
-    // Oculta login, muestra app
-    overlay.classList.add("hidden");
-    overlay.addEventListener("animationend", () => {
-      overlay.style.display = "none";
-    }, { once: true });
-
-    appRoot.style.display = "";
-
-    // Barra de debug
-    sessionBar.style.display  = "flex";
-    sessionStatus.textContent = "●";
-    sessionStatus.classList.remove("warning");
-    updateSessionBar();
-    startTick();
-    resetInactivityTimer();
-
-    // Inicia la app principal si aún no está inicializada
-    if (typeof render === "function" && !window.__appInitialized) {
-      window.__appInitialized = true;
-      preloadBaseAssets();
-      preloadBaseGraphs();
-      render();
-    }
-  }
-
-  function logout() {
-    clearToken();
-    clearTimeout(inactivityTimer);
-    stopTick();
-
-    console.info("[Login] Sesión cerrada. Token eliminado.");
-
-    // Restaura overlay
-    overlay.style.display = "flex";
-    overlay.classList.remove("hidden");
-    overlay.style.opacity  = "";
-    appRoot.style.display  = "none";
-
-    sessionBar.style.display = "none";
-
-    // Resetea el PIN
+  // ── MODAL ────────────────────────────────────────────────
+  function showModal() {
+    backdrop.style.display = "flex";
+    appRoot.classList.add("app--blurred");
     resetPin();
     showError("");
   }
+
+  function hideModal() {
+    backdrop.style.display = "none";
+    appRoot.classList.remove("app--blurred");
+  }
+
+  // ── LOGIN ────────────────────────────────────────────────
+  function doLogin() {
+    sessionToken = generateToken();
+    sessionStart = Date.now();
+    saveToken(sessionToken);
+    console.info(`[Login] Sesión iniciada. Token: ${sessionToken}`);
+
+    hideModal();
+    resetInactivityTimer();
+    updatePill();
+
+    if (pendingModelId) {
+      const mid = pendingModelId;
+      pendingModelId = null;
+      if (typeof setModel === "function") setModel(mid);
+    }
+  }
+
+  // ── LOGOUT ───────────────────────────────────────────────
+  function doLogout() {
+    clearToken();
+    clearTimeout(inactivityTimer);
+    pendingModelId = null;
+    console.info("[Login] Sesión cerrada.");
+    updatePill();
+    if (typeof setModel === "function") setModel(PUBLIC_MODEL_ID);
+  }
+
+  // ── API PÚBLICA para app.js ──────────────────────────────
+  // Llamada cuando el usuario clica m1–m5 sin sesión.
+  window.requireLoginForModel = function (modelId) {
+    // Si ya hay sesión activa, navegar directamente sin modal
+    if (sessionToken) {
+      if (typeof setModel === "function") setModel(modelId);
+      return;
+    }
+    pendingModelId = modelId;
+    showModal();
+  };
+
+  // ── EVENTOS PILL ─────────────────────────────────────────
+  btnLogin.addEventListener("click", () => {
+    pendingModelId = null; // Log in desde m6 → se queda en m6
+    showModal();
+  });
+
+  btnLogout.addEventListener("click", doLogout);
+
+  // X del modal → cierra sin logear
+  btnClose.addEventListener("click", hideModal);
+
+  // Clic en el backdrop oscuro → cierra
+  backdrop.addEventListener("click", (e) => {
+    if (e.target === backdrop) hideModal();
+  });
 
   // ── PIN ──────────────────────────────────────────────────
   function addDigit(d) {
     if (pin.length >= 4) return;
     pin += d;
-    updateDots();
+    syncDots();
     if (pin.length === 4) loginBtn.removeAttribute("disabled");
   }
 
   function removeDigit() {
     if (!pin.length) return;
     pin = pin.slice(0, -1);
-    updateDots();
+    syncDots();
     if (pin.length < 4) loginBtn.setAttribute("disabled", "");
   }
 
   function resetPin() {
     pin = "";
     loginBtn.setAttribute("disabled", "");
-    updateDots();
+    syncDots();
   }
 
-  function updateDots() {
-    dots.forEach((dot, i) => {
-      dot.classList.toggle("filled", i < pin.length);
-    });
+  function syncDots() {
+    dots.forEach((dot, i) => dot.classList.toggle("filled", i < pin.length));
   }
 
   function showError(msg) {
@@ -194,124 +180,77 @@
     loginError.classList.toggle("visible", Boolean(msg));
   }
 
-  function triggerErrorFeedback() {
+  function shakeError() {
     pinDots.classList.add("error");
-    pinDots.addEventListener("animationend", () => {
-      pinDots.classList.remove("error");
-    }, { once: true });
+    pinDots.addEventListener("animationend", () => pinDots.classList.remove("error"), { once: true });
   }
 
   function attemptLogin() {
     if (pin === CORRECT_PIN) {
-      login();
+      doLogin();
     } else {
-      triggerErrorFeedback();
-      showError("PIN incorrecto");
+      shakeError();
+      showError("Incorrect PIN");
       setTimeout(resetPin, 600);
     }
   }
 
-  // ── EVENTOS DEL TECLADO ──────────────────────────────────
+  // ── EVENTOS TECLADO ──────────────────────────────────────
   keyboard.addEventListener("click", ev => {
     const key = ev.target.closest(".pin-key");
     if (!key || key.disabled) return;
-
-    const digit = key.dataset.digit;
-
-    if (key.id === "pinClear") {
-      removeDigit();
-      showError("");
-      return;
-    }
-
-    if (digit !== undefined) {
-      addDigit(digit);
-      showError("");
-    }
+    if (key.id === "pinClear")           { removeDigit(); showError(""); return; }
+    if (key.dataset.digit !== undefined) { addDigit(key.dataset.digit); showError(""); }
   });
 
   loginBtn.addEventListener("click", () => {
     if (pin.length === 4) attemptLogin();
   });
 
-  // Teclado físico (accesibilidad y pruebas en escritorio)
   document.addEventListener("keydown", ev => {
-    if (!overlay || overlay.style.display === "none") return;
+    if (backdrop.style.display === "none") return;
     if (ev.key >= "0" && ev.key <= "9") addDigit(ev.key);
-    if (ev.key === "Backspace") removeDigit();
+    if (ev.key === "Backspace")          removeDigit();
+    if (ev.key === "Escape")             hideModal();
     if (ev.key === "Enter" && pin.length === 4) attemptLogin();
   });
 
-  // Botón cerrar sesión (barra de debug)
-  logoutBtn.addEventListener("click", logout);
-
-  // ── API DE CONSOLA PARA DESARROLLO ───────────────────────
+  // ── CONSOLA DEV ──────────────────────────────────────────
   window.LoginDev = {
-    /**
-     * Muestra el token de sesión actual en consola.
-     * @returns {string|null}
-     */
-    getToken() {
-      const t = getStoredToken();
-      console.info("[LoginDev] Token actual:", t ?? "(ninguno)");
-      return t;
-    },
-
-    /**
-     * Expira la sesión inmediatamente.
-     */
-    expireNow() {
-      console.info("[LoginDev] Expirando sesión ahora...");
-      handleInactivityExpire();
-    },
-
-    /**
-     * Cambia el timeout de inactividad en tiempo real.
-     * @param {number} segundos
-     */
-    setInactivity(segundos) {
-      maxInactivityMs = segundos * 1000;
-      sessionStart    = Date.now(); // resetea el contador
-      console.info(`[LoginDev] Inactividad ajustada a ${segundos} segundos.`);
-      if (sessionToken) {
-        resetInactivityTimer();
-        updateSessionBar();
-      }
-    },
-
-    /**
-     * Estado completo de la sesión.
-     */
+    getToken()       { const t = getStoredToken(); console.info("[LoginDev] Token:", t ?? "(ninguno)"); return t; },
+    expireNow()      { onInactivity(); },
+    setInactivity(s) { maxInactivityMs = s * 1000; if (sessionToken) resetInactivityTimer(); },
     status() {
       const stored  = getStoredToken();
       const elapsed = sessionStart ? Math.round((Date.now() - sessionStart) / 1000) : null;
-      const info = {
-        loggedIn:        Boolean(stored),
-        token:           stored ?? null,
-        sessionStarted:  sessionStart ? new Date(sessionStart).toISOString() : null,
-        elapsedSeconds:  elapsed,
-        inactivityLimit: maxInactivityMs / 1000 + " s",
-      };
+      const info = { loggedIn: !!stored, token: stored ?? null, elapsedSeconds: elapsed, inactivityLimit: maxInactivityMs / 1000 + "s" };
       console.table(info);
       return info;
-    },
+    }
   };
 
   // ── INIT ─────────────────────────────────────────────────
-  // Comprueba si ya había sesión al recargar
   (function init() {
+    // App siempre visible desde el arranque
+    backdrop.style.display = "none";
+
+    if (typeof render === "function" && !window.__appInitialized) {
+      window.__appInitialized = true;
+      if (typeof preloadBaseAssets  === "function") preloadBaseAssets();
+      if (typeof preloadGraphAssets === "function") preloadGraphAssets();
+      render();
+    }
+
+    // Restaurar sesión previa
     const stored = getStoredToken();
     if (stored) {
-      // Token válido en sessionStorage → acceso directo
-      sessionToken  = stored;
-      sessionStart  = Date.now();
+      sessionToken = stored;
+      sessionStart = Date.now();
+      resetInactivityTimer();
       console.info(`[Login] Sesión restaurada. Token: ${sessionToken}`);
-      login();
-    } else {
-      // Asegura que el overlay está visible
-      overlay.style.display = "flex";
-      overlay.style.opacity = "";
     }
+
+    updatePill();
   })();
 
 })();
