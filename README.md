@@ -13,7 +13,7 @@ Se puede ejecutar el archivo y visualizar en cualquier pantalla sin acceso a Int
 /
 ├── index.html         ← Estructura HTML (secciones A, B, C, D)
 ├── styles.css         ← Todos los estilos y tokens de diseño
-├── data.js            ← Contenido de los 6 modelos y equipos
+├── data.js            ← Contenido de los 6 modelos y opciones
 ├── app.js             ← Lógica de interacción
 └── assets/
     ├── renders/       ← Imágenes .webp del render 3D por modelo
@@ -30,12 +30,12 @@ Se puede ejecutar el archivo y visualizar en cualquier pantalla sin acceso a Int
     │   ├── m4.mp4
     │   ├── m5.mp4
     │   └── m6.mp4
-    └── schemes/       ← Imágenes .webp de esquemas de equipos
+    └── schemes/       ← Imágenes .webp de esquemas de opciones
         ├── pcs.webp
         ├── batteries.webp
         ├── aircon.webp
         ├── chiller.webp
-        └── ... (un .webp por equipo)
+        └── ... (un .webp por opcion)
 ```
 
 ## Cómo ejecutar en local
@@ -63,7 +63,7 @@ npx serve .
 - Nombra `m1.mp4`, `m2.mp4`... `m6.mp4`
 - Usar vídeo sin sonido (muted), loop infinito, resolución 1920×400px
 
-### Esquemas de equipos (Vista detalle)
+### Esquemas de opciones (Vista detalle)
 - Coloca los `.webp` en `assets/schemes/`
 - El nombre de cada archivo está definido en `data.js` → campo `schemeImg`
 - Dimensiones recomendadas: 800×450px (ratio 16:9)
@@ -74,7 +74,7 @@ Todo el contenido está en `data.js`. Cada modelo tiene:
 - `name` / `shortName` — títulos
 - `description` — texto del panel izquierdo
 - `render` / `graph` — rutas a los assets
-- `equipos[]` — array de equipos, cada uno con:
+- `opciones[]` — array de opciones, cada una con:
   - `title`, `short`, `long` — textos de la card y detalle
   - `schemeImg` — ruta al esquema
   - `focus.x` / `focus.y` — posición del punto en el render (en %)
@@ -86,13 +86,13 @@ Todo el contenido está en `data.js`. Cada modelo tiene:
       ↓
   setModel(id) → render completo
       ↓
-[Sección A] Aparecen cards de equipos
+[Sección A] Aparecen cards de opciones
       ↓
-  [Switch] → toggleEquip() → punto foco cambia a azul en render
+  [Switch] → toggleOption() → punto foco cambia a azul en render
       ↓
   [Flecha →] → openDetail() → activa switch + muestra detalle en Sección A
       ↓
-  [← Volver] → closeDetail() → vuelve al listado de equipos
+  [← Volver] → closeDetail() → vuelve al listado de opciones
 ```
 
 ## Tokens de diseño (CSS)
